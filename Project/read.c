@@ -2,7 +2,7 @@
 #include <stdint.h>
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb/stb_image.h"
+#include "stb_image.h"
 
 struct pixel** readToBuff(char* imageName, char* buffName){
 	printf("\nReading %s into %s...\n", imageName, buffName);
@@ -13,7 +13,6 @@ struct pixel** readToBuff(char* imageName, char* buffName){
 		exit(1);
 	}
 	printf("Done reading!");
-	stbi_write
 	stbi_image_free(buffName);
 	return NULL;
 }

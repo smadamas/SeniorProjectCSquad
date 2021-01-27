@@ -79,7 +79,7 @@ struct buff divide(struct buff a, struct buff b) {
 	}
 	result.img = result_img
 	
-	// Loop through images and subtract pixels
+	// Loop through images and divide pixels
 	for(unsigned char *ptra = a.img, *ptrb = b.img, *ptrres = result.img; 
 						ptra != a.img + size;
 						ptra += result.channels, ptrb += result.channels, ptrres += result.channels) {

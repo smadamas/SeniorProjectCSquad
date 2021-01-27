@@ -6,7 +6,7 @@
 
 
 void writeToImage(struct buff buffer, char* imageName){
-        printf("\nWriting to %s...\n", imageName);
+        printf("\nWriting %s into %s...\n",buffer.name, imageName);
 	char* temp = strtok(imageName, ".");
 	char* ext = strtok(NULL," ");
 	if(buffer.name == NULL){

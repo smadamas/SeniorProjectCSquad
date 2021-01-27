@@ -4,7 +4,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
 
-struct buff readToBuff(char* imageName, char* buffName){
+struct buff readToBuff(char* imageName, char* const buffName ){
 	printf("\nReading %s into %s...\n", imageName, buffName);
 	int width, height, ch;
 	unsigned char* buff = stbi_load(imageName, &width, &height, &ch, 0);
@@ -14,8 +14,8 @@ struct buff readToBuff(char* imageName, char* buffName){
 	}
 	struct buff buffer;
 	buffer.img = buff;
-	buffer.name = buffName;
-	buffer.imageName = imageName;
+	strcpy(buffer.name, buffName);
+	strcpy(buffer.imageName, imageName);
 	buffer.width = width;
 	buffer.height = height;
 	buffer.channels = ch;

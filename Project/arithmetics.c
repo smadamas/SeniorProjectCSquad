@@ -1,5 +1,103 @@
-#include "gd.h"
+#include <stdio.h>
+#include <stdint.h>
+#include <string.h>
 
+// a - b
+struct buff subtract(struct buff a, struct buff b) {
+	if((a.width != b.width) || (a.height != b.height) || (a.channels != b.channels)) // Check for correct dimensions
+		return NULL;
+		
+	struct buff result;
+	char *ext;
+	ext = strstr(a.imagename, ".png");
+	if(ext == NULL)
+		ext = strstr(a.imagename, ".jpg");
+	if(ext == NULL)
+		ext = strstr(a.imagename, ".tiff");	
+	if(ext == NULL)
+		ext = strstr(a.imagename, ".gif");	// Use extension of a for extension of result
+	
+	result.imagename = "subtraction"; // Fill in info for buffer
+	strcat(result.imagename, ext);
+	result.name = "subtraction";
+	result.width = a.width;
+	result.height = a.height;
+	result.channels = a.channels;
+	
+	int size = result.width * result.height * result.channels; // Allocate memory for result
+	unsigned char *result_img = malloc(size);
+	if(result_img == NULL) {
+		printf("Unable to allocate memory for the image.\n");
+		exit(1);
+	}
+	result.img = result_img
+	
+	// Loop through images and subtract pixels
+	for(unsigned char *ptra = a.img, *ptrb = b.img, *ptrres = result.img; 
+						ptra != a.img + size;
+						ptra += result.channels, ptrb += result.channels, ptrres += result.channels) {
+	
+		for(int i = 0; i < 3; i++) {
+			if((*(ptra + i) - *(ptrb + i)) < 0)
+				*(ptrres + i) = (uint8_t)0;
+			else
+				*(ptrres + i) = (uint8_t)(*(ptra + i) - *(ptrb + i));
+		}
+				
+		if(channels == 4)
+			*(ptrres + 3) = *(p + 3);
+	}
+}
+
+// a / b
+struct buff divide(struct buff a, struct buff b) {
+	if((a.width != b.width) || (a.height != b.height) || (a.channels != b.channels)) // Check for correct dimensions
+		return NULL;
+		
+	struct buff result;
+	char *ext;
+	ext = strstr(a.imagename, ".png");
+	if(ext == NULL)
+		ext = strstr(a.imagename, ".jpg");
+	if(ext == NULL)
+		ext = strstr(a.imagename, ".tiff");	
+	if(ext == NULL)
+		ext = strstr(a.imagename, ".gif");	// Use extension of a for extension of result
+	
+	result.imagename = "division"; // Fill in info for buffer
+	strcat(result.imagename, ext);
+	result.name = "division";
+	result.width = a.width;
+	result.height = a.height;
+	result.channels = a.channels;
+	
+	int size = result.width * result.height * result.channels; // Allocate memory for result
+	unsigned char *result_img = malloc(size);
+	if(result_img == NULL) {
+		printf("Unable to allocate memory for the image.\n");
+		exit(1);
+	}
+	result.img = result_img
+	
+	// Loop through images and divide pixels
+	for(unsigned char *ptra = a.img, *ptrb = b.img, *ptrres = result.img; 
+						ptra != a.img + size;
+						ptra += result.channels, ptrb += result.channels, ptrres += result.channels) {
+		
+		for(int i = 0; i < 3; i++) {
+			if(*(ptrb + i) == 0)
+				*(ptrres + i) = (uint8_t)*(ptra + i);
+			else
+				*(ptrres + i) = (uint8_t)(*(ptra + i) / *(ptrb + i));
+		}
+
+		if(channels == 4)
+			*(ptrres + 3) = *(p + 3);
+	}
+}
+
+/*			LIBGD
+//#include "stb/gd.h"
 // result = a - b
 gdImagePtr subtract(gdImagePtr a, gdImagePtr b) {
 	if((gdImageSX(a) != gdImageSX(b)) || ((gdImageSY(a) != gdImageSY(b)) // Checks for correct dimensions
@@ -88,3 +186,5 @@ gdImagePtr divide(gdImagePtr a, gdImagePtr b) {
 	
 	return result;
 }
+
+*/

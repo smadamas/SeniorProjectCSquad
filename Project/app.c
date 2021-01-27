@@ -1,22 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "read.c"
-#include "write.c"
-
-
-void printMenu();
-
 
 struct buff{
 	char* imageName;
 	char* name;
-	unsigned char* buff;
+	unsigned char* img;
+	int width, height, channels;
 };
 
 //void addBuffer(char* buffName, unsigned char* buffer, char* imageName, struct pair* buffers, int* buffCount);
+#include "read.c"
+#include "write.c"
 void printBuffer(struct buff buffer);
-
+void printMenu();
 
 int main() {
 	printf("Welcome to the UNIX Image Manipulation tool.\n");
@@ -43,15 +40,13 @@ int main() {
 			imageName = strtok(NULL," ");
 			strtok(NULL," ");
 			buffName = strtok(NULL," ");
-			buffer.buff = readToBuff(imageName, buffName);
-			buffer.name = buffName;
-			buffer.imageName = imageName;
+			buffer = readToBuff(imageName, buffName);
 		}
 		else if(strcmp(command, "write")==0){
 			buffName = strtok(NULL," ");
                         strtok(NULL," ");
                         imageName = strtok(NULL," ");
-			writeToImage(buffName, imageName);
+			writeToImage(buffer, imageName);
 		}
 		else if(strcmp(command, "list")==0){
 			printBuffer(buffer);

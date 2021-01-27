@@ -4,8 +4,8 @@
 
 // a - b
 struct buff subtract(struct buff a, struct buff b) {
-	if((a.width != b.width) || (a.height != b.height) || (a.channels != b.channels)) // Check for correct dimensions
-		return NULL;
+	if ((a.width != b.width) || (a.height != b.height) || (a.channels != b.channels)) // Check for correct dimensions
+		exit(1);
 		
 	struct buff result;
 	char *ext;
@@ -30,7 +30,7 @@ struct buff subtract(struct buff a, struct buff b) {
 		printf("Unable to allocate memory for the image.\n");
 		exit(1);
 	}
-	result.img = result_img
+	result.img = result_img;
 	
 	// Loop through images and subtract pixels
 	for(unsigned char *ptra = a.img, *ptrb = b.img, *ptrres = result.img; 
@@ -44,15 +44,17 @@ struct buff subtract(struct buff a, struct buff b) {
 				*(ptrres + i) = (uint8_t)(*(ptra + i) - *(ptrb + i));
 		}
 				
-		if(channels == 4)
-			*(ptrres + 3) = *(p + 3);
+		if(result.channels == 4)
+			*(ptrres + 3) = *(ptra + 3);
 	}
+
+	return result;
 }
 
 // a / b
 struct buff divide(struct buff a, struct buff b) {
-	if((a.width != b.width) || (a.height != b.height) || (a.channels != b.channels)) // Check for correct dimensions
-		return NULL;
+	if ((a.width != b.width) || (a.height != b.height) || (a.channels != b.channels)) // Check for correct dimensions
+		exit(1);
 		
 	struct buff result;
 	char *ext;
@@ -63,6 +65,8 @@ struct buff divide(struct buff a, struct buff b) {
 		ext = strstr(a.imagename, ".tiff");	
 	if(ext == NULL)
 		ext = strstr(a.imagename, ".gif");	// Use extension of a for extension of result
+	if (ext == NULL)
+		exit(1);
 	
 	result.imagename = "division"; // Fill in info for buffer
 	strcat(result.imagename, ext);
@@ -77,7 +81,7 @@ struct buff divide(struct buff a, struct buff b) {
 		printf("Unable to allocate memory for the image.\n");
 		exit(1);
 	}
-	result.img = result_img
+	result.img = result_img;
 	
 	// Loop through images and divide pixels
 	for(unsigned char *ptra = a.img, *ptrb = b.img, *ptrres = result.img; 
@@ -91,9 +95,11 @@ struct buff divide(struct buff a, struct buff b) {
 				*(ptrres + i) = (uint8_t)(*(ptra + i) / *(ptrb + i));
 		}
 
-		if(channels == 4)
-			*(ptrres + 3) = *(p + 3);
+		if(result.channels == 4)
+			*(ptrres + 3) = *(ptra + 3);
 	}
+
+	return result;
 }
 
 /*			LIBGD

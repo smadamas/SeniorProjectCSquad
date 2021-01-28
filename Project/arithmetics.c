@@ -18,7 +18,7 @@ struct buff subtract(struct buff a, struct buff b) {
 		ext = strstr(a.imageName, ".gif");	// Use extension of a for extension of result
 	
 	// Fill in info for buffer
-	strcpy(result.imageName, "subtraction");
+	strcpy(result.imageName, "sub");
 	strcat(result.imageName, ext);
 	strcpy(result.name, "subtraction");
 	result.width = a.width;
@@ -72,7 +72,7 @@ struct buff divide(struct buff a, struct buff b) {
 		exit(1);
 	
 	// Fill in info for buffer
-	strcpy(result.imageName, "division");
+	strcpy(result.imageName, "div");
 	strcat(result.imageName, ext);
 	strcpy(result.name, "division");
 	result.width = a.width;

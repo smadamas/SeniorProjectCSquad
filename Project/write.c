@@ -5,7 +5,7 @@
 #include "stb/stb_image_write.h"
 
 
-void writeToImage(struct buff buffer, char* imageName){
+void writeToImage(struct node buffer, char* imageName){
         printf("\nWriting %s into %s...\n",buffer.name, imageName);
 	char* temp = strtok(imageName, ".");
 	char* ext = strtok(NULL," ");

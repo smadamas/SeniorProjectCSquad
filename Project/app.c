@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct buff{
+struct node{
 	char imageName[15];
 	char name[15];
 	unsigned char* img;
@@ -13,9 +13,9 @@ struct buff{
 #include "write.c"
 #include "arithmetics.c"
 
-void addBuffer(struct buff buffer, struct buff* buffers, int* buffCount);
-struct buff buffSearch(char* buffName, struct buff* buffers, int buffCount);
-void printBuffer(struct buff* buffer, int buffCount);
+void addBuffer(struct node buffer, struct node* buffers, int* buffCount);
+struct node buffSearch(char* buffName, struct node* buffers, int buffCount);
+void printBuffer(struct node* buffer, int buffCount);
 void printMenu();
 
 
@@ -24,7 +24,7 @@ int main() {
 	printf("Type \"menu\" to view the list of commands or \"list\" to view your buffers.\n\n");
 
 
-	struct buff buffers[10];
+	struct node buffers[10];
 	int buffCount = 0;
 
 	char p[100];
@@ -45,7 +45,7 @@ int main() {
 			imageName = strtok(NULL," ");
 			strtok(NULL," ");
 			buffName = strtok(NULL," ");
-			struct buff temp = readToBuff(imageName, buffName);
+			struct node temp = readToBuff(imageName, buffName);
 			addBuffer(temp, buffers, &buffCount);
 		}
 		else if(strcmp(command, "write")==0){
@@ -105,7 +105,7 @@ void printMenu(){
 }
 
 
-void printBuffer(struct buff* buffers, int buffCount){
+void printBuffer(struct node* buffers, int buffCount){
 	printf("\n----- Buffers -----\n");
  	for (int i = 0; i < buffCount; i++){
                 printf("%s contains %s\n", buffers[i].name, buffers[i].imageName);
@@ -113,7 +113,7 @@ void printBuffer(struct buff* buffers, int buffCount){
 	printf("\n");
 }
 
-void addBuffer(struct buff buffer, struct buff* buffers, int* buffCount){
+void addBuffer(struct node buffer, struct node* buffers, int* buffCount){
 	int k = -1;
         for (int i = 0; i < *buffCount; i++){
         	if(strcmp(buffers[i].name, buffer.name)==0){
@@ -140,13 +140,13 @@ void addBuffer(struct buff buffer, struct buff* buffers, int* buffCount){
 	}
 }
 
-struct buff buffSearch(char* buffName, struct buff* buffers, int buffCount){
+struct node buffSearch(char* buffName, struct node* buffers, int buffCount){
 	for (int i = 0; i < buffCount; i++){
                 if(strcmp(buffers[i].name, buffName)==0){
                        	return buffers[i];
                 }
         }
 	printf("Error: buffer not found.\n");
-	struct buff temp;
+	struct node temp;
 	return temp;
 }

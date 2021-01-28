@@ -9,28 +9,31 @@ struct buff subtract(struct buff a, struct buff b) {
 		
 	struct buff result;
 	char *ext;
-	ext = strstr(a.imagename, ".png");
+	ext = strstr(a.imageName, ".png");
 	if(ext == NULL)
-		ext = strstr(a.imagename, ".jpg");
+		ext = strstr(a.imageName, ".jpg");
 	if(ext == NULL)
-		ext = strstr(a.imagename, ".tiff");	
+		ext = strstr(a.imageName, ".tiff");	
 	if(ext == NULL)
-		ext = strstr(a.imagename, ".gif");	// Use extension of a for extension of result
+		ext = strstr(a.imageName, ".gif");	// Use extension of a for extension of result
 	
-	result.imagename = "subtraction"; // Fill in info for buffer
-	strcat(result.imagename, ext);
-	result.name = "subtraction";
+	// Fill in info for buffer
+	strcpy(result.imageName, "subtraction");
+	strcat(result.imageName, ext);
+	strcpy(result.name, "subtraction");
 	result.width = a.width;
 	result.height = a.height;
 	result.channels = a.channels;
 	
-	int size = result.width * result.height * result.channels; // Allocate memory for result
+	size_t size = result.width * result.height * result.channels; // Allocate memory for result
 	unsigned char *result_img = malloc(size);
 	if(result_img == NULL) {
 		printf("Unable to allocate memory for the image.\n");
 		exit(1);
 	}
 	result.img = result_img;
+	
+	return result;
 	
 	// Loop through images and subtract pixels
 	for(unsigned char *ptra = a.img, *ptrb = b.img, *ptrres = result.img; 
@@ -58,19 +61,20 @@ struct buff divide(struct buff a, struct buff b) {
 		
 	struct buff result;
 	char *ext;
-	ext = strstr(a.imagename, ".png");
+	ext = strstr(a.imageName, ".png");
 	if(ext == NULL)
-		ext = strstr(a.imagename, ".jpg");
+		ext = strstr(a.imageName, ".jpg");
 	if(ext == NULL)
-		ext = strstr(a.imagename, ".tiff");	
+		ext = strstr(a.imageName, ".tiff");	
 	if(ext == NULL)
-		ext = strstr(a.imagename, ".gif");	// Use extension of a for extension of result
+		ext = strstr(a.imageName, ".gif");	// Use extension of a for extension of result
 	if (ext == NULL)
 		exit(1);
 	
-	result.imagename = "division"; // Fill in info for buffer
-	strcat(result.imagename, ext);
-	result.name = "division";
+	// Fill in info for buffer
+	strcpy(result.imageName, "division");
+	strcat(result.imageName, ext);
+	strcpy(result.name, "division");
 	result.width = a.width;
 	result.height = a.height;
 	result.channels = a.channels;

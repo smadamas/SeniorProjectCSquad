@@ -3,13 +3,13 @@
 #include <string.h>
 
 // a + b
-struct node add(struct node a, struct node b, char* buffName) {
+struct buff add(struct buff a, struct buff b, char* buffName) {
 	if ((a.width != b.width) || (a.height != b.height) || (a.channels != b.channels)) { // Check for correct dimensions
 		printf("Wrong dimensions.\n");
 		exit(1);
 	}
 
-	struct node result;
+	struct buff result;
 	char* ext;
 	ext = strstr(a.imageName, ".png");
 	if (ext == NULL)
@@ -56,13 +56,13 @@ struct node add(struct node a, struct node b, char* buffName) {
 }
 
 // a - b
-struct node subtract(struct node a, struct node b, char* buffName) {
+struct buff subtract(struct buff a, struct buff b, char* buffName) {
 	if ((a.width != b.width) || (a.height != b.height) || (a.channels != b.channels)) { // Check for correct dimensions
 		printf("Wrong dimensions.\n");
 		exit(1);
 	}
 		
-	struct node result;
+	struct buff result;
 	char *ext;
 	ext = strstr(a.imageName, ".png");
 	if(ext == NULL)
@@ -109,13 +109,13 @@ struct node subtract(struct node a, struct node b, char* buffName) {
 }
 
 // a * b
-struct node multiply(struct node a, struct node b, char* buffName) {
+struct buff multiply(struct buff a, struct buff b, char* buffName) {
 	if ((a.width != b.width) || (a.height != b.height) || (a.channels != b.channels)) { // Check for correct dimensions
 		printf("Wrong dimensions.\n");
 		exit(1);
 	}
 
-	struct node result;
+	struct buff result;
 	char* ext;
 	ext = strstr(a.imageName, ".png");
 	if (ext == NULL)
@@ -162,13 +162,13 @@ struct node multiply(struct node a, struct node b, char* buffName) {
 }
 
 // a / b
-struct node divide(struct node a, struct node b, char* buffName) {
+struct buff divide(struct buff a, struct buff b, char* buffName) {
 	if ((a.width != b.width) || (a.height != b.height) || (a.channels != b.channels)) { // Check for correct dimensions
 		printf("Wrong dimensions.\n");
 		exit(1);
 	}
 
-	struct node result;
+	struct buff result;
 	char* ext;
 	ext = strstr(a.imageName, ".png");
 	if (ext == NULL)

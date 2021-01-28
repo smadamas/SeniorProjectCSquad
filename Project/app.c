@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "read.c"
+#include "write.c"
+#include "arithmetics.c"
 
 struct node{
 	char imageName[15];
@@ -9,9 +12,6 @@ struct node{
 	int width, height, channels;
 };
 
-#include "read.c"
-#include "write.c"
-#include "arithmetics.c"
 
 void addBuffer(struct node buffer, struct node* buffers, int* buffCount);
 struct node buffSearch(char* buffName, struct node* buffers, int buffCount);

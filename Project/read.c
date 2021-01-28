@@ -2,7 +2,7 @@
 #include <stdint.h>
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb/stb_image.h"
+#include "stb_image.h"
 
 struct node readToBuff(char* imageName, char* const buffName ){
 	printf("\nReading %s into %s...\n", imageName, buffName);

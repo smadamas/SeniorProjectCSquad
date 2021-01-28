@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb/stb_image_write.h"
+#include "stb_image_write.h"
 
 
 void writeToImage(struct node buffer, char* imageName){

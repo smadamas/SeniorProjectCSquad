@@ -10,7 +10,6 @@ struct buff readToBuff(char* imageName, char* const buffName ){
 	unsigned char* buff = stbi_load(imageName, &width, &height, &ch, 0);
 	if(buffName == NULL){
 		printf("Error reading file\n");
-		exit(1);
 	}
 	struct buff buffer;
 	buffer.img = buff;

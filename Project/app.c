@@ -95,6 +95,7 @@ int main() {
 void printMenu(){
 	printf("\n----- Commands -----\n");
 	printf("\"quit\"\n");
+	printf("\"list\"\n");
 	printf("\"read <image-name> into <buffer-name>\"\n");
 	printf("\"write <buffer-name> into <image-name>\"\n");
 	printf("addition: \"<buffer1> = <buffer2> + <buffer3>\"\n");

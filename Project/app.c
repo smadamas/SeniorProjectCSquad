@@ -11,6 +11,7 @@ struct buff{
 
 #include "read.c"
 #include "write.c"
+#include "arithmetics.c"
 
 void addBuffer(struct buff buffer, struct buff* buffers, int* buffCount);
 struct buff buffSearch(char* buffName, struct buff* buffers, int buffCount);
@@ -60,7 +61,29 @@ int main() {
 			break;
 		}
 		else{
-			printf("\nError: command not found.\n");
+			strtok(NULL," ");
+			char* buff1 = strtok(NULL," ");
+                        char* cmd = strtok(NULL," ");
+                        char* buff2 = strtok(NULL," ");
+			if(strcmp(cmd,"+")==0){
+				addBuffer(add(buffSearch(buff1, buffers,buffCount), buffSearch(buff2, buffers,buffCount), command),
+					buffers, &buffCount);
+			}
+			else if(strcmp(cmd,"-")==0){
+                                addBuffer(subtract(buffSearch(buff1, buffers,buffCount), buffSearch(buff2, buffers,buffCount), command),
+                                        buffers, &buffCount);
+                        }
+			else if(strcmp(cmd,"*")==0){
+                                addBuffer(multiply(buffSearch(buff1, buffers,buffCount), buffSearch(buff2, buffers,buffCount), command),
+                                        buffers, &buffCount);
+                        }
+			else if(strcmp(cmd,"/")==0){
+                                addBuffer(divide(buffSearch(buff1, buffers,buffCount), buffSearch(buff2, buffers,buffCount), command),
+                                        buffers, &buffCount);
+                        }
+			else{
+				printf("\nError: command not found.\n");
+			}
 		}
 
 		gets(p);
@@ -73,7 +96,11 @@ void printMenu(){
 	printf("\n----- Commands -----\n");
 	printf("\"quit\"\n");
 	printf("\"read <image-name> into <buffer-name>\"\n");
-	printf("\"write <buffer-name> into <image-name>\"\n\n");
+	printf("\"write <buffer-name> into <image-name>\"\n");
+	printf("addition: \"<buffer1> = <buffer2> + <buffer3>\"\n");
+	printf("subtraction: \"<buffer1> = <buffer2> - <buffer3>\"\n");
+	printf("multiplication: \"<buffer1> = <buffer2> * <buffer3>\"\n");
+	printf("division: \"<buffer1> = <buffer2> / <buffer3>\"\n\n");
 }
 
 
@@ -82,6 +109,7 @@ void printBuffer(struct buff* buffers, int buffCount){
  	for (int i = 0; i < buffCount; i++){
                 printf("%s contains %s\n", buffers[i].name, buffers[i].imageName);
         }
+	printf("\n");
 }
 
 void addBuffer(struct buff buffer, struct buff* buffers, int* buffCount){

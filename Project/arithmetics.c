@@ -3,7 +3,7 @@
 #include <string.h>
 
 // a + b
-struct buff subtract(struct buff a, struct buff b) {
+struct buff add(struct buff a, struct buff b, char* buffName) {
 	if ((a.width != b.width) || (a.height != b.height) || (a.channels != b.channels)) { // Check for correct dimensions
 		printf("Wrong dimensions.\n");
 		exit(1);
@@ -22,7 +22,7 @@ struct buff subtract(struct buff a, struct buff b) {
 	// Fill in info for buffer
 	strcpy(result.imageName, "add");
 	strcat(result.imageName, ext);
-	strcpy(result.name, "addition");
+	strcpy(result.name, buffName);
 	result.width = a.width;
 	result.height = a.height;
 	result.channels = a.channels;
@@ -56,7 +56,7 @@ struct buff subtract(struct buff a, struct buff b) {
 }
 
 // a - b
-struct buff subtract(struct buff a, struct buff b) {
+struct buff subtract(struct buff a, struct buff b, char* buffName) {
 	if ((a.width != b.width) || (a.height != b.height) || (a.channels != b.channels)) { // Check for correct dimensions
 		printf("Wrong dimensions.\n");
 		exit(1);
@@ -75,7 +75,7 @@ struct buff subtract(struct buff a, struct buff b) {
 	// Fill in info for buffer
 	strcpy(result.imageName, "sub");
 	strcat(result.imageName, ext);
-	strcpy(result.name, "subtraction");
+	strcpy(result.name, buffName);
 	result.width = a.width;
 	result.height = a.height;
 	result.channels = a.channels;
@@ -109,7 +109,7 @@ struct buff subtract(struct buff a, struct buff b) {
 }
 
 // a * b
-struct buff divide(struct buff a, struct buff b) {
+struct buff multiply(struct buff a, struct buff b, char* buffName) {
 	if ((a.width != b.width) || (a.height != b.height) || (a.channels != b.channels)) { // Check for correct dimensions
 		printf("Wrong dimensions.\n");
 		exit(1);
@@ -128,7 +128,7 @@ struct buff divide(struct buff a, struct buff b) {
 	// Fill in info for buffer
 	strcpy(result.imageName, "mul");
 	strcat(result.imageName, ext);
-	strcpy(result.name, "multiplication");
+	strcpy(result.name, buffName);
 	result.width = a.width;
 	result.height = a.height;
 	result.channels = a.channels;
@@ -162,7 +162,7 @@ struct buff divide(struct buff a, struct buff b) {
 }
 
 // a / b
-struct buff divide(struct buff a, struct buff b) {
+struct buff divide(struct buff a, struct buff b, char* buffName) {
 	if ((a.width != b.width) || (a.height != b.height) || (a.channels != b.channels)) { // Check for correct dimensions
 		printf("Wrong dimensions.\n");
 		exit(1);
@@ -181,7 +181,7 @@ struct buff divide(struct buff a, struct buff b) {
 	// Fill in info for buffer
 	strcpy(result.imageName, "div");
 	strcat(result.imageName, ext);
-	strcpy(result.name, "division");
+	strcpy(result.name, buffName);
 	result.width = a.width;
 	result.height = a.height;
 	result.channels = a.channels;

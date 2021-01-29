@@ -12,11 +12,14 @@ struct buff{
 #include "read.c"
 #include "write.c"
 #include "arithmetics.c"
+#include "histoEQ.c"
 
 void addBuffer(struct buff buffer, struct buff* buffers, int* buffCount);
 struct buff buffSearch(char* buffName, struct buff* buffers, int buffCount);
 void printBuffer(struct buff* buffer, int buffCount);
 void printMenu();
+
+struct buff histogramEqualisation(struct buff a);
 
 
 int main() {
@@ -63,8 +66,8 @@ int main() {
 		else{
 			strtok(NULL," ");
 			char* buff1 = strtok(NULL," ");
-                        char* cmd = strtok(NULL," ");
-                        char* buff2 = strtok(NULL," ");
+			char* cmd = strtok(NULL," ");
+			char* buff2 = strtok(NULL," ");
 			if(strcmp(cmd,"+")==0){
 				addBuffer(add(buffSearch(buff1, buffers,buffCount), buffSearch(buff2, buffers,buffCount), command),
 					buffers, &buffCount);
@@ -81,6 +84,9 @@ int main() {
                                 addBuffer(divide(buffSearch(buff1, buffers,buffCount), buffSearch(buff2, buffers,buffCount), command),
                                         buffers, &buffCount);
                         }
+			else if(strcmp(cmd,":=")==0){
+				addBuffer(histogramEqualisation(buffSearch(buff1, buffers, buffCount)), buffers, &buffCount);
+			}
 			else{
 				printf("\nError: command not found.\n");
 			}
@@ -101,7 +107,8 @@ void printMenu(){
 	printf("addition: \"<buffer1> = <buffer2> + <buffer3>\"\n");
 	printf("subtraction: \"<buffer1> = <buffer2> - <buffer3>\"\n");
 	printf("multiplication: \"<buffer1> = <buffer2> * <buffer3>\"\n");
-	printf("division: \"<buffer1> = <buffer2> / <buffer3>\"\n\n");
+	printf("division: \"<buffer1> = <buffer2> / <buffer3>\"\n");
+	printf("histEQ: \"<buffer1> := histeq\"\n\n");
 }
 
 

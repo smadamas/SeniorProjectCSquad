@@ -123,7 +123,7 @@ struct buff histogramEqualisation(struct buff a)
     free(image); 
   
     // closing input and output files 
-    close(input_file); 
+    //close(input_file); 
 
     return newBuff;
 } 

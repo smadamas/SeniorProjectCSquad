@@ -1,2 +1,3 @@
+CC = gcc -g
 run: app.c
-	gcc -o run app.c -lm
+	$(CC) -o run app.c -lm

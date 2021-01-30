@@ -31,14 +31,21 @@ int main() {
 	int buffCount = 0;
 
 	char p[100];
-	gets(p);
+	
+	//strcpy(p,p2);
+	fgets(p, 100, stdin);
+	
+
 
 	while(1){
+		//gets is depreciated
+		
+		const char * p2 = strtok(p,"\n");
 		char *command;
 		char *imageName;
 		char *buffName;
 
-		command = strtok(p," ");
+		command = strtok(p2," ");
 
 
 		if(strcmp(command,"menu")==0){
@@ -92,7 +99,7 @@ int main() {
 			}
 		}
 
-		gets(p);
+		fgets(p, 100, stdin);
 	}
 
    	return 0;

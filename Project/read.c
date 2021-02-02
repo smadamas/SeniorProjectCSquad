@@ -12,6 +12,7 @@ struct buff readToBuff(char* imageName, char* const buffName ){
 		printf("Error reading file\n");
 		exit(1);
 	}
+	
 	struct buff buffer;
 	buffer.img = buff;
 	strcpy(buffer.name, buffName);

@@ -47,9 +47,10 @@ int main() {
 		else if(strcmp(command, "read")==0){
 			imageName = strtok(NULL," ");
 			char* ext = get_filename_ext(imageName);
-			char* file_types[4] = {"jpg","gif","tiff","png"}; //ALLOW NEW FILE TYPES HERE
+			char* file_types[5] = {"jpeg","jpg","gif","tiff","png"}; //ALLOW NEW FILE TYPES HERE
 			int approved = check_types(ext, file_types);
 			if(approved != 1 ){
+				printf("Error: Image file type is not approved.\n");
                 exit(1);
             } 
 			strtok(NULL," ");

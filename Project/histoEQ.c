@@ -30,13 +30,7 @@ struct buff histogramEqualisation(struct buff a)
     // of the image to read one row of an image at a time 
     image = (unsigned char*)calloc(cols, sizeof(unsigned char)); 
   
-    // opening input file in Read Only Mode 
-    int input_file = a.width * a.height; 
 
-    if (input_file < 0) { 
-        printf("Error reading input file\n"); 
-        exit(1); 
-    } 
   
     // creating output file that has write and read access 
     //output_file = creat(output_file_name, 0666); 

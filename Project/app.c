@@ -91,8 +91,8 @@ int main() {
                                 addBuffer(divide(buffSearch(buff1, buffers,buffCount), buffSearch(buff2, buffers,buffCount), command),
                                         buffers, &buffCount);
                         }
-			else if(strcmp(cmd,":=")==0){
-				addBuffer(histogramEqualisation(buffSearch(buff1, buffers, buffCount)), buffers, &buffCount);
+			else if(strcmp(buff1,"histeq")==0){
+				addBuffer(histogramEqualisation(buffSearch(cmd, buffers, buffCount)), buffers, &buffCount);
 			}
 			else{
 				printf("\nError: command not found.\n");

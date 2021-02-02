@@ -115,9 +115,9 @@ void printMenu(){
 	printf("addition: \"<buffer1> = <buffer2> + <buffer3>\"\n");
 	printf("subtraction: \"<buffer1> = <buffer2> - <buffer3>\"\n");
 	printf("multiplication: \"<buffer1> = <buffer2> * <buffer3>\"\n");
-	printf("division: \"<buffer1> = <buffer2> / <buffer3>\"\n\n");
-	printf("brighten: \"brighten <buffer1> into <buffer2>\"\n\n");
-	printf("darken: \"darken <buffer1> into <buffer2>\"\n\n");
+	printf("division: \"<buffer1> = <buffer2> / <buffer3>\"\n");
+	printf("\"brighten <buffer1> into <buffer2>\"\n");
+	printf("\"darken <buffer1> into <buffer2>\"\n\n");
 }
 
 

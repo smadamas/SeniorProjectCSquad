@@ -21,7 +21,7 @@ struct buff brighten(struct buff input, char* buffName, bool choice) {
 	if (ext == NULL)
 		ext = strstr(input.imageName, ".tiff");
 	if (ext == NULL)
-		ext = strstr(input.imageName, ".gif");	// Use extension of a for extension of result
+		ext = strstr(input.imageName, ".gif");	// Use extension
 
 	// Fill in info for buffer
 	if (choice){
@@ -47,10 +47,8 @@ struct buff brighten(struct buff input, char* buffName, bool choice) {
 	unsigned char *oldPtr = input.img, *newPtr = result.img;
 
 	// Loop through image pixels and brighten or darken
-	for (int a = 0; a < size; a++) {
-		oldPtr += result.channels;
-		newPtr += result.channels;
-
+	for (unsigned char *oldPtr = input.img, *newPtr = result.img; oldPtr != input.img + size; oldPtr += result.channels, newPtr += result.channels) {
+		printf("%u", oldPtr);
 		if (choice){
 			for (int i = 0; i < 3; i++) {
 				if ((*(oldPtr + i) + 128) > 255)
@@ -70,6 +68,10 @@ struct buff brighten(struct buff input, char* buffName, bool choice) {
 		
 		if (result.channels == 4)
 			*(newPtr + 3) = *(oldPtr + 3);
+
+		oldPtr += result.channels;
+		newPtr += result.channels;
+
 	}
 
 	return result;

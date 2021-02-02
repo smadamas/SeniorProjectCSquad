@@ -63,13 +63,13 @@ int main() {
 			buffName = strtok(NULL, " ");
 			strtok(NULL, " ");
 			imageName = strtok(NULL," ");
-			brighten(buffSearch(buffName, buffers, buffCount), imageName, true);
+			addBuffer(brighten(buffSearch(buffName, buffers, buffCount), imageName, true), buffers, &buffCount);
 		}
 		else if(strcmp(command, "darken")==0){
 			buffName = strtok(NULL, " ");
 			strtok(NULL, " ");
 			imageName = strtok(NULL," ");
-			brighten(buffSearch(buffName, buffers, buffCount), imageName, false);
+			addBuffer(brighten(buffSearch(buffName, buffers, buffCount), imageName, false), buffers, &buffCount);
 		}
 		else if(strcmp(command, "quit")==0){
 			break;

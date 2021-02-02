@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 struct buff{
 	char imageName[15];
@@ -12,6 +13,7 @@ struct buff{
 #include "read.c"
 #include "write.c"
 #include "arithmetics.c"
+#include "brighten.c"
 
 void addBuffer(struct buff buffer, struct buff* buffers, int* buffCount);
 struct buff buffSearch(char* buffName, struct buff* buffers, int buffCount);
@@ -64,6 +66,18 @@ int main() {
 		else if(strcmp(command, "list")==0){
 			printBuffer(buffers, buffCount);
 		}
+		else if(strcmp(command, "brighten")==0){
+			buffName = strtok(NULL, " ");
+			strtok(NULL, " ");
+			imageName = strtok(NULL," ");
+			brighten(buffSearch(buffName, buffers, buffCount), imageName, true);
+		}
+		else if(strcmp(command, "darken")==0){
+			buffName = strtok(NULL, " ");
+			strtok(NULL, " ");
+			imageName = strtok(NULL," ");
+			brighten(buffSearch(buffName, buffers, buffCount), imageName, false);
+		}
 		else if(strcmp(command, "quit")==0){
 			break;
 		}
@@ -108,7 +122,9 @@ void printMenu(){
 	printf("addition: \"<buffer1> = <buffer2> + <buffer3>\"\n");
 	printf("subtraction: \"<buffer1> = <buffer2> - <buffer3>\"\n");
 	printf("multiplication: \"<buffer1> = <buffer2> * <buffer3>\"\n");
-	printf("division: \"<buffer1> = <buffer2> / <buffer3>\"\n\n");
+	printf("division: \"<buffer1> = <buffer2> / <buffer3>\"\n");
+	printf("\"brighten <buffer1> into <buffer2>\"\n");
+	printf("\"darken <buffer1> into <buffer2>\"\n\n");
 }
 
 

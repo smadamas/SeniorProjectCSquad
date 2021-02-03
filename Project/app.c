@@ -14,6 +14,7 @@ struct buff{
 #include "write.c"
 #include "arithmetics.c"
 #include "brighten.c"
+#include "display.c"
 
 void addBuffer(struct buff buffer, struct buff* buffers, int* buffCount);
 struct buff buffSearch(char* buffName, struct buff* buffers, int buffCount);
@@ -81,6 +82,9 @@ int main() {
 		}
 		else if(strcmp(command, "quit")==0){
 			break;
+		}else if(strcmp(command, "display")==0){
+			buffName = strtok(NULL, " ");
+			displayImage(buffName);
 		}
 		else{
 			strtok(NULL," ");
@@ -118,6 +122,7 @@ void printMenu(){
 	printf("\n----- Commands -----\n");
 	printf("\"quit\"\n");
 	printf("\"list\"\n");
+	printf("\"display\"\n");
 	printf("\"read <image-name> into <buffer-name>\"\n");
 	printf("\"write <buffer-name> into <image-name>\"\n");
 	printf("addition: \"<buffer1> = <buffer2> + <buffer3>\"\n");

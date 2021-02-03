@@ -116,7 +116,7 @@ void printMenu(){
 	printf("subtraction: \"<buffer1> = <buffer2> - <buffer3>\"\n");
 	printf("multiplication: \"<buffer1> = <buffer2> * <buffer3>\"\n");
 	printf("division: \"<buffer1> = <buffer2> / <buffer3>\"\n");
-	printf("histEQ: \"<buffer1> := histeq\"\n\n");
+	printf("histEQ: \"<buffer_dest> := histeq <buffer>\"\n\n");
 }
 
 

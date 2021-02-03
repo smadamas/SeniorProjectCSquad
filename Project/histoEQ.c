@@ -36,11 +36,11 @@ struct buff histogramEqualisation(struct buff a, char* buffName)
         //read(input_file, &image[0], cols * sizeof(unsigned char)); 
         //image[0] = 
         for(int i=0; i<cols; i++){
-            image[row+i] = a.img[row + i];
+            image[i] = a.img[row + i];
         }
         // logic for calculating histogram 
         for (col = 0; col < cols; col++) 
-            hist[(int)a.img[col]]++; 
+            hist[(int)a.img[row + col]]++; 
     } 
   
     // calculating total number of pixels 
@@ -58,25 +58,35 @@ struct buff histogramEqualisation(struct buff a, char* buffName)
         // total number of pixels 
         new_gray_level[i] = round((((float)curr) * 255) / total); 
     } 
-  
-
+    
+    //Allocate for output
+    struct buff newBuff;
+    size_t size = newBuff.width * newBuff.height * newBuff.channels; // Allocate memory for result
+	unsigned char* result_img = malloc(size);
+	if (result_img == NULL) {
+		printf("Unable to allocate memory for the image.\n");
+		exit(1);
+	}
   
     // performing histogram equalisation by mapping new gray levels 
     for (row = 0; row < rows; row++) { 
         // reading a row of image 
         //read(input_file, &image[0], cols * sizeof(unsigned char)); 
         for(int i=0; i<cols; i++){
-            image[row + i] = a.img[row + i];
+            image[i] = a.img[row + i];
         }
         // mapping to new gray level values 
         for (col = 0; col < cols; col++) 
             image[col] = (unsigned char)new_gray_level[image[col]]; 
   
         // reading new gray level mapped row of image 
-        //write(output_file, &image[0], cols * sizeof(unsigned char)); 
+        //write(output_file, &image[0], cols * sizeof(unsigned char));
+        for(int i=0; i<cols; i++){
+            result_img[row + i] = a.img[row + i];
+        }
     }
 
-    struct buff newBuff;
+    
 
     // Fill in info for buffer
     char * nombre = a.imageName;
@@ -106,18 +116,12 @@ struct buff histogramEqualisation(struct buff a, char* buffName)
 	strcpy(newBuff.name, buffName);
 
 
-	size_t size = newBuff.width * newBuff.height * newBuff.channels; // Allocate memory for result
-	unsigned char* result_img = malloc(size);
-	if (result_img == NULL) {
-		printf("Unable to allocate memory for the image.\n");
-		exit(1);
-	}
+	
 
 	newBuff.img = result_img;
 
     // freeing dynamically allocated memory 
     free(image); 
-  
     // closing input and output files 
     //close(input_file); 
 

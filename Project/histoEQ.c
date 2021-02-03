@@ -34,8 +34,9 @@ struct buff histogramEqualisation(struct buff a, char* buffName)
     for (row = 0; row < rows; row++) { 
         // reading a row of image 
         //read(input_file, &image[0], cols * sizeof(unsigned char)); 
+        //image[0] = 
         for(int i=0; i<cols; i++){
-            image[i] = a.img[i];
+            image[row+i] = a.img[row + i];
         }
         // logic for calculating histogram 
         for (col = 0; col < cols; col++) 
@@ -58,18 +59,14 @@ struct buff histogramEqualisation(struct buff a, char* buffName)
         new_gray_level[i] = round((((float)curr) * 255) / total); 
     } 
   
-    // closing file 
-    //close(input_file); 
-  
-    // reopening file in Read Only Mode 
-    //input_file = open(input_file_name, O_RDONLY); 
+
   
     // performing histogram equalisation by mapping new gray levels 
     for (row = 0; row < rows; row++) { 
         // reading a row of image 
         //read(input_file, &image[0], cols * sizeof(unsigned char)); 
         for(int i=0; i<cols; i++){
-            image[i] = a.img[i];
+            image[row + i] = a.img[row + i];
         }
         // mapping to new gray level values 
         for (col = 0; col < cols; col++) 

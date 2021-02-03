@@ -19,7 +19,7 @@ struct buff buffSearch(char* buffName, struct buff* buffers, int buffCount);
 void printBuffer(struct buff* buffer, int buffCount);
 void printMenu();
 
-struct buff histogramEqualisation(struct buff a);
+struct buff histogramEqualisation(struct buff a, char* buffName);
 
 
 int main() {
@@ -40,12 +40,13 @@ int main() {
 	while(1){
 		//gets is depreciated
 		
-		const char * p2 = strtok(p,"\n");
+		char * p2 = strtok(p,"\n");
 		char *command;
 		char *imageName;
 		char *buffName;
+		char * p3 = p2;
 
-		command = strtok(p2," ");
+		command = strtok(p3," ");
 
 
 		if(strcmp(command,"menu")==0){
@@ -91,8 +92,8 @@ int main() {
                                 addBuffer(divide(buffSearch(buff1, buffers,buffCount), buffSearch(buff2, buffers,buffCount), command),
                                         buffers, &buffCount);
                         }
-			else if(strcmp(buff1,"histeq")==0){
-				addBuffer(histogramEqualisation(buffSearch(cmd, buffers, buffCount)), buffers, &buffCount);
+			else if((strcmp(buff1,"histeq")==0)){
+				addBuffer(histogramEqualisation(buffSearch(cmd, buffers, buffCount), command), buffers, &buffCount);
 			}
 			else{
 				printf("\nError: command not found.\n");

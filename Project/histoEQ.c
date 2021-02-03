@@ -9,7 +9,7 @@
 // Function to perform histogram equalisation on an image 
 // Function takes total rows, columns, input file
 
-struct buff histogramEqualisation(struct buff a) 
+struct buff histogramEqualisation(struct buff a, char* buffName) 
 { 
     // creating image pointer 
     unsigned char* image; 
@@ -29,15 +29,6 @@ struct buff histogramEqualisation(struct buff a)
     // allocating image array the size equivalent to number of columns 
     // of the image to read one row of an image at a time 
     image = (unsigned char*)calloc(cols, sizeof(unsigned char)); 
-  
-
-  
-    // creating output file that has write and read access 
-    //output_file = creat(output_file_name, 0666); 
-    //if (output_file < 0) { 
-    //    printf("Error creating output file\n"); 
-    //    exit(1); 
-    //} 
   
     // Calculating frequency of occurrence for all pixel values 
     for (row = 0; row < rows; row++) { 
@@ -103,6 +94,20 @@ struct buff histogramEqualisation(struct buff a)
 	newBuff.width = a.width;
 	newBuff.height = a.height;
 	newBuff.channels = a.channels;
+
+    char* ext;
+	ext = strstr(a.imageName, ".png");
+	if (ext == NULL)
+		ext = strstr(a.imageName, ".jpg");
+	if (ext == NULL)
+		ext = strstr(a.imageName, ".tiff");
+	if (ext == NULL)
+		ext = strstr(a.imageName, ".gif");	// Use extension of a for extension of result
+
+    strcpy(newBuff.imageName, "histEQ");
+	strcat(newBuff.imageName, ext);
+	strcpy(newBuff.name, buffName);
+
 
 	size_t size = newBuff.width * newBuff.height * newBuff.channels; // Allocate memory for result
 	unsigned char* result_img = malloc(size);

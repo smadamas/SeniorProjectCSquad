@@ -23,7 +23,7 @@ void printMenu();
 char *get_filename_ext(const char *filename);
 int check_types(char* ext, char* file_types[]);
 
-int main() {
+int main(int   argc, char** argv) {
 	printf("Welcome to the UNIX Image Manipulation tool.\n");
 	printf("Type \"menu\" to view the list of commands or \"list\" to view your buffers.\n\n");
 
@@ -80,13 +80,15 @@ int main() {
 			imageName = strtok(NULL," ");
 			brighten(buffSearch(buffName, buffers, buffCount), imageName, false);
 		}
+		else if(strcmp(command, "display")==0){
+			buffName = strtok(NULL, " ");
+			printf("in display");
+			displayImage(buffSearch(buffName, buffers, buffCount), argc, argv);
+			// displayImage(buffName);
+		}
 		else if(strcmp(command, "quit")==0){
 			break;
-		}else if(strcmp(command, "display")==0){
-			buffName = strtok(NULL, " ");
-			displayImage(buffName);
-		}
-		else{
+		}		else{
 			strtok(NULL," ");
 			char* buff1 = strtok(NULL," ");
                         char* cmd = strtok(NULL," ");
@@ -122,7 +124,7 @@ void printMenu(){
 	printf("\n----- Commands -----\n");
 	printf("\"quit\"\n");
 	printf("\"list\"\n");
-	printf("\"display\"\n");
+	printf("\"display <buffer-name>\"\n");
 	printf("\"read <image-name> into <buffer-name>\"\n");
 	printf("\"write <buffer-name> into <image-name>\"\n");
 	printf("addition: \"<buffer1> = <buffer2> + <buffer3>\"\n");

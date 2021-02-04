@@ -4,8 +4,8 @@
 #include <stdbool.h>
 
 struct buff{
-	char imageName[15];
-	char name[15];
+	char imageName[30];
+	char name[30];
 	unsigned char* img;
 	int width, height, channels;
 };
@@ -38,6 +38,7 @@ int main(int   argc, char** argv) {
 		char *command;
 		char *imageName;
 		char *buffName;
+		char *amount;
 
 		command = strtok(p," ");
 
@@ -72,13 +73,17 @@ int main(int   argc, char** argv) {
 			buffName = strtok(NULL, " ");
 			strtok(NULL, " ");
 			imageName = strtok(NULL," ");
-			brighten(buffSearch(buffName, buffers, buffCount), imageName, true);
+			strtok(NULL, " ");
+			amount = strtok(NULL, " ");
+			addBuffer(brighten(buffSearch(buffName, buffers, buffCount), imageName, true, atoi(amount)), buffers, &buffCount);
 		}
 		else if(strcmp(command, "darken")==0){
 			buffName = strtok(NULL, " ");
 			strtok(NULL, " ");
 			imageName = strtok(NULL," ");
-			brighten(buffSearch(buffName, buffers, buffCount), imageName, false);
+			strtok(NULL, " ");
+			amount = strtok(NULL, " ");
+			addBuffer(brighten(buffSearch(buffName, buffers, buffCount), imageName, false, atoi(amount)), buffers, &buffCount);
 		}
 		else if(strcmp(command, "display")==0){
 			buffName = strtok(NULL, " ");
@@ -131,8 +136,8 @@ void printMenu(){
 	printf("subtraction: \"<buffer1> = <buffer2> - <buffer3>\"\n");
 	printf("multiplication: \"<buffer1> = <buffer2> * <buffer3>\"\n");
 	printf("division: \"<buffer1> = <buffer2> / <buffer3>\"\n");
-	printf("\"brighten <buffer1> into <buffer2>\"\n");
-	printf("\"darken <buffer1> into <buffer2>\"\n\n");
+	printf("\"brighten <buffer1> into <buffer2> by <value between 0 and 255>\"\n");
+	printf("\"darken <buffer1> into <buffer2> by <value between 0 and 255>\"\n\n");
 }
 
 
@@ -169,6 +174,8 @@ void addBuffer(struct buff buffer, struct buff* buffers, int* buffCount){
                 buffers[k].height = buffer.height;
                 buffers[k].channels = buffer.channels;
 	}
+
+	printf("New buffer added\n\n");
 }
 
 struct buff buffSearch(char* buffName, struct buff* buffers, int buffCount){

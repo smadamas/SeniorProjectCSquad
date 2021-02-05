@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 
+
 struct buff{
 	char imageName[15];
 	char name[15];
@@ -40,7 +41,6 @@ int main(int   argc, char** argv) {
 		char *buffName;
 
 		command = strtok(p," ");
-
 
 		if(strcmp(command,"menu")==0){
                         printMenu();
@@ -84,7 +84,6 @@ int main(int   argc, char** argv) {
 			buffName = strtok(NULL, " ");
 			printf("in display");
 			displayImage(buffSearch(buffName, buffers, buffCount), argc, argv);
-			// displayImage(buffName);
 		}
 		else if(strcmp(command, "quit")==0){
 			break;

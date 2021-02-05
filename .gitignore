@@ -5,3 +5,5 @@ Project/run
 *.gif
 *.tiff
 *jpeg
+Project/test.c
+Project/temp

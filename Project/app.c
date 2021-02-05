@@ -76,7 +76,7 @@ int main() {
 			break;
 		}
 		else if(strcmp(command, "kirsch")==0){
-			hey();
+			edgeDetection();
 		}
 		else{
 			strtok(NULL," ");

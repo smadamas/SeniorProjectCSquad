@@ -14,6 +14,7 @@ struct buff{
 #include "write.c"
 #include "arithmetics.c"
 #include "brighten.c"
+#include "kirsch.c"
 
 void addBuffer(struct buff buffer, struct buff* buffers, int* buffCount);
 struct buff buffSearch(char* buffName, struct buff* buffers, int buffCount);
@@ -73,6 +74,9 @@ int main() {
 		}
 		else if(strcmp(command, "quit")==0){
 			break;
+		}
+		else if(strcmp(command, "kirsch")==0){
+			hey();
 		}
 		else{
 			strtok(NULL," ");

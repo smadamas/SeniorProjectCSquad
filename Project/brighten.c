@@ -6,12 +6,12 @@
 //Change this into the brightening routine which changes the pixels, add truncate function below
 struct buff brighten(struct buff input, char* buffName, bool choice) {
 
-	printf(input.imageName);
-	printf("\n");
-	printf(input.name);
-	printf("\n");
-	printf(buffName);
-	printf("\n%d", choice);
+	// printf(input.imageName);
+	// printf("\n");
+	// printf(input.name);
+	// printf("\n");
+	// printf(buffName);
+	// printf("\n%d", choice);
 
 	struct buff result;
 	char* ext;
@@ -48,7 +48,7 @@ struct buff brighten(struct buff input, char* buffName, bool choice) {
 
 	// Loop through image pixels and brighten or darken
 	for (unsigned char *oldPtr = input.img, *newPtr = result.img; oldPtr != input.img + size; oldPtr += result.channels, newPtr += result.channels) {
-		printf("%u", oldPtr);
+		//printf("%u", oldPtr);
 		if (choice){
 			for (int i = 0; i < 3; i++) {
 				if ((*(oldPtr + i) + 128) > 255)

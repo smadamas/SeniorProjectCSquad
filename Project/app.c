@@ -181,7 +181,7 @@ char *get_filename_ext(const char *filename){
     return dot + 1;
 }
 int check_types(char* ext, char* file_types[]){
-    for(int i =0; i< 3; i++){
+    for(int i =0; i<5; i++){
         int temp = strcmp(ext,file_types[i]);
         if(temp == 0) return 1;
     }

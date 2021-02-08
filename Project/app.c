@@ -3,6 +3,8 @@
 #include <string.h>
 #include <stdbool.h>
 
+
+
 struct buff{
 	char imageName[15];
 	char name[15];
@@ -14,6 +16,7 @@ struct buff{
 #include "write.c"
 #include "arithmetics.c"
 #include "brighten.c"
+#include "edge.c"
 
 void addBuffer(struct buff buffer, struct buff* buffers, int* buffCount);
 struct buff buffSearch(char* buffName, struct buff* buffers, int buffCount);
@@ -82,27 +85,32 @@ int main() {
 		else if(strcmp(command, "quit")==0){
 			break;
 		}
+		else if(strcmp(command, "horizontal")==0 || strcmp(command, "vertical")==0){
+			char* type = strtok(NULL, " ");
+			imageName = strtok(NULL, " ");		
+			detectEdge(command, type ,imageName);
+		}
 		else{
 			strtok(NULL," ");
 			char* buff1 = strtok(NULL," ");
-                        char* cmd = strtok(NULL," ");
-                        char* buff2 = strtok(NULL," ");
+			char* cmd = strtok(NULL," ");
+			char* buff2 = strtok(NULL," ");
 			if(strcmp(cmd,"+")==0){
 				addBuffer(add(buffSearch(buff1, buffers,buffCount), buffSearch(buff2, buffers,buffCount), command),
 					buffers, &buffCount);
 			}
 			else if(strcmp(cmd,"-")==0){
-                                addBuffer(subtract(buffSearch(buff1, buffers,buffCount), buffSearch(buff2, buffers,buffCount), command),
-                                        buffers, &buffCount);
-                        }
+				addBuffer(subtract(buffSearch(buff1, buffers,buffCount), buffSearch(buff2, buffers,buffCount), command),
+						buffers, &buffCount);
+			}
 			else if(strcmp(cmd,"*")==0){
-                                addBuffer(multiply(buffSearch(buff1, buffers,buffCount), buffSearch(buff2, buffers,buffCount), command),
-                                        buffers, &buffCount);
-                        }
+				addBuffer(multiply(buffSearch(buff1, buffers,buffCount), buffSearch(buff2, buffers,buffCount), command),
+						buffers, &buffCount);
+			}
 			else if(strcmp(cmd,"/")==0){
-                                addBuffer(divide(buffSearch(buff1, buffers,buffCount), buffSearch(buff2, buffers,buffCount), command),
-                                        buffers, &buffCount);
-                        }
+				addBuffer(divide(buffSearch(buff1, buffers,buffCount), buffSearch(buff2, buffers,buffCount), command),
+						buffers, &buffCount);
+			}
 			else{
 				printf("\nError: command not found.\n");
 			}
@@ -125,7 +133,11 @@ void printMenu(){
 	printf("multiplication: \"<buffer1> = <buffer2> * <buffer3>\"\n");
 	printf("division: \"<buffer1> = <buffer2> / <buffer3>\"\n");
 	printf("\"brighten <buffer1> into <buffer2>\"\n");
-	printf("\"darken <buffer1> into <buffer2>\"\n\n");
+	printf("\"darken <buffer1> into <buffer2>\"\n");
+	printf("\"horizontal kirsch <image-name>\"\n");
+	printf("\"vertical kirsch <image-name>\"\n\n");
+	printf("\"horizontal prewitt <image-name>\"\n");
+	printf("\"vertical prewitt <image-name>\"\n\n");
 }
 
 
@@ -146,21 +158,21 @@ void addBuffer(struct buff buffer, struct buff* buffers, int* buffCount){
         	}
         }
 	if(k == -1){
-                buffers[*buffCount].img = buffer.img;
-                strcpy(buffers[*buffCount].imageName, buffer.imageName);
+		buffers[*buffCount].img = buffer.img;
+		strcpy(buffers[*buffCount].imageName, buffer.imageName);
 		strcpy(buffers[*buffCount].name, buffer.name);
 		buffers[*buffCount].width = buffer.width;
-        	buffers[*buffCount].height = buffer.height;
-        	buffers[*buffCount].channels = buffer.channels;
+		buffers[*buffCount].height = buffer.height;
+		buffers[*buffCount].channels = buffer.channels;
 		(*buffCount)++;
-        }
-        else{
-                buffers[k].img = buffer.img;
-                strcpy(buffers[k].imageName, buffer.imageName);
-                strcpy(buffers[k].name, buffer.name);
-                buffers[k].width = buffer.width;
-                buffers[k].height = buffer.height;
-                buffers[k].channels = buffer.channels;
+    }
+    else{
+		buffers[k].img = buffer.img;
+		strcpy(buffers[k].imageName, buffer.imageName);
+		strcpy(buffers[k].name, buffer.name);
+		buffers[k].width = buffer.width;
+		buffers[k].height = buffer.height;
+		buffers[k].channels = buffer.channels;
 	}
 }
 

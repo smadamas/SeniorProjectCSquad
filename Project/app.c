@@ -3,6 +3,8 @@
 #include <string.h>
 #include <stdbool.h>
 
+
+
 struct buff{
 	char imageName[30];
 	char name[30];
@@ -14,12 +16,14 @@ struct buff{
 #include "write.c"
 #include "arithmetics.c"
 #include "brighten.c"
+#include "edge.c"
 
 void addBuffer(struct buff buffer, struct buff* buffers, int* buffCount);
 struct buff buffSearch(char* buffName, struct buff* buffers, int buffCount);
 void printBuffer(struct buff* buffer, int buffCount);
 void printMenu();
-
+char *get_filename_ext(const char *filename);
+int check_types(char* ext, char* file_types[]);
 
 int main() {
 	printf("Welcome to the UNIX Image Manipulation tool.\n");
@@ -46,6 +50,13 @@ int main() {
                 }
 		else if(strcmp(command, "read")==0){
 			imageName = strtok(NULL," ");
+			char* ext = get_filename_ext(imageName);
+			char* file_types[5] = {"jpeg","jpg","gif","tiff","png"}; //ALLOW NEW FILE TYPES HERE
+			int approved = check_types(ext, file_types);
+			if(approved != 1 ){
+				printf("Error: Image file type is not approved.\n");
+                exit(1);
+            } 
 			strtok(NULL," ");
 			buffName = strtok(NULL," ");
 			struct buff temp = readToBuff(imageName, buffName);
@@ -79,27 +90,32 @@ int main() {
 		else if(strcmp(command, "quit")==0){
 			break;
 		}
+		else if(strcmp(command, "horizontal")==0 || strcmp(command, "vertical")==0){
+			char* type = strtok(NULL, " ");
+			imageName = strtok(NULL, " ");		
+			detectEdge(command, type ,imageName);
+		}
 		else{
 			strtok(NULL," ");
 			char* buff1 = strtok(NULL," ");
-                        char* cmd = strtok(NULL," ");
-                        char* buff2 = strtok(NULL," ");
+			char* cmd = strtok(NULL," ");
+			char* buff2 = strtok(NULL," ");
 			if(strcmp(cmd,"+")==0){
 				addBuffer(add(buffSearch(buff1, buffers,buffCount), buffSearch(buff2, buffers,buffCount), command),
 					buffers, &buffCount);
 			}
 			else if(strcmp(cmd,"-")==0){
-                                addBuffer(subtract(buffSearch(buff1, buffers,buffCount), buffSearch(buff2, buffers,buffCount), command),
-                                        buffers, &buffCount);
-                        }
+				addBuffer(subtract(buffSearch(buff1, buffers,buffCount), buffSearch(buff2, buffers,buffCount), command),
+						buffers, &buffCount);
+			}
 			else if(strcmp(cmd,"*")==0){
-                                addBuffer(multiply(buffSearch(buff1, buffers,buffCount), buffSearch(buff2, buffers,buffCount), command),
-                                        buffers, &buffCount);
-                        }
+				addBuffer(multiply(buffSearch(buff1, buffers,buffCount), buffSearch(buff2, buffers,buffCount), command),
+						buffers, &buffCount);
+			}
 			else if(strcmp(cmd,"/")==0){
-                                addBuffer(divide(buffSearch(buff1, buffers,buffCount), buffSearch(buff2, buffers,buffCount), command),
-                                        buffers, &buffCount);
-                        }
+				addBuffer(divide(buffSearch(buff1, buffers,buffCount), buffSearch(buff2, buffers,buffCount), command),
+						buffers, &buffCount);
+			}
 			else{
 				printf("\nError: command not found.\n");
 			}
@@ -121,8 +137,17 @@ void printMenu(){
 	printf("subtraction: \"<buffer1> = <buffer2> - <buffer3>\"\n");
 	printf("multiplication: \"<buffer1> = <buffer2> * <buffer3>\"\n");
 	printf("division: \"<buffer1> = <buffer2> / <buffer3>\"\n");
+<<<<<<< HEAD
 	printf("\"brighten <buffer1> into <buffer2> by <value between 0 and 255>\"\n");
 	printf("\"darken <buffer1> into <buffer2> by <value between 0 and 255>\"\n\n");
+=======
+	printf("\"brighten <buffer1> into <buffer2>\"\n");
+	printf("\"darken <buffer1> into <buffer2>\"\n");
+	printf("\"horizontal kirsch <image-name>\"\n");
+	printf("\"vertical kirsch <image-name>\"\n\n");
+	printf("\"horizontal prewitt <image-name>\"\n");
+	printf("\"vertical prewitt <image-name>\"\n\n");
+>>>>>>> b0e00ab028e30ade65ea92ec0fef416d6383e600
 }
 
 
@@ -143,21 +168,21 @@ void addBuffer(struct buff buffer, struct buff* buffers, int* buffCount){
         	}
         }
 	if(k == -1){
-                buffers[*buffCount].img = buffer.img;
-                strcpy(buffers[*buffCount].imageName, buffer.imageName);
+		buffers[*buffCount].img = buffer.img;
+		strcpy(buffers[*buffCount].imageName, buffer.imageName);
 		strcpy(buffers[*buffCount].name, buffer.name);
 		buffers[*buffCount].width = buffer.width;
-        	buffers[*buffCount].height = buffer.height;
-        	buffers[*buffCount].channels = buffer.channels;
+		buffers[*buffCount].height = buffer.height;
+		buffers[*buffCount].channels = buffer.channels;
 		(*buffCount)++;
-        }
-        else{
-                buffers[k].img = buffer.img;
-                strcpy(buffers[k].imageName, buffer.imageName);
-                strcpy(buffers[k].name, buffer.name);
-                buffers[k].width = buffer.width;
-                buffers[k].height = buffer.height;
-                buffers[k].channels = buffer.channels;
+    }
+    else{
+		buffers[k].img = buffer.img;
+		strcpy(buffers[k].imageName, buffer.imageName);
+		strcpy(buffers[k].name, buffer.name);
+		buffers[k].width = buffer.width;
+		buffers[k].height = buffer.height;
+		buffers[k].channels = buffer.channels;
 	}
 
 	printf("New buffer added\n\n");
@@ -172,4 +197,17 @@ struct buff buffSearch(char* buffName, struct buff* buffers, int buffCount){
 	printf("Error: buffer not found.\n");
 	struct buff temp;
 	return temp;
+}
+
+char *get_filename_ext(const char *filename){
+    char *dot = strrchr(filename, '.');
+    if(!dot || dot == filename) return "";
+    return dot + 1;
+}
+int check_types(char* ext, char* file_types[]){
+    for(int i =0; i<5; i++){
+        int temp = strcmp(ext,file_types[i]);
+        if(temp == 0) return 1;
+    }
+    return 0;
 }

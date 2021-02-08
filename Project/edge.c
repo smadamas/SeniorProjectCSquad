@@ -144,12 +144,12 @@ void detectPrewitt(char* orientation, char* imageName){
     FILE *in;
     gdImagePtr result, src;
 
-    float prewitt_mask_horiz[3][3] = {
+    float prewitt_mask_vert[3][3] = {
     {1, 0, -1},
     {1, 0, -1},
     {1, 0, -1} };
 
-    float prewitt_mask_vert[3][3] = {
+    float prewitt_mask_horiz[3][3] = {
     { 1,  1,  1},
     { 0,  0,  0},
     {-1, -1, -1} };
@@ -167,7 +167,7 @@ void detectPrewitt(char* orientation, char* imageName){
         }
         FILE *out;
         char name[50];
-        strcpy(name, "prewitt-");
+        strcpy(name, "sobel-");
         strcat(name, orientation);
         strcat(name, "-");
         strcat(name, temp);

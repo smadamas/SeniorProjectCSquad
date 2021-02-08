@@ -4,33 +4,18 @@
 #include <stdbool.h>
 
 //Change this into the brightening routine which changes the pixels, add truncate function below
-struct buff brighten(struct buff input, char* buffName, bool choice) {
-
-	// printf(input.imageName);
-	// printf("\n");
-	// printf(input.name);
-	// printf("\n");
-	// printf(buffName);
-	// printf("\n%d", choice);
+struct buff brighten(struct buff input, char* buffName, bool choice, int amount) {
 
 	struct buff result;
-	char* ext;
-	ext = strstr(input.imageName, ".png");
-	if (ext == NULL)
-		ext = strstr(input.imageName, ".jpg");
-	if (ext == NULL)
-		ext = strstr(input.imageName, ".tiff");
-	if (ext == NULL)
-		ext = strstr(input.imageName, ".gif");	// Use extension
-
+	
 	// Fill in info for buffer
 	if (choice){
-		strcpy(result.imageName, "brightened");
+		strcpy(result.imageName, "brightened_");
 	}
 	else {
-		strcpy(result.imageName, "darkened");
+		strcpy(result.imageName, "darkened_");
 	}
-	strcat(result.imageName, ext);
+	strcat(result.imageName, input.imageName);
 	strcpy(result.name, buffName);
 	result.width = input.width;
 	result.height = input.height;
@@ -48,30 +33,33 @@ struct buff brighten(struct buff input, char* buffName, bool choice) {
 
 	// Loop through image pixels and brighten or darken
 	for (unsigned char *oldPtr = input.img, *newPtr = result.img; oldPtr != input.img + size; oldPtr += result.channels, newPtr += result.channels) {
-		//printf("%u", oldPtr);
 		if (choice){
 			for (int i = 0; i < 3; i++) {
-				if ((*(oldPtr + i) + 128) > 255)
+				if ((*(oldPtr + i) + amount) > 255)
 					*(newPtr + i) = (uint8_t)255;
 				else
-					*(newPtr + i) = (uint8_t)(*(oldPtr + i) + 128);
+					*(newPtr + i) = (uint8_t)(*(oldPtr + i) + amount);
 			}
 		}
 		else {
 			for (int i = 0; i < 3; i++) {
-				if ((*(oldPtr + i) - 128) < 0)
+				if ((*(oldPtr + i) - amount) < 0)
 					*(newPtr + i) = (uint8_t)0;
 				else
-					*(newPtr + i) = (uint8_t)(*(oldPtr + i) - 128);
+					*(newPtr + i) = (uint8_t)(*(oldPtr + i) - amount);
 			}
 		}
 		
 		if (result.channels == 4)
 			*(newPtr + 3) = *(oldPtr + 3);
 
-		oldPtr += result.channels;
-		newPtr += result.channels;
+	}
 
+	if (choice){
+		printf("\nBrightening completed into %s\n", result.imageName);
+	}
+	else {
+		printf("\nDarkening completed into %s\n", result.imageName);
 	}
 
 	return result;

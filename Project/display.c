@@ -7,43 +7,31 @@
 // use sdl lib
 // use qt lib
 
-void destroy(void) {
+void destroy(void)
+{
   gtk_main_quit();
 }
 
-void displayImage(struct buff input, int   argc, char** argv){
- GtkWidget* window;
-  GtkWidget* image;
+void displayImage(struct buff input, int argc, char **argv)
+{
 
-  gtk_init (&argc, &argv);
+  GtkWidget *window;
+  GtkWidget *image;
 
-    //input.img
-const int Width = input.width, Height = input.height;
-  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  GdkPixbuf *pixbuf = gdk_pixbuf_new_from_data (input.imageName, GDK_COLORSPACE_RGB,
-      FALSE, 8, Width, Height, Width*3, NULL, NULL);
+  gtk_init(&argc, &argv);
 
-  gtk_window_set_title (GTK_WINDOW (window), "Image Viewer");
-
-  g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
-
-  image = gtk_image_new_from_pixbuf (pixbuf);
-  gtk_container_add(GTK_CONTAINER (window), image);
-
-  gtk_widget_show_all (window);
-
-  gtk_main ();
-  // window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   // image  = gtk_image_new_from_file(input.imageName);
+  // image = gtk_image_new_from_pixbuf(input.pixImg);
 
-  // gtk_signal_connect(GTK_OBJECT (window), "destroy",
-  //            GTK_SIGNAL_FUNC (destroy), NULL);
+  gtk_signal_connect(GTK_OBJECT(window), "destroy",
+                     GTK_SIGNAL_FUNC(destroy), NULL);
 
-  // gtk_container_add(GTK_CONTAINER (window), image);
+  gtk_container_add(GTK_CONTAINER(window), input.imgGTK);
 
-  // gtk_widget_show_all(window);
+  gtk_widget_show_all(window);
 
-  // gtk_main();
+  gtk_main();
 }
 
 // #include <SDL/SDL.h>
@@ -100,7 +88,7 @@ const int Width = input.width, Height = input.height;
 
 // void displayImage(struct buff input, int argc, char * argv[])
 // {
-  
+
 //     (void)argc, (void)argv;
 //     static uint8_t buffer[WIDTH * HEIGHT * 3];
 

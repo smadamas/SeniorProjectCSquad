@@ -6,4 +6,5 @@ Project/run
 *.tiff
 *jpeg
 Project/test.c
+Project/test
 Project/temp

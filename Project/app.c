@@ -3,8 +3,6 @@
 #include <string.h>
 #include <stdbool.h>
 
-
-
 struct buff{
 	char imageName[30];
 	char name[30];
@@ -95,7 +93,7 @@ int main() {
 			imageName = strtok(NULL, " ");		
 			detectEdge(command, type ,imageName);
 		}
-		else{
+		else if(strcmp(command, "addition")==0 || strcmp(command, "subtraction")==0 || strcmp(command, "division")==0 || strcmp(command, "multiplication")==0){
 			strtok(NULL," ");
 			char* buff1 = strtok(NULL," ");
 			char* cmd = strtok(NULL," ");
@@ -117,14 +115,16 @@ int main() {
 						buffers, &buffCount);
 			}
 			else{
-				printf("\nError: command not found.\n");
+				printf("\nError: Arithmetic syntax incorrect\n");
 			}
 		}
+		else {
+			printf("\nCommand not found or not supported, please try again.\n\n");
+		} 
 
 		gets(p);
 	}
 
-   	return 0;
 }
 
 void printMenu(){
@@ -137,17 +137,9 @@ void printMenu(){
 	printf("subtraction: \"<buffer1> = <buffer2> - <buffer3>\"\n");
 	printf("multiplication: \"<buffer1> = <buffer2> * <buffer3>\"\n");
 	printf("division: \"<buffer1> = <buffer2> / <buffer3>\"\n");
-<<<<<<< HEAD
-	printf("\"brighten <buffer1> into <buffer2> by <value between 0 and 255>\"\n");
-	printf("\"darken <buffer1> into <buffer2> by <value between 0 and 255>\"\n\n");
-=======
 	printf("\"brighten <buffer1> into <buffer2>\"\n");
 	printf("\"darken <buffer1> into <buffer2>\"\n");
-	printf("\"horizontal kirsch <image-name>\"\n");
-	printf("\"vertical kirsch <image-name>\"\n\n");
-	printf("\"horizontal prewitt <image-name>\"\n");
-	printf("\"vertical prewitt <image-name>\"\n\n");
->>>>>>> b0e00ab028e30ade65ea92ec0fef416d6383e600
+	printf("\"<horizontal/vertical> <kirsch/prewitt/sobel> <image-name>\"\n\n");
 }
 
 

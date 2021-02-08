@@ -18,7 +18,7 @@ void detectEdge(char* orientation, char* type, char* imageName){
     else{
         printf("Error: edge detection method not supported.\n\n");
     }
-
+	printf("\nCreated edge detection %s_%s_%s\n", type, orientation, imageName);
 
 }
 
@@ -167,7 +167,7 @@ void detectPrewitt(char* orientation, char* imageName){
         }
         FILE *out;
         char name[50];
-        strcpy(name, "sobel-");
+        strcpy(name, "prewitt-");
         strcat(name, orientation);
         strcat(name, "-");
         strcat(name, temp);

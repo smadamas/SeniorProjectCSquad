@@ -6,8 +6,8 @@
 
 
 struct buff{
-	char imageName[15];
-	char name[15];
+	char imageName[30];
+	char name[30];
 	unsigned char* img;
 	int width, height, channels;
 };
@@ -17,14 +17,16 @@ struct buff{
 #include "arithmetics.c"
 #include "brighten.c"
 #include "edge.c"
+#include "display.c"
 
 void addBuffer(struct buff buffer, struct buff* buffers, int* buffCount);
 struct buff buffSearch(char* buffName, struct buff* buffers, int buffCount);
 void printBuffer(struct buff* buffer, int buffCount);
 void printMenu();
+char *get_filename_ext(const char *filename);
+int check_types(char* ext, char* file_types[]);
 
-
-int main() {
+int main(int   argc, char** argv) {
 	printf("Welcome to the UNIX Image Manipulation tool.\n");
 	printf("Type \"menu\" to view the list of commands or \"list\" to view your buffers.\n\n");
 
@@ -39,6 +41,7 @@ int main() {
 		char *command;
 		char *imageName;
 		char *buffName;
+		char *amount;
 
 		command = strtok(p," ");
 
@@ -48,6 +51,13 @@ int main() {
                 }
 		else if(strcmp(command, "read")==0){
 			imageName = strtok(NULL," ");
+			char* ext = get_filename_ext(imageName);
+			char* file_types[5] = {"jpeg","jpg","gif","tiff","png"}; //ALLOW NEW FILE TYPES HERE
+			int approved = check_types(ext, file_types);
+			if(approved != 1 ){
+				printf("Error: Image file type is not approved.\n");
+                exit(1);
+            } 
 			strtok(NULL," ");
 			buffName = strtok(NULL," ");
 			struct buff temp = readToBuff(imageName, buffName);
@@ -66,13 +76,23 @@ int main() {
 			buffName = strtok(NULL, " ");
 			strtok(NULL, " ");
 			imageName = strtok(NULL," ");
-			brighten(buffSearch(buffName, buffers, buffCount), imageName, true);
+			strtok(NULL, " ");
+			amount = strtok(NULL, " ");
+			addBuffer(brighten(buffSearch(buffName, buffers, buffCount), imageName, true, atoi(amount)), buffers, &buffCount);
 		}
 		else if(strcmp(command, "darken")==0){
 			buffName = strtok(NULL, " ");
 			strtok(NULL, " ");
 			imageName = strtok(NULL," ");
-			brighten(buffSearch(buffName, buffers, buffCount), imageName, false);
+			strtok(NULL, " ");
+			amount = strtok(NULL, " ");
+			addBuffer(brighten(buffSearch(buffName, buffers, buffCount), imageName, false, atoi(amount)), buffers, &buffCount);
+		}
+		else if(strcmp(command, "display")==0){
+			buffName = strtok(NULL, " ");
+			printf("in display");
+			displayImage(buffSearch(buffName, buffers, buffCount), argc, argv);
+			// displayImage(buffName);
 		}
 		else if(strcmp(command, "quit")==0){
 			break;
@@ -118,6 +138,7 @@ void printMenu(){
 	printf("\n----- Commands -----\n");
 	printf("\"quit\"\n");
 	printf("\"list\"\n");
+	printf("\"display <buffer-name>\"\n");
 	printf("\"read <image-name> into <buffer-name>\"\n");
 	printf("\"write <buffer-name> into <image-name>\"\n");
 	printf("addition: \"<buffer1> = <buffer2> + <buffer3>\"\n");
@@ -164,6 +185,8 @@ void addBuffer(struct buff buffer, struct buff* buffers, int* buffCount){
 		buffers[k].height = buffer.height;
 		buffers[k].channels = buffer.channels;
 	}
+
+	printf("New buffer added\n\n");
 }
 
 struct buff buffSearch(char* buffName, struct buff* buffers, int buffCount){
@@ -175,4 +198,17 @@ struct buff buffSearch(char* buffName, struct buff* buffers, int buffCount){
 	printf("Error: buffer not found.\n");
 	struct buff temp;
 	return temp;
+}
+
+char *get_filename_ext(const char *filename){
+    char *dot = strrchr(filename, '.');
+    if(!dot || dot == filename) return "";
+    return dot + 1;
+}
+int check_types(char* ext, char* file_types[]){
+    for(int i =0; i< 3; i++){
+        int temp = strcmp(ext,file_types[i]);
+        if(temp == 0) return 1;
+    }
+    return 0;
 }

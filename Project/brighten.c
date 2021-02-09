@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-//Change this into the brightening routine which changes the pixels, add truncate function below
+//Brightening routine can accept darken or brightne commandds based on bool choice
 struct buff brighten(struct buff input, char* buffName, bool choice, int amount) {
 
 	struct buff result;
@@ -33,7 +33,6 @@ struct buff brighten(struct buff input, char* buffName, bool choice, int amount)
 
 	// Loop through image pixels and brighten or darken
 	for (unsigned char *oldPtr = input.img, *newPtr = result.img; oldPtr != input.img + size; oldPtr += result.channels, newPtr += result.channels) {
-
 		if (choice){
 			for (int i = 0; i < 3; i++) {
 				if ((*(oldPtr + i) + amount) > 255)
@@ -65,3 +64,4 @@ struct buff brighten(struct buff input, char* buffName, bool choice, int amount)
 
 	return result;
 }
+

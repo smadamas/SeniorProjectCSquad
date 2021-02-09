@@ -3,8 +3,6 @@
 #include <string.h>
 #include <stdbool.h>
 
-
-
 struct buff{
 	char imageName[30];
 	char name[30];
@@ -25,6 +23,7 @@ void printBuffer(struct buff* buffer, int buffCount);
 void printMenu();
 char *get_filename_ext(const char *filename);
 int check_types(char* ext, char* file_types[]);
+
 
 int main(int   argc, char** argv) {
 	printf("Welcome to the UNIX Image Manipulation tool.\n");
@@ -87,6 +86,7 @@ int main(int   argc, char** argv) {
 			strtok(NULL, " ");
 			amount = strtok(NULL, " ");
 			addBuffer(brighten(buffSearch(buffName, buffers, buffCount), imageName, false, atoi(amount)), buffers, &buffCount);
+
 		}
 		else if(strcmp(command, "display")==0){
 			buffName = strtok(NULL, " ");
@@ -102,7 +102,7 @@ int main(int   argc, char** argv) {
 			imageName = strtok(NULL, " ");		
 			detectEdge(command, type ,imageName);
 		}
-		else{
+		else if(strcmp(command, "addition")==0 || strcmp(command, "subtraction")==0 || strcmp(command, "division")==0 || strcmp(command, "multiplication")==0){
 			strtok(NULL," ");
 			char* buff1 = strtok(NULL," ");
 			char* cmd = strtok(NULL," ");
@@ -124,14 +124,16 @@ int main(int   argc, char** argv) {
 						buffers, &buffCount);
 			}
 			else{
-				printf("\nError: command not found.\n");
+				printf("\nError: Arithmetic syntax incorrect\n");
 			}
 		}
+		else {
+			printf("\nCommand not found or not supported, please try again.\n\n");
+		} 
 
 		gets(p);
 	}
 
-   	return 0;
 }
 
 void printMenu(){
@@ -147,8 +149,7 @@ void printMenu(){
 	printf("division: \"<buffer1> = <buffer2> / <buffer3>\"\n");
 	printf("\"brighten <buffer1> into <buffer2>\"\n");
 	printf("\"darken <buffer1> into <buffer2>\"\n");
-	printf("\"horizontal kirsch <image-name>\"\n");
-	printf("\"vertical kirsch <image-name>\"\n\n");
+	printf("\"<horizontal/vertical> <kirsch/prewitt/sobel> <image-name>\"\n\n");
 }
 
 

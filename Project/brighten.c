@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-//Change this into the brightening routine which changes the pixels, add truncate function below
+//Brightening routine can accept darken or brightne commandds based on bool choice
 struct buff brighten(struct buff input, char* buffName, bool choice, int amount) {
 
 	struct buff result;
@@ -64,3 +64,4 @@ struct buff brighten(struct buff input, char* buffName, bool choice, int amount)
 
 	return result;
 }
+

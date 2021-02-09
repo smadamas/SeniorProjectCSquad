@@ -15,6 +15,7 @@ struct buff{
 #include "arithmetics.c"
 #include "brighten.c"
 #include "edge.c"
+#include "display.c"
 
 void addBuffer(struct buff buffer, struct buff* buffers, int* buffCount);
 struct buff buffSearch(char* buffName, struct buff* buffers, int buffCount);
@@ -23,7 +24,8 @@ void printMenu();
 char *get_filename_ext(const char *filename);
 int check_types(char* ext, char* file_types[]);
 
-int main() {
+
+int main(int   argc, char** argv) {
 	printf("Welcome to the UNIX Image Manipulation tool.\n");
 	printf("Type \"menu\" to view the list of commands or \"list\" to view your buffers.\n\n");
 
@@ -84,6 +86,13 @@ int main() {
 			strtok(NULL, " ");
 			amount = strtok(NULL, " ");
 			addBuffer(brighten(buffSearch(buffName, buffers, buffCount), imageName, false, atoi(amount)), buffers, &buffCount);
+
+		}
+		else if(strcmp(command, "display")==0){
+			buffName = strtok(NULL, " ");
+			printf("in display");
+			displayImage(buffSearch(buffName, buffers, buffCount), argc, argv);
+			// displayImage(buffName);
 		}
 		else if(strcmp(command, "quit")==0){
 			break;
@@ -131,6 +140,7 @@ void printMenu(){
 	printf("\n----- Commands -----\n");
 	printf("\"quit\"\n");
 	printf("\"list\"\n");
+	printf("\"display <buffer-name>\"\n");
 	printf("\"read <image-name> into <buffer-name>\"\n");
 	printf("\"write <buffer-name> into <image-name>\"\n");
 	printf("addition: \"<buffer1> = <buffer2> + <buffer3>\"\n");
@@ -197,7 +207,8 @@ char *get_filename_ext(const char *filename){
     return dot + 1;
 }
 int check_types(char* ext, char* file_types[]){
-    for(int i =0; i<5; i++){
+
+    for(int i =0; i< 3; i++){
         int temp = strcmp(ext,file_types[i]);
         if(temp == 0) return 1;
     }

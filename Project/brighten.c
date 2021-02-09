@@ -33,6 +33,7 @@ struct buff brighten(struct buff input, char* buffName, bool choice, int amount)
 
 	// Loop through image pixels and brighten or darken
 	for (unsigned char *oldPtr = input.img, *newPtr = result.img; oldPtr != input.img + size; oldPtr += result.channels, newPtr += result.channels) {
+
 		if (choice){
 			for (int i = 0; i < 3; i++) {
 				if ((*(oldPtr + i) + amount) > 255)

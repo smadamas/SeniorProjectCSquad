@@ -72,7 +72,9 @@ int main(int argc, char **argv)
 			buffName = strtok(NULL, " ");
 			strtok(NULL, " ");
 			imageName = strtok(NULL, " ");
+			printf("\nWriting %s into %s...\n", buffName, imageName);
 			writeToImage(buffSearch(buffName, buffers, buffCount), imageName);
+			printf("Done writing!\n\n");
 		}
 		else if (strcmp(command, "list") == 0)
 		{

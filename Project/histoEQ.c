@@ -12,7 +12,7 @@
 struct buff histogramEqualisation(struct buff a, char *buffName)
 {
     // creating image pointer
-    unsigned char image[40000];
+    unsigned char* image;
 
     //Instantiating Rows and Cols
     int cols = a.width;
@@ -28,7 +28,13 @@ struct buff histogramEqualisation(struct buff a, char *buffName)
 
     // allocating image array the size equivalent to number of columns
     // of the image to read one row of an image at a time
-    // image = (unsigned char *)calloc(cols, sizeof(unsigned char));
+    image = (unsigned char *)calloc(cols, sizeof(unsigned char));
+
+    if (image == NULL)
+    {
+        printf("Unable to allocate memory for the image.\n");
+        exit(1);
+    }
 
     // Calculating frequency of occurrence for all pixel values
     for (row = 0; row < rows; row++)
@@ -38,11 +44,12 @@ struct buff histogramEqualisation(struct buff a, char *buffName)
         //image[0] =
         for (int i = 0; i < cols; i++)
         {
+            // Read a row
             image[i] = a.img[row + i];
         }
         // logic for calculating histogram
         for (col = 0; col < cols; col++)
-            hist[(int)a.img[row + col]]++;
+            hist[(int)image[row + col]]++;
     }
 
     // calculating total number of pixels
@@ -66,12 +73,14 @@ struct buff histogramEqualisation(struct buff a, char *buffName)
     struct buff newBuff;
     size_t size = newBuff.width * newBuff.height * newBuff.channels; // Allocate memory for result
                                                                      // unsigned char *result_img = malloc(size * sizeof(unsigned char));
-    unsigned char result_img[40000];
-    // if (result_img == NULL)
-    // {
-    //     printf("Unable to allocate memory for the image.\n");
-    //     exit(1);
-    // }
+    unsigned char* result_img;
+    result_img = (unsigned char *)calloc(cols * rows, sizeof(unsigned char));
+
+    if (result_img == NULL)
+    {
+        printf("Unable to allocate memory for the image.\n");
+        exit(1);
+    }
 
     // performing histogram equalisation by mapping new gray levels
     for (row = 0; row < rows; row++)
@@ -124,10 +133,9 @@ struct buff histogramEqualisation(struct buff a, char *buffName)
     newBuff.img = result_img;
 
     // freeing dynamically allocated memory
-    // free(image);
+    free(image);
     // free(result_img);
-    // closing input and output files
-    //close(input_file);
+
 
     return newBuff;
 }

@@ -124,12 +124,20 @@ int main(int argc, char **argv)
 			{
 				detectEdge("vertical", type, imageName);
 				detectEdge("horizontal", type, imageName);
-				struct buff temp1 = readToBuff("sobel-vertical-abc.png", "sobelvert");
-				struct buff temp2 = readToBuff("sobel-horizontal-abc.png", "sobelhoriz");
+				char vertname[50];
+				char horizname[50];
+				strcpy(vertname, "sobel-vertical-");
+				strcat(vertname, imageName);
+				strcpy(horizname, "sobel-horizontal-");
+				strcat(horizname, imageName);
+				struct buff temp1 = readToBuff(vertname, "sobelvert");
+				struct buff temp2 = readToBuff(horizname, "sobelhoriz");
 				addBuffer(temp1, buffers, &buffCount);
 				addBuffer(temp2, buffers, &buffCount);
 				addBuffer(sobel(buffSearch("sobelvert", buffers, buffCount), buffSearch("sobelhoriz", buffers, buffCount), "sobel"),
 						  buffers, &buffCount);
+				//remove("sobel-vertical-abc.png");
+				//remove("sobel-horizontal-abc.png");
 			}
 			else
 			{

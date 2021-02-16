@@ -101,7 +101,7 @@ struct buff histogramEqualisation(struct buff a, char *buffName)
     }
     int index = 0;
     for (img = a.img; img < limit; img++){
-        *result_img = result[(unsigned long)*img];
+        *result_img = (unsigned char)result[(unsigned long)*img];
         result_img++; //Increment output pointer
     }
 

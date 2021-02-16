@@ -6,7 +6,7 @@
 
 struct buff
 {
-	char imageName[30];
+	char imageName[32];
 	char name[30];
 	char status[30];
 	unsigned char *img;
@@ -54,27 +54,39 @@ int main(int argc, char **argv)
 		else if (strcmp(command, "read") == 0)
 		{
 			imageName = strtok(NULL, " ");
-			char *ext = get_filename_ext(imageName);
-			char *file_types[5] = {"jpeg", "jpg", "gif", "tiff", "png"}; //ALLOW NEW FILE TYPES HERE
-			int approved = check_types(ext, file_types);
-			if (approved != 1)
-			{
-				printf("Error: Image file type is not approved.\n");
-				exit(1);
+			if (strlen(imageName) > 14){
+				printf("Image name too long. Image + extension must be shorter than 11 characters.\n");
 			}
-			strtok(NULL, " ");
-			buffName = strtok(NULL, " ");
-			struct buff temp = readToBuff(imageName, buffName);
-			addBuffer(temp, buffers, &buffCount);
+			else {
+				char *ext = get_filename_ext(imageName);
+				char *file_types[5] = {"jpeg", "jpg", "gif", "tiff", "png"}; //ALLOW NEW FILE TYPES HERE
+				int approved = check_types(ext, file_types);
+				if (approved != 1)
+				{
+					printf("Error: Image file type is not approved.\n");
+					exit(1);
+				}
+				strtok(NULL, " ");
+				buffName = strtok(NULL, " ");
+				struct buff temp = readToBuff(imageName, buffName);
+				addBuffer(temp, buffers, &buffCount);
+			}
+			
 		}
 		else if (strcmp(command, "write") == 0)
 		{
 			buffName = strtok(NULL, " ");
 			strtok(NULL, " ");
 			imageName = strtok(NULL, " ");
-			printf("\nWriting %s into %s...\n", buffName, imageName);
-			writeToImage(buffSearch(buffName, buffers, buffCount), imageName);
-			printf("Done writing!\n\n");
+			if (strlen(imageName) > 14){
+				printf("Image name too long. Image + extension must be shorter than 11 characters.\n");
+			}
+			else {
+				printf("\nWriting %s into %s...\n", buffName, imageName);
+				writeToImage(buffSearch(buffName, buffers, buffCount), imageName);
+				printf("Done writing!\n\n");
+			}
+			
 		}
 		else if (strcmp(command, "list") == 0)
 		{
@@ -85,18 +97,30 @@ int main(int argc, char **argv)
 			buffName = strtok(NULL, " ");
 			strtok(NULL, " ");
 			imageName = strtok(NULL, " ");
-			strtok(NULL, " ");
-			amount = strtok(NULL, " ");
-			addBuffer(brighten(buffSearch(buffName, buffers, buffCount), imageName, true, atoi(amount)), buffers, &buffCount);
+			if (strlen(imageName) > 14){
+				printf("Image name too long. Image + extension must be shorter than 11 characters.\n");
+			}
+			else {
+				strtok(NULL, " ");
+				amount = strtok(NULL, " ");
+				addBuffer(brighten(buffSearch(buffName, buffers, buffCount), imageName, true, atoi(amount)), buffers, &buffCount);
+			}
+			
 		}
 		else if (strcmp(command, "darken") == 0)
 		{
 			buffName = strtok(NULL, " ");
 			strtok(NULL, " ");
 			imageName = strtok(NULL, " ");
-			strtok(NULL, " ");
-			amount = strtok(NULL, " ");
-			addBuffer(brighten(buffSearch(buffName, buffers, buffCount), imageName, false, atoi(amount)), buffers, &buffCount);
+			if (strlen(imageName) > 14){
+				printf("Image name too long. Image + extension must be shorter than 11 characters.\n");
+			}
+			else {
+				strtok(NULL, " ");
+				amount = strtok(NULL, " ");
+				addBuffer(brighten(buffSearch(buffName, buffers, buffCount), imageName, false, atoi(amount)), buffers, &buffCount);
+			}
+			
 		}
 		else if (strcmp(command, "display") == 0)
 		{
@@ -120,29 +144,35 @@ int main(int argc, char **argv)
 		{
 			char *type = strtok(NULL, " ");
 			imageName = strtok(NULL, " ");
-			if (strcmp(type, "sobel") == 0)
-			{
-				detectEdge("vertical", type, imageName);
-				detectEdge("horizontal", type, imageName);
-				char vertname[50];
-				char horizname[50];
-				strcpy(vertname, "sobel-vertical-");
-				strcat(vertname, imageName);
-				strcpy(horizname, "sobel-horizontal-");
-				strcat(horizname, imageName);
-				struct buff temp1 = readToBuff(vertname, "sobelvert");
-				struct buff temp2 = readToBuff(horizname, "sobelhoriz");
-				addBuffer(temp1, buffers, &buffCount);
-				addBuffer(temp2, buffers, &buffCount);
-				addBuffer(sobel(buffSearch("sobelvert", buffers, buffCount), buffSearch("sobelhoriz", buffers, buffCount), "sobel"),
-						  buffers, &buffCount);
-				//remove("sobel-vertical-abc.png");
-				//remove("sobel-horizontal-abc.png");
+			if (strlen(imageName) > 14){
+				printf("Image name too long. Image + extension must be shorter than 11 characters.\n");
 			}
-			else
-			{
-				detectEdge(command, type, imageName);
+			else {
+				if (strcmp(type, "sobel") == 0)
+				{
+					detectEdge("vertical", type, imageName);
+					detectEdge("horizontal", type, imageName);
+					char vertname[50];
+					char horizname[50];
+					strcpy(vertname, "sobel-vertical-");
+					strcat(vertname, imageName);
+					strcpy(horizname, "sobel-horizontal-");
+					strcat(horizname, imageName);
+					struct buff temp1 = readToBuff(vertname, "sobelvert");
+					struct buff temp2 = readToBuff(horizname, "sobelhoriz");
+					addBuffer(temp1, buffers, &buffCount);
+					addBuffer(temp2, buffers, &buffCount);
+					addBuffer(sobel(buffSearch("sobelvert", buffers, buffCount), buffSearch("sobelhoriz", buffers, buffCount), "sobel"),
+							buffers, &buffCount);
+					//remove("sobel-vertical-abc.png");
+					//remove("sobel-horizontal-abc.png");
+				}
+				else
+				{
+					detectEdge(command, type, imageName);
+				}
 			}
+			
 		}
 		else if (strcmp(command, "addition") == 0 || strcmp(command, "subtraction") == 0 || strcmp(command, "division") == 0 || strcmp(command, "multiplication") == 0)
 		{

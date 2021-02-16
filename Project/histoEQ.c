@@ -17,14 +17,24 @@ struct buff histogramEqualisation(struct buff a, char *buffName)
     //Instantiating Rows and Cols
     int cols = a.width;
     int rows = a.height;
+    printf("\n\n%d", a.channels);
 
     // Declaring 2 arrays for storing histogram values (frequencies) and
     // new gray level values (newly mapped pixel values as per algorithm)
-    int hist[256] = {0};
-    int new_gray_level[256] = {0};
+    int hist[256];
+    int new_gray_level[256];
+
+    for (int i = 0; i < 256; i++){
+        hist[i] = 0;
+        new_gray_level[i] = 0;
+    }
 
     // Declaring other important variables
-    int col, row, total, curr, i;
+    int col, row, total, i;
+    unsigned long curr, cdf_min;
+    total = cols * rows;
+
+    curr = 0;
 
     // allocating image array the size equivalent to number of columns
     // of the image to read one row of an image at a time
@@ -37,44 +47,45 @@ struct buff histogramEqualisation(struct buff a, char *buffName)
     }
 
     // Calculating frequency of occurrence for all pixel values
-    for (row = 0; row < rows; row++)
-    {
-        // reading a row of image
-        //read(input_file, &image[0], cols * sizeof(unsigned char));
-        //image[0] =
-        for (int i = 0; i < cols; i++)
-        {
-            // Read a row
-            image[i] = a.img[row + i];
-        }
-        // logic for calculating histogram
-        for (col = 0; col < cols; col++)
-            hist[(int)image[row + col]]++;
+    // New way 
+
+    unsigned char* img;
+    img = a.img;
+    const unsigned char* limit = a.img + total;
+
+    for(img = a.img; img < limit; img++){
+        hist[*img]++;
     }
 
-    // calculating total number of pixels
-    total = cols * rows;
-
-    curr = 0;
-
-    // calculating cumulative frequency and new gray levels
-    for (i = 0; i < 256; i++)
-    {
+    // calculating CDF (works)
+    float cdf[256];
+    for (i = 0; i < 256; i++){
         // cumulative frequency
         curr += hist[i];
-
-        // calculating new gray level after multiplying by
-        // maximum gray count which is 255 and dividing by
-        // total number of pixels
-        new_gray_level[i] = round((((float)curr) * 255) / total);
+        cdf[i] = curr;
+    }
+    for(i = 0; i < 256; i++){
+        if(cdf[i] != 0){
+            cdf_min = cdf[i];
+            break;
+        }
     }
 
     //Allocate for output
     struct buff newBuff;
-    size_t size = newBuff.width * newBuff.height * newBuff.channels; // Allocate memory for result
+    size_t size = cols * rows * 1; // Allocate memory for result
                                                                      // unsigned char *result_img = malloc(size * sizeof(unsigned char));
+    unsigned long* result;
+    result = (unsigned long *)calloc(size, sizeof(unsigned long));
+
+    if (result == NULL)
+    {
+        printf("Unable to allocate memory for the histogram.\n");
+        exit(1);
+    }
+
     unsigned char* result_img;
-    result_img = (unsigned char *)calloc(cols * rows, sizeof(unsigned char));
+    result_img = (unsigned char *)calloc(size, sizeof(unsigned char));
 
     if (result_img == NULL)
     {
@@ -82,40 +93,25 @@ struct buff histogramEqualisation(struct buff a, char *buffName)
         exit(1);
     }
 
-    // performing histogram equalisation by mapping new gray levels
-    for (row = 0; row < rows; row++)
-    {
-        // reading a row of image
-        //read(input_file, &image[0], cols * sizeof(unsigned char));
-        for (int i = 0; i < cols; i++)
-        {
-            image[i] = a.img[row + i];
-        }
-        // mapping to new gray level values
-        for (col = 0; col < cols; col++)
-            image[col] = (unsigned char)new_gray_level[image[col]];
+    const double k = 255.0 / (total - cdf_min);
 
-        // reading new gray level mapped row of image
-        //write(output_file, &image[0], cols * sizeof(unsigned char));
-        for (int i = 0; i < cols; i++)
-        {
-            result_img[row + i] = a.img[row + i];
-        }
+    for (i = 0; i < 256; i++)
+    {
+        result[i] = (unsigned long)(k*(cdf[i] - cdf_min));
+    }
+    int index = 0;
+    for (img = a.img; img < limit; img++){
+        *result_img = result[(unsigned long)*img];
+        result_img++; //Increment output pointer
     }
 
+
     // Fill in info for buffer
-    char *nombre = a.imageName;
-    strcpy(newBuff.imageName, nombre);
-
-    //Need to pass in extension
-    strcat(newBuff.imageName, "extension");
-
-    //Change name
-    char *B_nombre = a.imageName;
-    strcpy(newBuff.name, B_nombre);
+    strcpy(newBuff.imageName, a.imageName);
+    strcpy(newBuff.name, a.name);
     newBuff.width = a.width;
     newBuff.height = a.height;
-    newBuff.channels = a.channels;
+    newBuff.channels = 1;
 
     char *ext;
     ext = strstr(a.imageName, ".png");
@@ -126,16 +122,12 @@ struct buff histogramEqualisation(struct buff a, char *buffName)
     if (ext == NULL)
         ext = strstr(a.imageName, ".gif"); // Use extension of a for extension of result
 
-    strcpy(newBuff.imageName, "histEQ");
-    strcat(newBuff.imageName, ext);
-    strcpy(newBuff.name, buffName);
 
     newBuff.img = result_img;
 
     // freeing dynamically allocated memory
-    free(image);
     // free(result_img);
-
+    printf("Done Equalizing");
 
     return newBuff;
 }

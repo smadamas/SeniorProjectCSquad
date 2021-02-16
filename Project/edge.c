@@ -95,9 +95,31 @@ void detectEdge(char* orientation, char* type, char* imageName){
     else if(strcmp(type, "sobel")==0){
         if(strcmp(orientation, "vertical")==0){
             gdImageConvolution(src, sobel_mask_vert, 1.0,0.0);
+/* 			FILE *out;
+			char name[50];
+			strcpy(name, "sobel-");
+			strcat(name, orientation);
+			strcat(name, "-");
+			strcat(name, temp);
+			out = fopen(name, "wb");
+			gdImagePngEx(src, out, 9);                  
+			fclose(out);                               
+			gdImageDestroy(src); */
+			return;
         }
         else if(strcmp(orientation, "horizontal")==0){
             gdImageConvolution(src, sobel_mask_horiz, 1.0,0.0);
+/* 			FILE *out;
+			char name[50];
+			strcpy(name, "sobel-");
+			strcat(name, orientation);
+			strcat(name, "-");
+			strcat(name, temp);
+			out = fopen(name, "wb");
+			gdImagePngEx(src, out, 9);                  
+			fclose(out);                               
+			gdImageDestroy(src); */
+			return;
         }
         else if(strcmp(orientation, "combined")==0){
             gdImageConvolution(src, sobel_mask_vert, 1.0,0.0);

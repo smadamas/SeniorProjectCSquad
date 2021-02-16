@@ -120,7 +120,21 @@ int main(int argc, char **argv)
 		{
 			char *type = strtok(NULL, " ");
 			imageName = strtok(NULL, " ");
-			detectEdge(command, type, imageName);
+			if (strcmp(type, "sobel") == 0)
+			{
+				detectEdge("vertical", type, imageName);
+				detectEdge("horizontal", type, imageName);
+				struct buff temp1 = readToBuff("sobel-vertical-abc.png", "sobelvert");
+				struct buff temp2 = readToBuff("sobel-horizontal-abc.png", "sobelhoriz");
+				addBuffer(temp1, buffers, &buffCount);
+				addBuffer(temp2, buffers, &buffCount);
+				addBuffer(sobel(buffSearch("sobelvert", buffers, buffCount), buffSearch("sobelhoriz", buffers, buffCount), "sobel"),
+						  buffers, &buffCount);
+			}
+			else
+			{
+				detectEdge(command, type, imageName);
+			}
 		}
 		else if (strcmp(command, "addition") == 0 || strcmp(command, "subtraction") == 0 || strcmp(command, "division") == 0 || strcmp(command, "multiplication") == 0)
 		{
@@ -170,13 +184,13 @@ void printMenu()
 	printf("\"display <buffer-name>\"\n");
 	printf("\"read <image-name> into <buffer-name>\"\n");
 	printf("\"write <buffer-name> into <image-name>\"\n");
-	printf("addition: \"<buffer1> = <buffer2> + <buffer3>\"\n");
-	printf("subtraction: \"<buffer1> = <buffer2> - <buffer3>\"\n");
-	printf("multiplication: \"<buffer1> = <buffer2> * <buffer3>\"\n");
-	printf("division: \"<buffer1> = <buffer2> / <buffer3>\"\n");
+	printf("\"addition : <buffer2> + <buffer3>\"\n");
+	printf("\"subtraction : <buffer2> + <buffer3>\"\n");
+	printf("\"multiplication : <buffer2> + <buffer3>\"\n");
+	printf("\"division : <buffer2> + <buffer3>\"\n");
 	printf("\"brighten <buffer1> into <buffer2>\"\n");
 	printf("\"darken <buffer1> into <buffer2>\"\n");
-	printf("\"<horizontal/vertical> <kirsch/prewitt/sobel> <image-name>\"\n\n");
+	printf("\"<horizontal/vertical/combined> <kirsch/prewitt/sobel> <image-name>\"\n\n");
 }
 
 void printBuffer(struct buff *buffers, int buffCount)

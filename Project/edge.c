@@ -7,6 +7,7 @@ void detectEdge(char* orientation, char* type, char* imageName){
     gdImagePtr src, copy;
     char* temp = strtok(imageName, ".");
     char* ext = strtok(NULL," ");
+    int extType;
 
     float kirsch_mask_horiz[3][3] = {
     { 5, 5, 5},
@@ -35,61 +36,101 @@ void detectEdge(char* orientation, char* type, char* imageName){
         
     if (strcmp(ext, "png")==0){
         in = fopen(strcat(temp, ".png"), "rb");
+        extType = 1;
     }
-    else if (strcmp(ext, "jpg")==0){
-        in = fopen(strcat(temp, ".jpg"), "rb");
+    else if (strcmp(ext, "jpg")==0 || strcmp(ext, "jpeg")==0){
+        in = fopen(strcat(temp, ".jpeg"), "rb");
+        extType = 2;
     }
     else if (strcmp(ext, "gif")==0){
         in = fopen(strcat(temp, ".gif"), "rb");
+        extType = 3;
     }
-    else if (strcmp(ext, "tiff")==0){
-        in = fopen(strcat(temp, ".tiff"), "rb");
+    else {
+        printf("This file type is not supported by this function.\n");
+        return;
     }
 
     src = gdImageCreateFromPng(in);
     gdImageGrayScale(src);
-    
     if(strcmp(type, "kirsch")==0){             
         if(strcmp(orientation, "vertical")==0){
             gdImageConvolution(src, kirsch_mask_vert, 1.0,0.0);
+ 			FILE *out;
+			char name[50];
+			strcpy(name, "kirsch-");
+			strcat(name, orientation);
+			strcat(name, "-");
+			strcat(name, temp);
+			out = fopen(name, "wb");
+			gdImagePngEx(src, out, 9);                  
+			fclose(out);                               
+			gdImageDestroy(src);
+			return;
         }
         else if(strcmp(orientation, "horizontal")==0){
             gdImageConvolution(src, kirsch_mask_horiz, 1.0,0.0);
+ 			FILE *out;
+			char name[50];
+			strcpy(name, "kirsch-");
+			strcat(name, orientation);
+			strcat(name, "-");
+			strcat(name, temp);
+			out = fopen(name, "wb");
+			gdImagePngEx(src, out, 9);                  
+			fclose(out);                              
+			gdImageDestroy(src);
+			return;
         }
         else if(strcmp(orientation, "combined")==0){
             gdImageConvolution(src, kirsch_mask_vert, 1.0,0.0);
             copy = gdImageClone(src);
             gdImageConvolution(copy, kirsch_mask_horiz, 1.0,0.0);
-            
-            int height = gdImageSX(src);
-            int width = gdImageSY(src);
-
-            for (int i = 0; i < width; i++){
-                for (int j = 0; j < height; j++){
-                
-                }
-            }
         }
     }
     else if(strcmp(type, "prewitt")==0){
         if(strcmp(orientation, "vertical")==0){
             gdImageConvolution(src, prewitt_mask_vert, 1.0,0.0);
+ 			FILE *out;
+			char name[50];
+			strcpy(name, "prewitt-");
+			strcat(name, orientation);
+			strcat(name, "-");
+			strcat(name, temp);
+			out = fopen(name, "wb");
+
+            //Experiemental trying to get other file types working!
+            switch (extType){
+                case 1:
+                    gdImagePngEx(src, out, 9);
+                case 2:
+                    gdImageJpeg(src, out, -1);
+                case 3:
+                    gdImageGif(src, out);
+            }
+
+			fclose(out);                               
+			gdImageDestroy(src);
+			return;
         }
         else if(strcmp(orientation, "horizontal")==0){
             gdImageConvolution(src, prewitt_mask_horiz, 1.0,0.0);
+ 			FILE *out;
+			char name[50];
+			strcpy(name, "prewitt-");
+			strcat(name, orientation);
+			strcat(name, "-");
+			strcat(name, temp);
+			out = fopen(name, "wb");
+			gdImagePngEx(src, out, 9);                  
+			fclose(out);                              
+			gdImageDestroy(src);
+			return;
         }
         else if(strcmp(orientation, "combined")==0){
             gdImageConvolution(src, prewitt_mask_vert, 1.0,0.0);
             copy = gdImageClone(src);
             gdImageConvolution(copy, prewitt_mask_horiz, 1.0,0.0);
-    
-            int height = gdImageSX(src);
-            int width = gdImageSY(src);
-            for (int i = 0; i < width; i++){
-                for (int j = 0; j < height; j++){
-                
-                }
-            }
         }
     }
     else if(strcmp(type, "sobel")==0){
@@ -125,32 +166,9 @@ void detectEdge(char* orientation, char* type, char* imageName){
             gdImageConvolution(src, sobel_mask_vert, 1.0,0.0);
             copy = gdImageClone(src);
             gdImageConvolution(copy, sobel_mask_horiz, 1.0,0.0);
-            
-            int height = gdImageSX(src);
-            int width = gdImageSY(src);
-            for (int i = 0; i < width; i++){
-                for (int j = 0; j < height; j++){
-                    
-                }
-            }
         }
     }
     else{
         printf("Error: edge detection method not supported.\n\n");
     }
-
-    FILE *out;
-    char name[50];
-    strcpy(name, type);
-    strcat(name, "-");
-    strcat(name, orientation);
-    strcat(name, "-");
-    strcat(name, temp);
-    out = fopen(name, "wb");
-    gdImagePngEx(src, out, 9);                  
-    fclose(out);                               
-    gdImageDestroy(src); gdImageDestroy(copy);
-
-	printf("\nCreated edge detection %s_%s_%s\n", type, orientation, imageName);
-
 }

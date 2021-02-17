@@ -55,7 +55,7 @@ int main(int argc, char **argv)
 		{
 			imageName = strtok(NULL, " ");
 			if (strlen(imageName) > 14){
-				printf("Image name too long. Image + extension must be shorter than 11 characters.\n");
+				printf("Image name too long. Image + extension must be shorter than 14 characters.\n");
 			}
 			else {
 				char *ext = get_filename_ext(imageName);
@@ -79,7 +79,7 @@ int main(int argc, char **argv)
 			strtok(NULL, " ");
 			imageName = strtok(NULL, " ");
 			if (strlen(imageName) > 14){
-				printf("Image name too long. Image + extension must be shorter than 11 characters.\n");
+				printf("Image name too long. Image + extension must be shorter than 14 characters.\n");
 			}
 			else {
 				printf("\nWriting %s into %s...\n", buffName, imageName);
@@ -98,7 +98,7 @@ int main(int argc, char **argv)
 			strtok(NULL, " ");
 			imageName = strtok(NULL, " ");
 			if (strlen(imageName) > 14){
-				printf("Image name too long. Image + extension must be shorter than 11 characters.\n");
+				printf("Image name too long. Image + extension must be shorter than 14 characters.\n");
 			}
 			else {
 				strtok(NULL, " ");
@@ -113,7 +113,7 @@ int main(int argc, char **argv)
 			strtok(NULL, " ");
 			imageName = strtok(NULL, " ");
 			if (strlen(imageName) > 14){
-				printf("Image name too long. Image + extension must be shorter than 11 characters.\n");
+				printf("Image name too long. Image + extension must be shorter than 14 characters.\n");
 			}
 			else {
 				strtok(NULL, " ");
@@ -145,34 +145,134 @@ int main(int argc, char **argv)
 			char *type = strtok(NULL, " ");
 			imageName = strtok(NULL, " ");
 			if (strlen(imageName) > 14){
-				printf("Image name too long. Image + extension must be shorter than 11 characters.\n");
+				printf("Image name too long. Image + extension must be shorter than 14 characters.\n");
 			}
 			else {
-				if (strcmp(type, "sobel") == 0)
-				{
-					detectEdge("vertical", type, imageName);
-					detectEdge("horizontal", type, imageName);
-					char vertname[50];
-					char horizname[50];
-					strcpy(vertname, "sobel-vertical-");
-					strcat(vertname, imageName);
-					strcpy(horizname, "sobel-horizontal-");
-					strcat(horizname, imageName);
-					struct buff temp1 = readToBuff(vertname, "sobelvert");
-					struct buff temp2 = readToBuff(horizname, "sobelhoriz");
-					addBuffer(temp1, buffers, &buffCount);
-					addBuffer(temp2, buffers, &buffCount);
-					addBuffer(sobel(buffSearch("sobelvert", buffers, buffCount), buffSearch("sobelhoriz", buffers, buffCount), "sobel"),
-							buffers, &buffCount);
-					//remove("sobel-vertical-abc.png");
-					//remove("sobel-horizontal-abc.png");
+				detectEdge(command, type, imageName);
+				char name[50];
+				strcpy(name, type);
+				strcat(name, "-");
+				strcat(name, command);
+				strcat(name, "-");
+				strcat(name, imageName);
+
+				struct buff temp1;
+				if (strcmp(type, "sobel") == 0){
+					temp1 = readToBuff(name, strcat(command, "Sob"));
 				}
-				else
-				{
-					detectEdge(command, type, imageName);
+				else if (strcmp(type, "prewitt") == 0){
+					temp1 = readToBuff(name, strcat(command, "Pre"));
 				}
+				else {
+					temp1 = readToBuff(name, strcat(command, "Kir"));
+				}
+				
+				addBuffer(temp1, buffers, &buffCount);
 			}
 			
+		}
+		else if (strcmp(command, "combined") == 0){
+			
+			char *type = strtok(NULL, " ");
+			imageName = strtok(NULL, " ");
+			if (strcmp(type, "sobel") == 0)
+			{
+				detectEdge("vertical", type, imageName);
+				detectEdge("horizontal", type, imageName);
+				char vertname[50];
+				char horizname[50];
+				strcpy(vertname, "sobel-vertical-");
+				strcat(vertname, imageName);
+				strcpy(horizname, "sobel-horizontal-");
+				strcat(horizname, imageName);
+				struct buff temp1 = readToBuff(vertname, "sobelvert");
+				struct buff temp2 = readToBuff(horizname, "sobelhoriz");
+				addBuffer(temp1, buffers, &buffCount);
+				addBuffer(temp2, buffers, &buffCount);
+				addBuffer(combine(buffSearch("sobelvert", buffers, buffCount), buffSearch("sobelhoriz", buffers, buffCount), "combined"),
+						  buffers, &buffCount);
+			}
+			else if (strcmp(type, "prewitt") == 0)
+			{
+				detectEdge("vertical", type, imageName);
+				detectEdge("horizontal", type, imageName);
+				char vertname[50];
+				char horizname[50];
+				strcpy(vertname, "prewitt-vertical-");
+				strcat(vertname, imageName);
+				strcpy(horizname, "prewitt-horizontal-");
+				strcat(horizname, imageName);
+				struct buff temp1 = readToBuff(vertname, "prewittvert");
+				struct buff temp2 = readToBuff(horizname, "prewitthoriz");
+				addBuffer(temp1, buffers, &buffCount);
+				addBuffer(temp2, buffers, &buffCount);
+				addBuffer(combine(buffSearch("prewittvert", buffers, buffCount), buffSearch("prewitthoriz", buffers, buffCount), "combined"),
+						  buffers, &buffCount);
+			}
+			else if (strcmp(type, "kirsch") == 0)
+			{
+				detectEdge("vertical", type, imageName);
+				detectEdge("horizontal", type, imageName);
+				char vertname[50];
+				char horizname[50];
+				strcpy(vertname, "kirsch-vertical-");
+				strcat(vertname, imageName);
+				strcpy(horizname, "kirsch-horizontal-");
+				strcat(horizname, imageName);
+				struct buff temp1 = readToBuff(vertname, "kirschvert");
+				struct buff temp2 = readToBuff(horizname, "kirschhoriz");
+				addBuffer(temp1, buffers, &buffCount);
+				addBuffer(temp2, buffers, &buffCount);
+				addBuffer(combine(buffSearch("kirschvert", buffers, buffCount), buffSearch("kirschhoriz", buffers, buffCount), "combined"),
+						  buffers, &buffCount);
+			}
+			
+			/*
+			char *type = strtok(NULL, " ");
+			imageName = strtok(NULL, " ");
+			if (strlen(imageName) > 14){
+				printf("Image name too long. Image + extension must be shorter than 14 characters.\n");
+			}
+			else {
+				detectEdge("vertical", type, imageName);
+				detectEdge("horizontal", type, imageName);
+				char vertname[50];
+				char horizname[50];
+				strcpy(vertname, type);
+				strcat(vertname, "-");
+				strcat(vertname, command);
+				strcat(vertname, "-");
+				strcat(vertname, imageName);
+				strcpy(horizname, type);
+				strcat(horizname, "-horiz-");
+				strcat(horizname, imageName);
+
+				char vertBuffLabel[50];
+				char horizBuffLabel[50];
+				if (strcmp(type, "sobel") == 0){
+					strcpy(vertBuffLabel, "vertSob");
+					strcpy(horizBuffLabel, "horizSob");
+				}
+				else if (strcmp(type, "prewitt") == 0){
+					strcpy(vertBuffLabel, "vertPre");
+					strcpy(horizBuffLabel, "horizPre");
+				}
+				else {
+					strcpy(vertBuffLabel, "vertKir");
+					strcpy(horizBuffLabel, "horizKir");
+				}
+
+				
+				struct buff temp1;
+				temp1 = readToBuff(vertname, vertBuffLabel);
+				struct buff temp2 = readToBuff(horizname, horizBuffLabel);
+				addBuffer(temp1, buffers, &buffCount);
+				addBuffer(temp2, buffers, &buffCount);
+				struct buff temp3 = combine(buffSearch("label1", buffers, buffCount), buffSearch("label2", buffers, buffCount), type);
+				addBuffer(temp3, buffers, &buffCount); 
+				
+			}
+			*/
 		}
 		else if (strcmp(command, "addition") == 0 || strcmp(command, "subtraction") == 0 || strcmp(command, "division") == 0 || strcmp(command, "multiplication") == 0)
 		{

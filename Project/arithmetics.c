@@ -214,8 +214,8 @@ struct buff divide(struct buff a, struct buff b, char* buffName) {
 	return result;
 }
 
-// sobel
-struct buff sobel(struct buff a, struct buff b, char* buffName) {
+// Combining sobel/prewitt/kirsch
+struct buff combine(struct buff a, struct buff b, char* buffName) {
 	if ((a.width != b.width) || (a.height != b.height) || (a.channels != b.channels)) { // Check for correct dimensions
 		printf("Wrong dimensions.\n");
 		exit(1);
@@ -232,7 +232,7 @@ struct buff sobel(struct buff a, struct buff b, char* buffName) {
 		ext = strstr(a.imageName, ".gif");	// Use extension of a for extension of result
 
 	// Fill in info for buffer
-	strcpy(result.imageName, "sobel");
+	strcpy(result.imageName, "combined");
 	strcat(result.imageName, ext);
 	strcpy(result.name, buffName);
 	result.width = a.width;

@@ -12,8 +12,8 @@ struct buff readToBuff(char* imageName, char* const buffName ){
 	//note: ch is the number of channels that WOULD have been in the buffer. The last argument to stbi_load controls the number of channels
 	printf("w: %d, h: %d, ch: %d\n", width, height, ch);
 
-	gdImagePtr im;
-	FILE* fd = fopen(imageName, "rb");
+	//gdImagePtr im;
+	//FILE* fd = fopen(imageName, "rb");
 
 	if(buffName == NULL){
 		printf("Error reading file\n");
@@ -21,8 +21,31 @@ struct buff readToBuff(char* imageName, char* const buffName ){
 		exit(1);
 	}
 
+	char* temp = strtok(imageName, ".");
+    char* ext = strtok(NULL," ");
+	FILE* in;
+
+
 	struct buff buffer;	
-	buffer.imrgb = gdImageCreateFromPng(fd);
+
+
+	if (strcmp(ext, "png")==0){
+        in = fopen(strcat(temp, ".png"), "rb");
+		buffer.imrgb = gdImageCreateFromPng(in);
+    }
+    else if (strcmp(ext, "jpg")==0 || strcmp(ext, "jpeg")==0){
+        in = fopen(strcat(temp, ".jpg"), "rb");
+		//printf("%s", strcat(temp, .jpg));
+		buffer.imrgb = gdImageCreateFromJpeg(in);
+    }
+    else if (strcmp(ext, "gif")==0){
+        in = fopen(strcat(temp, ".gif"), "rb");
+		buffer.imrgb = gdImageCreateFromGif(in);
+    }
+	else if (strcmp(ext, "tiff")==0){
+        in = fopen(strcat(temp, ".tiff"), "rb");
+		buffer.imrgb = gdImageCreateFromTiff(in);
+    }
 	buffer.img = buff;
 	strcpy(buffer.name, buffName);
 	strcpy(buffer.imageName, imageName);
@@ -30,5 +53,8 @@ struct buff readToBuff(char* imageName, char* const buffName ){
 	buffer.height = height;
 	buffer.channels = ch;
 	printf("Done reading!\n\n");
+
+	// FILE* output = fopen("temp.png", "wb");
+	// gdImagePngEx(buffer.imrgb, output, 9);
 	return buffer;
 }

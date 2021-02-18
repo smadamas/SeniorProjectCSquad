@@ -110,7 +110,7 @@ int main()
 				// FILE* out = fopen("temp.png", "wb");
 				// gdImagePngEx(temp.imrgb, out, 9);
 				// printf("values are %d %d %d", temp.height, temp.width, temp.channels);
-				addBuffer(histogramEqualisation(temp, command), buffers, &buffCount);
+				addBuffer(histogramEqualization(temp, command), buffers, &buffCount);
 			}
 			else
 			{

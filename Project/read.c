@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
-#include "gd.h"
+#include "libgd/src/gd.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -15,20 +15,15 @@ struct buff readToBuff(char* imageName, char* const buffName ){
 	gdImagePtr im;
 	FILE* fd = fopen(imageName, "rb");
 
-
-	im = gdImageCreateFromPng(fd);
-
-	//im = gdImageCreateTrueColor(width, height);
-
 	if(buffName == NULL){
 		printf("Error reading file\n");
 		stbi_failure_reason();
 		exit(1);
 	}
 
-	struct buff buffer;
+	struct buff buffer;	
+	buffer.imrgb = gdImageCreateFromPng(fd);
 	buffer.img = buff;
-	buffer.imrgb = im;
 	strcpy(buffer.name, buffName);
 	strcpy(buffer.imageName, imageName);
 	buffer.width = width;

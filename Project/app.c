@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "gd.h"
+#include "libgd/src/gd.h"
 
 struct buff
 {
@@ -60,6 +60,8 @@ int main()
 			buffName = strtok(NULL, " ");
 			struct buff temp = readToBuff(imageName, buffName);
 			addBuffer(temp, buffers, &buffCount);
+			// FILE* out = fopen("temp.png", "wb");
+			// gdImagePngEx(buffers[0].imrgb, out, 9);
 		}
 		else if (strcmp(command, "write") == 0)
 		{
@@ -105,6 +107,8 @@ int main()
 			else if ((strcmp(buff1, "histeq") == 0))
 			{
 				struct buff temp = buffSearch(cmd, buffers, buffCount);
+				// FILE* out = fopen("temp.png", "wb");
+				// gdImagePngEx(temp.imrgb, out, 9);
 				// printf("values are %d %d %d", temp.height, temp.width, temp.channels);
 				addBuffer(histogramEqualisation(temp, command), buffers, &buffCount);
 			}
@@ -163,6 +167,7 @@ void addBuffer(struct buff buffer, struct buff *buffers, int *buffCount)
 		buffers[*buffCount].width = buffer.width;
 		buffers[*buffCount].height = buffer.height;
 		buffers[*buffCount].channels = buffer.channels;
+		buffers[*buffCount].imrgb = buffer.imrgb;
 		(*buffCount)++;
 	}
 	else

@@ -5,20 +5,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "gd.h"
+#include "libgd/src/gd.h"
 
 // Function to perform histogram equalisation on an image
 // Function takes total rows, columns, input file
 
 struct buff histogramEqualisation(struct buff a, char *buffName)
 {
+    // FILE* out = fopen("temp.png", "wb");
+	// gdImagePngEx(a.imrgb, out, 9);
+
+
     // creating image pointer
     unsigned char* image;
 
     //Instantiating Rows and Cols
     int cols = a.width;
     int rows = a.height;
-    printf("\n\n%d", a.channels);
+    //printf("\n\n%d", a.channels);
 
     size_t s = cols * rows * a.channels;
     unsigned char * grey;
@@ -42,22 +46,14 @@ struct buff histogramEqualisation(struct buff a, char *buffName)
     const unsigned char* limit = a.img + total;
     curr = 0;
 
-    // image = (unsigned char *)calloc(cols, sizeof(unsigned char));
-
-    // if (image == NULL)
-    // {
-    //     printf("Unable to allocate memory for the image.\n");
-    //     exit(1);
-    // }
-
+ 
     //Convert to greyscale
+    
 
     for(int r=0; r < a.width; r++){
         for(int c=0; c < a.height; c++){
-            int red = gdTrueColorGetRed(gdImageGetTrueColorPixel(a.imrgb, r, c));
-            int green = gdTrueColorGetGreen(gdImageGetTrueColorPixel(a.imrgb, r, c));
-            int blue = gdTrueColorGetBlue(gdImageGetTrueColorPixel(a.imrgb, r, c));
-            *grey = (unsigned char)((0.3*red) + (0.59*green) + (0.11*blue));
+            int pos = gdImageGetPixel(a.imrgb, r, c);
+            *grey = (unsigned char)((0.3*gdTrueColorGetRed(pos)) + (0.59*gdTrueColorGetGreen(pos)) + (0.11*gdTrueColorGetBlue(pos)));
             grey++;
         }
     }

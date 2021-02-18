@@ -21,7 +21,8 @@ struct buff histogramEqualisation(struct buff a, char *buffName)
     printf("\n\n%d", a.channels);
 
     size_t s = cols * rows * a.channels;
-    unsigned char grey[rows][cols];
+    unsigned char * grey;
+    grey = calloc(rows*cols,sizeof(unsigned char));
     
 
     // Declaring 2 arrays for storing histogram values (frequencies) and
@@ -56,7 +57,8 @@ struct buff histogramEqualisation(struct buff a, char *buffName)
             int red = gdTrueColorGetRed(gdImageGetTrueColorPixel(a.imrgb, r, c));
             int green = gdTrueColorGetGreen(gdImageGetTrueColorPixel(a.imrgb, r, c));
             int blue = gdTrueColorGetBlue(gdImageGetTrueColorPixel(a.imrgb, r, c));
-            grey[r][c] = (0.3*red) + (0.59*green) + (0.11*blue);
+            *grey = (unsigned char)((0.3*red) + (0.59*green) + (0.11*blue));
+            grey++;
         }
     }
 
@@ -64,7 +66,7 @@ struct buff histogramEqualisation(struct buff a, char *buffName)
     // New way 
 
     unsigned char* img;
-    const unsigned char* greyLimit = grey + (rows*cols);
+    unsigned char* greyLimit = grey + (rows*cols);
 
     for(img = grey; img < greyLimit; img++){
         hist[*img]++;

@@ -13,7 +13,12 @@ struct buff readToBuff(char* imageName, char* const buffName ){
 	printf("w: %d, h: %d, ch: %d\n", width, height, ch);
 
 	gdImagePtr im;
-	im = gdImageCreateTrueColor(width, height);
+	FILE* fd = fopen(imageName, "rb");
+
+
+	im = gdImageCreateFromPng(fd);
+
+	//im = gdImageCreateTrueColor(width, height);
 
 	if(buffName == NULL){
 		printf("Error reading file\n");

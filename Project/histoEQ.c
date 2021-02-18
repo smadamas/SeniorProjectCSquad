@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "gd.h"
 
 // Function to perform histogram equalisation on an image
 // Function takes total rows, columns, input file
@@ -19,6 +20,10 @@ struct buff histogramEqualisation(struct buff a, char *buffName)
     int rows = a.height;
     printf("\n\n%d", a.channels);
 
+    size_t s = cols * rows * a.channels;
+    unsigned char grey[rows][cols];
+    
+
     // Declaring 2 arrays for storing histogram values (frequencies) and
     // new gray level values (newly mapped pixel values as per algorithm)
     int hist[256];
@@ -32,48 +37,57 @@ struct buff histogramEqualisation(struct buff a, char *buffName)
     // Declaring other important variables
     int col, row, total, i;
     unsigned long curr, cdf_min;
-    total = cols * rows;
-
+    total = cols * rows * a.channels;
+    const unsigned char* limit = a.img + total;
     curr = 0;
 
-    // allocating image array the size equivalent to number of columns
-    // of the image to read one row of an image at a time
-    image = (unsigned char *)calloc(cols, sizeof(unsigned char));
+    // image = (unsigned char *)calloc(cols, sizeof(unsigned char));
 
-    if (image == NULL)
-    {
-        printf("Unable to allocate memory for the image.\n");
-        exit(1);
+    // if (image == NULL)
+    // {
+    //     printf("Unable to allocate memory for the image.\n");
+    //     exit(1);
+    // }
+
+    //Convert to greyscale
+
+    for(int r=0; r < a.width; r++){
+        for(int c=0; c < a.height; c++){
+            int red = gdTrueColorGetRed(gdImageGetTrueColorPixel(a.imrgb, r, c));
+            int green = gdTrueColorGetGreen(gdImageGetTrueColorPixel(a.imrgb, r, c));
+            int blue = gdTrueColorGetBlue(gdImageGetTrueColorPixel(a.imrgb, r, c));
+            grey[r][c] = (0.3*red) + (0.59*green) + (0.11*blue);
+        }
     }
 
     // Calculating frequency of occurrence for all pixel values
     // New way 
 
     unsigned char* img;
-    img = a.img;
-    const unsigned char* limit = a.img + total;
+    const unsigned char* greyLimit = grey + (rows*cols);
 
-    for(img = a.img; img < limit; img++){
+    for(img = grey; img < greyLimit; img++){
         hist[*img]++;
     }
 
-    // calculating CDF (works)
+    // calculating CDF
     float cdf[256];
     for (i = 0; i < 256; i++){
         // cumulative frequency
         curr += hist[i];
         cdf[i] = curr;
     }
+
+    cdf_min = 255;
     for(i = 0; i < 256; i++){
-        if(cdf[i] != 0){
+        if(cdf[i] < cdf_min){
             cdf_min = cdf[i];
-            break;
         }
     }
 
     //Allocate for output
     struct buff newBuff;
-    size_t size = cols * rows * 1; // Allocate memory for result
+    size_t size = cols * rows; // Allocate memory for result
                                                                      // unsigned char *result_img = malloc(size * sizeof(unsigned char));
     unsigned long* result;
     result = (unsigned long *)calloc(size, sizeof(unsigned long));
@@ -93,16 +107,19 @@ struct buff histogramEqualisation(struct buff a, char *buffName)
         exit(1);
     }
 
-    const double k = 255.0 / (total - cdf_min);
+    const double k = 255.0 / ((cols*rows) - cdf_min);
 
+    //old grey level "i" maps to new grey level "result[i]"
     for (i = 0; i < 256; i++)
     {
         result[i] = (unsigned long)(k*(cdf[i] - cdf_min));
     }
+
     int index = 0;
-    for (img = a.img; img < limit; img++){
-        *result_img = (unsigned char)result[(unsigned long)*img];
+    for (img = grey; img < greyLimit; img++){
+        result_img[index] = (unsigned char)result[(int)(*img)];
         result_img++; //Increment output pointer
+        index++;
     }
 
 

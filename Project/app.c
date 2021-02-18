@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "gd.h"
 
 struct buff
 {
@@ -8,6 +9,7 @@ struct buff
 	char name[15];
 	unsigned char *img;
 	int width, height, channels;
+	gdImagePtr imrgb;
 };
 
 #include "read.c"

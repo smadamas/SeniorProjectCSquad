@@ -178,6 +178,7 @@ void addBuffer(struct buff buffer, struct buff *buffers, int *buffCount)
 		buffers[k].width = buffer.width;
 		buffers[k].height = buffer.height;
 		buffers[k].channels = buffer.channels;
+		buffers[k].imrgb = buffer.imrgb;
 	}
 }
 

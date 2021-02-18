@@ -9,11 +9,6 @@ struct buff readToBuff(char* imageName, char* const buffName ){
 	printf("\nReading %s into %s...\n", imageName, buffName);
 	int width, height, ch;
 	unsigned char* buff = stbi_load(imageName, &width, &height, &ch, 3);
-	//note: ch is the number of channels that WOULD have been in the buffer. The last argument to stbi_load controls the number of channels
-	printf("w: %d, h: %d, ch: %d\n", width, height, ch);
-
-	//gdImagePtr im;
-	//FILE* fd = fopen(imageName, "rb");
 
 	if(buffName == NULL){
 		printf("Error reading file\n");

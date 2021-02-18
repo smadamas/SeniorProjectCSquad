@@ -22,7 +22,6 @@ struct buff buffSearch(char *buffName, struct buff *buffers, int buffCount);
 void printBuffer(struct buff *buffer, int buffCount);
 void printMenu();
 
-struct buff histogramEqualisation(struct buff a, char *buffName);
 
 int main()
 {
@@ -60,8 +59,6 @@ int main()
 			buffName = strtok(NULL, " ");
 			struct buff temp = readToBuff(imageName, buffName);
 			addBuffer(temp, buffers, &buffCount);
-			// FILE* out = fopen("temp.png", "wb");
-			// gdImagePngEx(buffers[0].imrgb, out, 9);
 		}
 		else if (strcmp(command, "write") == 0)
 		{
@@ -77,6 +74,12 @@ int main()
 		else if (strcmp(command, "quit") == 0)
 		{
 			break;
+		}
+		else if ((strcmp(command, "histeq") == 0))
+		{
+			char *buff1 = strtok(NULL, " ");
+			struct buff temp = buffSearch(buff1, buffers, buffCount);
+			histogramEqualization(temp, command);
 		}
 		else
 		{
@@ -103,15 +106,7 @@ int main()
 			{
 				addBuffer(divide(buffSearch(buff1, buffers, buffCount), buffSearch(buff2, buffers, buffCount), command),
 						  buffers, &buffCount);
-			}
-			else if ((strcmp(buff1, "histeq") == 0))
-			{
-				struct buff temp = buffSearch(cmd, buffers, buffCount);
-				// FILE* out = fopen("temp.png", "wb");
-				// gdImagePngEx(temp.imrgb, out, 9);
-				// printf("values are %d %d %d", temp.height, temp.width, temp.channels);
-				addBuffer(histogramEqualization(temp, command), buffers, &buffCount);
-			}
+			}			
 			else
 			{
 				printf("\nError: command not found.\n");
@@ -135,7 +130,7 @@ void printMenu()
 	printf("subtraction: \"<buffer1> = <buffer2> - <buffer3>\"\n");
 	printf("multiplication: \"<buffer1> = <buffer2> * <buffer3>\"\n");
 	printf("division: \"<buffer1> = <buffer2> / <buffer3>\"\n");
-	printf("histEQ: \"<buffer_dest> := histeq <buffer>\"\n\n");
+	printf("histEQ: \"histeq <buffer>\"\n\n");
 }
 
 void printBuffer(struct buff *buffers, int buffCount)

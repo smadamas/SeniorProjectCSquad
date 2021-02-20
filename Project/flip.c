@@ -6,11 +6,6 @@
 struct buff verticalFlip(struct buff a)
 {
     struct buff temp = a;
-    // strcat(temp.imageName, a.imageName);
-    // strcpy(temp.name, a);
-    // temp.width = a.width;
-    // temp.height = a.height;
-    // temp.channels = a.channels;
     int rows = temp.height / 2;
     int row_stride = temp.width * temp.channels;
     unsigned char *temp_row = (unsigned char *)malloc(row_stride);

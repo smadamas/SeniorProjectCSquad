@@ -13,6 +13,7 @@ struct buff
 	unsigned char *img;
 	int width, height, channels;
 	gdImagePtr imrgb;
+	bool isLibgd;
 };
 
 #include "read.c"

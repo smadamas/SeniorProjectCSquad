@@ -49,6 +49,7 @@ struct buff readToBuff(char *imageName, char *const buffName)
 	buffer.width = width;
 	buffer.height = height;
 	buffer.channels = ch;
+	buffer.isLibgd = false;
 	printf("Done reading!\n\n");
 	return buffer;
 }

@@ -22,6 +22,7 @@ struct buff
 #include "edge.c"
 #include "display.c"
 #include "histoEQ.c"
+#include "flip.c"
 
 void addBuffer(struct buff buffer, struct buff *buffers, int *buffCount);
 struct buff buffSearch(char *buffName, struct buff *buffers, int buffCount);
@@ -238,53 +239,6 @@ int main(int argc, char **argv)
 				addBuffer(combine(buffSearch("kirschvert", buffers, buffCount), buffSearch("kirschhoriz", buffers, buffCount), "combined"),
 						  buffers, &buffCount);
 			}
-
-			/*
-			char *type = strtok(NULL, " ");
-			imageName = strtok(NULL, " ");
-			if (strlen(imageName) > 14){
-				printf("Image name too long. Image + extension must be shorter than 14 characters.\n");
-			}
-			else {
-				detectEdge("vertical", type, imageName);
-				detectEdge("horizontal", type, imageName);
-				char vertname[50];
-				char horizname[50];
-				strcpy(vertname, type);
-				strcat(vertname, "-");
-				strcat(vertname, command);
-				strcat(vertname, "-");
-				strcat(vertname, imageName);
-				strcpy(horizname, type);
-				strcat(horizname, "-horiz-");
-				strcat(horizname, imageName);
-
-				char vertBuffLabel[50];
-				char horizBuffLabel[50];
-				if (strcmp(type, "sobel") == 0){
-					strcpy(vertBuffLabel, "vertSob");
-					strcpy(horizBuffLabel, "horizSob");
-				}
-				else if (strcmp(type, "prewitt") == 0){
-					strcpy(vertBuffLabel, "vertPre");
-					strcpy(horizBuffLabel, "horizPre");
-				}
-				else {
-					strcpy(vertBuffLabel, "vertKir");
-					strcpy(horizBuffLabel, "horizKir");
-				}
-
-				
-				struct buff temp1;
-				temp1 = readToBuff(vertname, vertBuffLabel);
-				struct buff temp2 = readToBuff(horizname, horizBuffLabel);
-				addBuffer(temp1, buffers, &buffCount);
-				addBuffer(temp2, buffers, &buffCount);
-				struct buff temp3 = combine(buffSearch("label1", buffers, buffCount), buffSearch("label2", buffers, buffCount), type);
-				addBuffer(temp3, buffers, &buffCount); 
-				
-			}
-			*/
 		}
 		else if (strcmp(command, "addition") == 0 || strcmp(command, "subtraction") == 0 || strcmp(command, "division") == 0 || strcmp(command, "multiplication") == 0)
 		{
@@ -323,6 +277,21 @@ int main(int argc, char **argv)
 			struct buff temp = buffSearch(buff1, buffers, buffCount);
 			histogramEqualization(temp, command);
 		}
+		else if ((strcmp(command, "flip") == 0))
+		{
+			char *rot = strtok(NULL, " ");
+			if ((strcmp(rot, "vertical") == 0))
+			{
+				buffName = strtok(NULL, " ");
+				struct buff temp = buffSearch(buffName, buffers, buffCount);
+				temp = verticalFlip(temp);
+				addBuffer(temp, buffers, &buffCount);
+			}
+			else
+			{
+				printf("Invalid rotation!\n");
+			}
+		}
 		else
 		{
 			printf("\nCommand not found or not supported, please type menu for list of commands.\n\n");
@@ -348,6 +317,7 @@ void printMenu()
 	printf("\"darken <buffer1> into <buffer2>\"\n");
 	printf("\"<horizontal/vertical/combined> <kirsch/prewitt/sobel> <image-name>\"\n\n");
 	printf("histEQ: \"histeq <buffer>\"\n\n");
+	printf("Flip: \"flip <vertical/horizontal> <buffer>\"\n\n");
 }
 
 void printBuffer(struct buff *buffers, int buffCount)

@@ -6,7 +6,13 @@
 struct buff rightRotate(struct buff a)
 {   
     struct buff temp = a;
-    temp.imrgb = gdImageRotateInterpolated(a.imrgb, 45,0x0);
+    temp.height = a.width;
+    temp.width = a.height;
+    printf("Channel: %i", a.channels);
+    printf("imgName: %s", a.imageName);
+    printf("name: %s", a.name);
+    printf("status: %s", a.status);
+    //temp.imrgb = gdImageRotateInterpolated(a.imrgb, 45,0x0);
     return temp;
 
 }

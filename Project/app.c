@@ -338,9 +338,9 @@ void printMenu()
 	printf("\"division : <buffer2> + <buffer3>\"\n");
 	printf("\"brighten <buffer1> into <buffer2>\"\n");
 	printf("\"darken <buffer1> into <buffer2>\"\n");
-	printf("\"<horizontal/vertical/combined> <kirsch/prewitt/sobel> <image-name>\"\n\n");
-	printf("histEQ: \"histeq <buffer>\"\n\n");
-	printf("Flip: \"flip <vertical/horizontal> <buffer>\"\n\n");
+	printf("\"<horizontal/vertical/combined> <kirsch/prewitt/sobel> <image-name>\"\n");
+	printf("histEQ: \"histeq <buffer>\"\n");
+	printf("Flip: \"flip <vertical/horizontal> <buffer>\"\n");
 	printf("Rotation: \"rotate <left/right> <buffer>\"\n\n");
 }
 

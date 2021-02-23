@@ -23,6 +23,7 @@ struct buff
 #include "display.c"
 #include "histoEQ.c"
 #include "flip.c"
+#include "rotation.c"
 
 void addBuffer(struct buff buffer, struct buff *buffers, int *buffCount);
 struct buff buffSearch(char *buffName, struct buff *buffers, int buffCount);
@@ -292,6 +293,28 @@ int main(int argc, char **argv)
 				printf("Invalid rotation!\n");
 			}
 		}
+		else if ((strcmp(command, "rotate") == 0))
+		{
+			char *rot = strtok(NULL, " ");
+			/*if ((strcmp(rot, "left") == 0))
+			{
+				buffName = strtok(NULL, " ");
+				struct buff temp = buffSearch(buffName, buffers, buffCount);
+				temp = leftRotate(temp);
+				addBuffer(temp, buffers, &buffCount);
+			}*/
+			if ((strcmp(rot, "right") == 0))
+			{
+				buffName = strtok(NULL, " ");
+				struct buff temp = buffSearch(buffName, buffers, buffCount);
+				temp = rightRotate(temp);
+				addBuffer(temp, buffers, &buffCount);
+			}
+			else
+			{
+				printf("Invalid Mirroring!\n");
+			}
+		}
 		else
 		{
 			printf("\nCommand not found or not supported, please type menu for list of commands.\n\n");
@@ -318,6 +341,7 @@ void printMenu()
 	printf("\"<horizontal/vertical/combined> <kirsch/prewitt/sobel> <image-name>\"\n\n");
 	printf("histEQ: \"histeq <buffer>\"\n\n");
 	printf("Flip: \"flip <vertical/horizontal> <buffer>\"\n\n");
+	printf("Rotation: \"rotate <left/right> <buffer>\"\n\n");
 }
 
 void printBuffer(struct buff *buffers, int buffCount)

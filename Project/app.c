@@ -26,6 +26,10 @@ struct buff
 #include "flip.c"
 #include "rotation.c"
 #define KGRN  "\x1B[32m"
+#define KYEL  "\x1B[33m"
+#define KBLU  "\x1B[34m"
+#define KRED  "\x1B[31m"
+#define KMAG  "\x1B[35m"
 #define RESET "\x1B[0m"
 
 void addBuffer(struct buff buffer, struct buff *buffers, int *buffCount);
@@ -37,8 +41,8 @@ int check_types(char *ext, char *file_types[]);
 
 int main(int argc, char **argv)
 {
-	printf("Welcome to the UNIX Image Manipulation tool.\n");
-	printf("Type \"menu\" to view the list of commands or \"list\" to view your buffers.\n\n");
+	printf(KGRN "Welcome to the UNIX Image Manipulation tool.\n");
+	printf("Type \"" KYEL "menu" KGRN "\"  to view the list of commands or \"" KYEL "list" KGRN "\" to view your buffers.\n\n" RESET);
 
 	struct buff buffers[10];
 	int buffCount = 0;
@@ -299,17 +303,19 @@ int main(int argc, char **argv)
 		else if ((strcmp(command, "rotate") == 0))
 		{
 			char *rot = strtok(NULL, " ");
-			/*if ((strcmp(rot, "left") == 0))
+			if ((strcmp(rot, "left") == 0))
 			{
 				buffName = strtok(NULL, " ");
 				struct buff temp = buffSearch(buffName, buffers, buffCount);
 				temp = leftRotate(temp);
 				addBuffer(temp, buffers, &buffCount);
-			}*/
+			}
 			if ((strcmp(rot, "right") == 0))
 			{
-				char *buff1 = strtok(NULL, " ");
-				rightRotate(buffSearch(buff1, buffers, buffCount));
+				buffName = strtok(NULL, " ");
+				struct buff temp = buffSearch(buffName, buffers, buffCount);
+				temp = rightRotate(temp);
+				addBuffer(temp, buffers, &buffCount);
 			}
 			else
 			{
@@ -327,31 +333,31 @@ int main(int argc, char **argv)
 
 void printMenu()
 {
-	printf("\n----- Commands -----\n");
-	printf("\"quit\"\n");
-	printf("\"list\"\n");
-	printf("\"display <buffer-name>\"\n");
-	printf("\"read <image-name> into <buffer-name>\"\n");
-	printf("\"write <buffer-name> into <image-name>\"\n");
-	printf("\"addition : <buffer2> + <buffer3>\"\n");
-	printf("\"subtraction : <buffer2> + <buffer3>\"\n");
-	printf("\"multiplication : <buffer2> + <buffer3>\"\n");
-	printf("\"division : <buffer2> + <buffer3>\"\n");
-	printf(KGRN "Brightening: " RESET "\"brighten <buffer1> into <buffer2>\"\n");
-	printf(KGRN "Darkening: " RESET "\"darken <buffer1> into <buffer2>\"\n");
-	printf(KGRN "Edge Detection: " RESET "\"<horizontal/vertical/combined> <kirsch/prewitt/sobel> <image-name>\"\n");
-	printf(KGRN "histEQ: " RESET "\"histeq <buffer>\"\n");
-	printf(KGRN "Flip: " RESET "\"flip <vertical/horizontal> <buffer>\"\n");
-	printf(KGRN "Rotation: " RESET "\"rotate <left/right> <buffer>\"\n\n");
+	printf(KGRN "\n----- Commands -----\n");
+	printf(KBLU "Exit Program: " RESET "\"quit\"\n");
+	printf(KBLU "List Buffers: " RESET "\"list\"\n");
+	printf(KBLU "Show Image in Buffer: " RESET "\"display <buffer-name>\"\n");
+	printf(KBLU "Input Image: " RESET "\"read <image-name> into <buffer-name>\"\n");
+	printf(KBLU "Output Image: " RESET"\"write <buffer-name> into <image-name>\"\n");
+	printf(KBLU "Addition: " RESET "\"addition : <buffer2> + <buffer3>\"\n");
+	printf(KBLU "Subtraction: " RESET"\"subtraction : <buffer2> + <buffer3>\"\n");
+	printf(KBLU "Multiplication " RESET"\"multiplication : <buffer2> + <buffer3>\"\n");
+	printf(KBLU "Division: " RESET"\"division : <buffer2> + <buffer3>\"\n");
+	printf(KBLU "Brightening: " RESET "\"brighten <buffer1> into <buffer2>\"\n");
+	printf(KBLU "Darkening: " RESET "\"darken <buffer1> into <buffer2>\"\n");
+	printf(KBLU "Edge Detection: " RESET "\"<horizontal/vertical/combined> <kirsch/prewitt/sobel> <image-name>\"\n");
+	printf(KBLU "Histogram Equalization: " RESET "\"histeq <buffer>\"\n");
+	printf(KBLU "Flip: " RESET "\"flip <vertical/horizontal> <buffer>\"\n");
+	printf(KBLU "Rotation: " RESET "\"rotate <left/right> <buffer>\"\n\n");
 
 }
 
 void printBuffer(struct buff *buffers, int buffCount)
 {
-	printf("\n----- Buffers -----\n");
+	printf(KGRN"\n----- Buffers -----\n" RESET);
 	for (int i = 0; i < buffCount; i++)
 	{
-		printf("%s contains %s\n", buffers[i].name, buffers[i].imageName);
+		printf("%s "KBLU"contains"RESET" %s\n", buffers[i].name, buffers[i].imageName);
 	}
 	printf("\n");
 }
@@ -389,7 +395,7 @@ void addBuffer(struct buff buffer, struct buff *buffers, int *buffCount)
 		buffers[k].imrgb = buffer.imrgb;
 	}
 
-	printf("New buffer added\n\n");
+	printf(KYEL"New buffer added\n\n"RESET);
 }
 
 struct buff buffSearch(char *buffName, struct buff *buffers, int buffCount)
@@ -401,7 +407,7 @@ struct buff buffSearch(char *buffName, struct buff *buffers, int buffCount)
 			return buffers[i];
 		}
 	}
-	printf("Error: buffer not found.\n");
+	printf(KRED"Error:"RESET" buffer not found.\n");
 	struct buff temp;
 	strcpy(temp.status, "false");
 	return temp;

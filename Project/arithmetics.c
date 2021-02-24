@@ -1,11 +1,16 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#define KYEL  "\x1B[33m"
+#define KBLU  "\x1B[34m"
+#define KRED  "\x1B[31m"
+#define KMAG  "\x1B[35m"
+#define RESET "\x1B[0m"
 
 // a + b
 struct buff add(struct buff a, struct buff b, char* buffName) {
 	if ((a.width != b.width) || (a.height != b.height) || (a.channels != b.channels)) { // Check for correct dimensions
-		printf("Wrong dimensions.\n");
+		printf(KRED"Error: "RESET"Wrong dimensions.\n");
 		exit(1);
 	}
 
@@ -30,7 +35,7 @@ struct buff add(struct buff a, struct buff b, char* buffName) {
 	size_t size = result.width * result.height * result.channels; // Allocate memory for result
 	unsigned char* result_img = malloc(size);
 	if (result_img == NULL) {
-		printf("Unable to allocate memory for the image.\n");
+		printf(KRED"Error: "RESET"Unable to allocate memory for the image.\n");
 		exit(1);
 	}
 
@@ -58,7 +63,7 @@ struct buff add(struct buff a, struct buff b, char* buffName) {
 // a - b
 struct buff subtract(struct buff a, struct buff b, char* buffName) {
 	if ((a.width != b.width) || (a.height != b.height) || (a.channels != b.channels)) { // Check for correct dimensions
-		printf("Wrong dimensions.\n");
+		printf(KRED"Error: "RESET"Wrong dimensions.\n");
 		exit(1);
 	}
 		
@@ -83,7 +88,7 @@ struct buff subtract(struct buff a, struct buff b, char* buffName) {
 	size_t size = result.width * result.height * result.channels; // Allocate memory for result
 	unsigned char *result_img = malloc(size);
 	if(result_img == NULL) {
-		printf("Unable to allocate memory for the image.\n");
+		printf(KRED"Error:"RESET"Unable to allocate memory for the image.\n");
 		exit(1);
 	}
 

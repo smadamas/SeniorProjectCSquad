@@ -4,6 +4,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include "libgd/src/gd.h"
+#define KYEL  "\x1B[33m"
+#define KBLU  "\x1B[34m"
+#define KRED  "\x1B[31m"
+#define KMAG  "\x1B[35m"
+#define RESET "\x1B[0m"
 
 void histogramEqualization(struct buff a, char *buffName)
 {
@@ -109,5 +114,5 @@ void histogramEqualization(struct buff a, char *buffName)
     FILE *output = fopen(strcat(outName, ".png"), "wb");
     gdImagePngEx(out, output, 9);
 
-    printf("Done equalizing!\n");
+    printf(KYEL"Done equalizing!\n\n"RESET);
 }

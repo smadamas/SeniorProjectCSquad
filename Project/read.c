@@ -3,15 +3,18 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#define KYEL  "\x1B[33m"
+#define KRED  "\x1B[31m"
+#define RESET "\x1B[0m"
 
 struct buff readToBuff(char *imageName, char *const buffName)
 {
-	printf("\nReading %s into %s...\n", imageName, buffName);
+	printf(KYEL"\nReading %s into %s...\n" RESET, imageName, buffName);
 	int width, height, ch;
 	unsigned char *buff = stbi_load(imageName, &width, &height, &ch, 0);
 	if (buffName == NULL)
 	{
-		printf("Error reading file\n");
+		printf(KRED "Error: "RESET " Cannot read file\n");
 		stbi_failure_reason();
 	}
 
@@ -49,6 +52,6 @@ struct buff readToBuff(char *imageName, char *const buffName)
 	buffer.height = height;
 	buffer.channels = ch;
 	buffer.isLibgd = false;
-	printf("Done reading!\n\n");
+	printf(KYEL "Done reading!\n\n"RESET);
 	return buffer;
 }

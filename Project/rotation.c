@@ -27,23 +27,24 @@ struct buff rightRotate(struct buff a)
     return temp;
 }
 
-/*struct buff leftRotate(struct buff a)
+struct buff leftRotate(struct buff a)
 {
     struct buff temp = a;
-    int rows = temp.height / 2;
-    int row_stride = temp.width * temp.channels;
-    unsigned char *temp_row = (unsigned char *)malloc(row_stride);
-    int source_offset, target_offset;
-    for (int rowIndex = 0; rowIndex < rows; rowIndex++)
-    {
-        source_offset = rowIndex * row_stride;
-        target_offset = (temp.height - rowIndex - 1) * row_stride;
+    temp.isLibgd = true;
+    temp.height = a.width;
+    temp.width = a.height;
+    gdImagePtr out = gdImageRotateInterpolated(a.imrgb, 270.0, 0);
 
-        memcpy(temp_row, temp.img + source_offset, row_stride);
-        memcpy(temp.img + source_offset, temp.img + target_offset, row_stride);
-        memcpy(temp.img + target_offset, temp_row, row_stride);
-    }
-    strcpy(temp.name, "flipV");
-    strcpy(temp.imageName, "flipV.jpg");
+    /* I uncommented the following lines */
+    char outName[50];
+    strcpy(outName, "Left-");
+    char *t = strtok(a.imageName, ".");
+    strcat(outName, t);
+
+    FILE *output = fopen(strcat(outName, ".png"), "wb");
+    gdImagePngEx(out, output, 9);
+
+    printf("Done rotating!\n");
+
     return temp;
-}*/
+}

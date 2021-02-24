@@ -4,6 +4,10 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 
+#define KYEL  "\x1B[33m"
+#define KRED  "\x1B[31m"
+#define RESET "\x1B[0m"
+
 void writeToImage(struct buff buffer, char *imageName)
 {
 	char *temp = strtok(imageName, ".");
@@ -12,7 +16,7 @@ void writeToImage(struct buff buffer, char *imageName)
 	{
 		if (buffer.name == NULL)
 		{
-			printf("Error: buffer is empty.\n");
+			printf(KRED"Error:"RESET" buffer is empty.\n");
 		}
 		else if (strcmp(ext, "png") == 0)
 		{
@@ -40,7 +44,7 @@ void writeToImage(struct buff buffer, char *imageName)
 		}
 		else
 		{
-			printf("File type not supported yet.\n\n");
+			printf(KRED"Error: "RESET"File type not supported yet.\n\n");
 		}
 		
 	}
@@ -49,7 +53,7 @@ void writeToImage(struct buff buffer, char *imageName)
 
 		if (buffer.name == NULL)
 		{
-			printf("Error: buffer is empty.\n");
+			printf(KRED"Error: "RESET"buffer is empty.\n");
 		}
 		else if (strcmp(ext, "png") == 0)
 		{
@@ -69,7 +73,7 @@ void writeToImage(struct buff buffer, char *imageName)
 		}
 		else
 		{
-			printf("File type not supported yet.\n\n");
+			printf(KRED"Error: "RESET"File type not supported yet.\n\n");
 		}
 	}
 }

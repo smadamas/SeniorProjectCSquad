@@ -308,13 +308,8 @@ int main(int argc, char **argv)
 			}*/
 			if ((strcmp(rot, "right") == 0))
 			{
-				//char *buff1 = strtok(NULL, " ");
-				//struct buff temp = buffSearch(buff1, buffers, buffCount);
-				//rightRotate(temp);
-				buffName = strtok(NULL, " ");
-				struct buff temp = buffSearch(buffName, buffers, buffCount);
-				temp = rightRotate(temp);
-				addBuffer(temp, buffers, &buffCount);
+				char *buff1 = strtok(NULL, " ");
+				rightRotate(buffSearch(buff1, buffers, buffCount));
 			}
 			else
 			{

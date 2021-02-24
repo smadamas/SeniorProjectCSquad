@@ -4,29 +4,20 @@
 #include <stdbool.h>
 #include "libgd/src/gd.h"
 
-struct buff rightRotate(struct buff a)
+
+void rightRotate(struct buff a)
 {   
 
-    printf("Image info: %s\n", a.img);
+    gdImagePtr img = a.imrgb;
+    gdImageRotateInterpolated(img,90.0,0);
 
-    struct buff temp = a;
-    temp.isLibgd = true; 
-    temp.height = a.width;
-    temp.width = a.height;
-    gdImagePtr out = gdImageRotateInterpolated(a.imrgb, 90.0, 0);
-
-    /*char outName[50];
-    strcpy(outName, "Right-");
+    char outName[50];
+    strcpy(outName, "rotate-R");
     char *temp = strtok(a.imageName, ".");
     strcat(outName, temp);
 
     FILE *output = fopen(strcat(outName, ".png"), "wb");
-    gdImagePngEx(out, output, 9);*/
-
-    printf("Done rotating!\n");
-
-    return temp;
-
+    gdImagePngEx(img, output, 9);
 }
 
 /*struct buff leftRotate(struct buff a)

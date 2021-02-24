@@ -10,7 +10,7 @@ struct buff rightRotate(struct buff a)
     printf("Image info: %s\n", a.img);
 
     struct buff temp = a;
-    temp.isLibgd = true;
+    temp.isLibgd = true; 
     temp.height = a.width;
     temp.width = a.height;
     gdImagePtr out = gdImageRotateInterpolated(a.imrgb, 90.0, 0);

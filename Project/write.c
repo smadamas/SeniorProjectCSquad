@@ -4,19 +4,19 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 
-#define KYEL  "\x1B[33m"
-#define KRED  "\x1B[31m"
+#define KYEL "\x1B[33m"
+#define KRED "\x1B[31m"
 #define RESET "\x1B[0m"
 
 void writeToImage(struct buff buffer, char *imageName)
 {
 	char *temp = strtok(imageName, ".");
 	char *ext = strtok(NULL, " ");
-	if (buffer.isLibgd)
+	if (buffer.isLibgd > 0)
 	{
 		if (buffer.name == NULL)
 		{
-			printf(KRED"Error:"RESET" buffer is empty.\n");
+			printf(KRED "Error:" RESET " buffer is empty.\n");
 		}
 		else if (strcmp(ext, "png") == 0)
 		{
@@ -24,7 +24,7 @@ void writeToImage(struct buff buffer, char *imageName)
 			gdImagePngEx(buffer.imrgb, output, 9);
 			fclose(output);
 		}
-		else if (strcmp(ext, "jpg") == 0|| strcmp(ext, "jpeg") == 0)
+		else if (strcmp(ext, "jpg") == 0 || strcmp(ext, "jpeg") == 0)
 		{
 			FILE *output = fopen(strcat(temp, ".jpg"), "wb");
 			gdImageJpeg(buffer.imrgb, output, 9);
@@ -44,16 +44,15 @@ void writeToImage(struct buff buffer, char *imageName)
 		}
 		else
 		{
-			printf(KRED"Error: "RESET"File type not supported yet.\n\n");
+			printf(KRED "Error: " RESET "File type not supported yet.\n\n");
 		}
-		
 	}
 	else
 	{
 
 		if (buffer.name == NULL)
 		{
-			printf(KRED"Error: "RESET"buffer is empty.\n");
+			printf(KRED "Error: " RESET "buffer is empty.\n");
 		}
 		else if (strcmp(ext, "png") == 0)
 		{
@@ -73,7 +72,7 @@ void writeToImage(struct buff buffer, char *imageName)
 		}
 		else
 		{
-			printf(KRED"Error: "RESET"File type not supported yet.\n\n");
+			printf(KRED "Error: " RESET "File type not supported yet.\n\n");
 		}
 	}
 }

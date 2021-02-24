@@ -13,7 +13,7 @@ struct buff
 	unsigned char *img;
 	int width, height, channels;
 	gdImagePtr imrgb;
-	bool isLibgd;
+	int isLibgd;
 };
 
 #include "read.c"
@@ -25,11 +25,11 @@ struct buff
 #include "histoEQ.c"
 #include "flip.c"
 #include "rotation.c"
-#define KGRN  "\x1B[32m"
-#define KYEL  "\x1B[33m"
-#define KBLU  "\x1B[34m"
-#define KRED  "\x1B[31m"
-#define KMAG  "\x1B[35m"
+#define KGRN "\x1B[32m"
+#define KYEL "\x1B[33m"
+#define KBLU "\x1B[34m"
+#define KRED "\x1B[31m"
+#define KMAG "\x1B[35m"
 #define RESET "\x1B[0m"
 
 void addBuffer(struct buff buffer, struct buff *buffers, int *buffCount);
@@ -310,7 +310,7 @@ int main(int argc, char **argv)
 				temp = leftRotate(temp);
 				addBuffer(temp, buffers, &buffCount);
 			}
-			if ((strcmp(rot, "right") == 0))
+			else if ((strcmp(rot, "right") == 0))
 			{
 				buffName = strtok(NULL, " ");
 				struct buff temp = buffSearch(buffName, buffers, buffCount);
@@ -338,26 +338,25 @@ void printMenu()
 	printf(KBLU "List Buffers: " RESET "\"list\"\n");
 	printf(KBLU "Show Image in Buffer: " RESET "\"display <buffer-name>\"\n");
 	printf(KBLU "Input Image: " RESET "\"read <image-name> into <buffer-name>\"\n");
-	printf(KBLU "Output Image: " RESET"\"write <buffer-name> into <image-name>\"\n");
+	printf(KBLU "Output Image: " RESET "\"write <buffer-name> into <image-name>\"\n");
 	printf(KBLU "Addition: " RESET "\"addition : <buffer2> + <buffer3>\"\n");
-	printf(KBLU "Subtraction: " RESET"\"subtraction : <buffer2> + <buffer3>\"\n");
-	printf(KBLU "Multiplication " RESET"\"multiplication : <buffer2> + <buffer3>\"\n");
-	printf(KBLU "Division: " RESET"\"division : <buffer2> + <buffer3>\"\n");
+	printf(KBLU "Subtraction: " RESET "\"subtraction : <buffer2> - <buffer3>\"\n");
+	printf(KBLU "Multiplication " RESET "\"multiplication : <buffer2> * <buffer3>\"\n");
+	printf(KBLU "Division: " RESET "\"division : <buffer2> / <buffer3>\"\n");
 	printf(KBLU "Brightening: " RESET "\"brighten <buffer1> into <buffer2>\"\n");
 	printf(KBLU "Darkening: " RESET "\"darken <buffer1> into <buffer2>\"\n");
 	printf(KBLU "Edge Detection: " RESET "\"<horizontal/vertical/combined> <kirsch/prewitt/sobel> <image-name>\"\n");
 	printf(KBLU "Histogram Equalization: " RESET "\"histeq <buffer>\"\n");
 	printf(KBLU "Flip: " RESET "\"flip <vertical/horizontal> <buffer>\"\n");
 	printf(KBLU "Rotation: " RESET "\"rotate <left/right> <buffer>\"\n\n");
-
 }
 
 void printBuffer(struct buff *buffers, int buffCount)
 {
-	printf(KGRN"\n----- Buffers -----\n" RESET);
+	printf(KGRN "\n----- Buffers -----\n" RESET);
 	for (int i = 0; i < buffCount; i++)
 	{
-		printf("%s "KBLU"contains"RESET" %s\n", buffers[i].name, buffers[i].imageName);
+		printf("%s " KBLU "contains" RESET " %s\n", buffers[i].name, buffers[i].imageName);
 	}
 	printf("\n");
 }
@@ -382,6 +381,8 @@ void addBuffer(struct buff buffer, struct buff *buffers, int *buffCount)
 		buffers[*buffCount].height = buffer.height;
 		buffers[*buffCount].channels = buffer.channels;
 		buffers[*buffCount].imrgb = buffer.imrgb;
+		// strcpy(buffers[*buffCount].imrgb, buffer.imrgb);
+		buffers[*buffCount].isLibgd = buffer.isLibgd;
 		(*buffCount)++;
 	}
 	else
@@ -393,9 +394,11 @@ void addBuffer(struct buff buffer, struct buff *buffers, int *buffCount)
 		buffers[k].height = buffer.height;
 		buffers[k].channels = buffer.channels;
 		buffers[k].imrgb = buffer.imrgb;
+		// strcpy(buffers[k].imrgb, buffer.imrgb);
+		buffers[k].isLibgd = buffer.isLibgd;
 	}
 
-	printf(KYEL"New buffer added\n\n"RESET);
+	printf(KYEL "New buffer added\n\n" RESET);
 }
 
 struct buff buffSearch(char *buffName, struct buff *buffers, int buffCount)
@@ -407,7 +410,7 @@ struct buff buffSearch(char *buffName, struct buff *buffers, int buffCount)
 			return buffers[i];
 		}
 	}
-	printf(KRED"Error:"RESET" buffer not found.\n");
+	printf(KRED "Error:" RESET " buffer not found.\n");
 	struct buff temp;
 	strcpy(temp.status, "false");
 	return temp;

@@ -5,28 +5,28 @@
 #include "libgd/src/gd.h"
 
 struct buff rightRotate(struct buff a)
-{   
+{
 
     printf("Image info: %s\n", a.img);
 
     struct buff temp = a;
-    temp.isLibgd = true; 
+    temp.isLibgd = true;
     temp.height = a.width;
     temp.width = a.height;
     gdImagePtr out = gdImageRotateInterpolated(a.imrgb, 90.0, 0);
 
-    /*char outName[50];
+    /* I uncommented the following lines */
+    char outName[50];
     strcpy(outName, "Right-");
-    char *temp = strtok(a.imageName, ".");
-    strcat(outName, temp);
+    char *t = strtok(a.imageName, ".");
+    strcat(outName, t);
 
     FILE *output = fopen(strcat(outName, ".png"), "wb");
-    gdImagePngEx(out, output, 9);*/
+    gdImagePngEx(out, output, 9);
 
     printf("Done rotating!\n");
 
     return temp;
-
 }
 
 /*struct buff leftRotate(struct buff a)

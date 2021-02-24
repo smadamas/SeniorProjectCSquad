@@ -1,4 +1,9 @@
 #include "libgd/src/gd.h"
+#define KYEL  "\x1B[33m"
+#define KBLU  "\x1B[34m"
+#define KRED  "\x1B[31m"
+#define KMAG  "\x1B[35m"
+#define RESET "\x1B[0m"
 
 void detectEdge(char *orientation, char *type, char *imageName)
 {
@@ -192,6 +197,6 @@ void detectEdge(char *orientation, char *type, char *imageName)
     }
     else
     {
-        printf("Error: edge detection method not supported.\n\n");
+        printf(KRED "Error:"RESET" edge detection method not supported.\n\n");
     }
 }

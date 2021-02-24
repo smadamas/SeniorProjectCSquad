@@ -29,7 +29,6 @@ struct buff readToBuff(char *imageName, char *const buffName)
 	else if (strcmp(ext, "jpg") == 0 || strcmp(ext, "jpeg") == 0)
 	{
 		in = fopen(strcat(temp, ".jpg"), "rb");
-		//printf("%s", strcat(temp, .jpg));
 		buffer.imrgb = gdImageCreateFromJpeg(in);
 	}
 	else if (strcmp(ext, "gif") == 0)
@@ -49,6 +48,7 @@ struct buff readToBuff(char *imageName, char *const buffName)
 	buffer.width = width;
 	buffer.height = height;
 	buffer.channels = ch;
+	buffer.isLibgd = false;
 	printf("Done reading!\n\n");
 	return buffer;
 }

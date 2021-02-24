@@ -13,6 +13,7 @@ struct buff
 	unsigned char *img;
 	int width, height, channels;
 	gdImagePtr imrgb;
+	bool isLibgd;
 };
 
 #include "read.c"
@@ -24,6 +25,8 @@ struct buff
 #include "histoEQ.c"
 #include "flip.c"
 #include "rotation.c"
+#define KGRN  "\x1B[32m"
+#define RESET "\x1B[0m"
 
 void addBuffer(struct buff buffer, struct buff *buffers, int *buffCount);
 struct buff buffSearch(char *buffName, struct buff *buffers, int buffCount);
@@ -290,7 +293,7 @@ int main(int argc, char **argv)
 			}
 			else
 			{
-				printf("Invalid rotation!\n");
+				printf("Invalid mirroring!\n");
 			}
 		}
 		else if ((strcmp(command, "rotate") == 0))
@@ -305,6 +308,9 @@ int main(int argc, char **argv)
 			}*/
 			if ((strcmp(rot, "right") == 0))
 			{
+				//char *buff1 = strtok(NULL, " ");
+				//struct buff temp = buffSearch(buff1, buffers, buffCount);
+				//rightRotate(temp);
 				buffName = strtok(NULL, " ");
 				struct buff temp = buffSearch(buffName, buffers, buffCount);
 				temp = rightRotate(temp);
@@ -312,7 +318,7 @@ int main(int argc, char **argv)
 			}
 			else
 			{
-				printf("Invalid Mirroring!\n");
+				printf("Invalid Rotation!\n");
 			}
 		}
 		else
@@ -336,12 +342,13 @@ void printMenu()
 	printf("\"subtraction : <buffer2> + <buffer3>\"\n");
 	printf("\"multiplication : <buffer2> + <buffer3>\"\n");
 	printf("\"division : <buffer2> + <buffer3>\"\n");
-	printf("\"brighten <buffer1> into <buffer2>\"\n");
-	printf("\"darken <buffer1> into <buffer2>\"\n");
-	printf("\"<horizontal/vertical/combined> <kirsch/prewitt/sobel> <image-name>\"\n");
-	printf("histEQ: \"histeq <buffer>\"\n");
-	printf("Flip: \"flip <vertical/horizontal> <buffer>\"\n");
-	printf("Rotation: \"rotate <left/right> <buffer>\"\n\n");
+	printf(KGRN "Brightening: " RESET "\"brighten <buffer1> into <buffer2>\"\n");
+	printf(KGRN "Darkening: " RESET "\"darken <buffer1> into <buffer2>\"\n");
+	printf(KGRN "Edge Detection: " RESET "\"<horizontal/vertical/combined> <kirsch/prewitt/sobel> <image-name>\"\n");
+	printf(KGRN "histEQ: " RESET "\"histeq <buffer>\"\n");
+	printf(KGRN "Flip: " RESET "\"flip <vertical/horizontal> <buffer>\"\n");
+	printf(KGRN "Rotation: " RESET "\"rotate <left/right> <buffer>\"\n\n");
+
 }
 
 void printBuffer(struct buff *buffers, int buffCount)

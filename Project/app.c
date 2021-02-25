@@ -23,7 +23,6 @@ struct buff
 #include "edge.c"
 #include "display.c"
 #include "histoEQ.c"
-#include "flip.c"
 #include "rotation.c"
 #define KGRN "\x1B[32m"
 #define KYEL "\x1B[33m"
@@ -283,7 +282,8 @@ int main(int argc, char **argv)
 		{
 			char *buff1 = strtok(NULL, " ");
 			struct buff temp = buffSearch(buff1, buffers, buffCount);
-			histogramEqualization(temp, command);
+			temp = histogramEqualization(temp, command);
+			addBuffer(temp, buffers, &buffCount);
 		}
 		else if ((strcmp(command, "flip") == 0))
 		{
@@ -293,6 +293,13 @@ int main(int argc, char **argv)
 				buffName = strtok(NULL, " ");
 				struct buff temp = buffSearch(buffName, buffers, buffCount);
 				temp = verticalFlip(temp);
+				addBuffer(temp, buffers, &buffCount);
+			}
+			else if ((strcmp(rot, "horizontal") == 0))
+			{
+				buffName = strtok(NULL, " ");
+				struct buff temp = buffSearch(buffName, buffers, buffCount);
+				temp = horizontalFlip(temp);
 				addBuffer(temp, buffers, &buffCount);
 			}
 			else

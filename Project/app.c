@@ -295,8 +295,7 @@ int main(int argc, char **argv)
 				temp = verticalFlip(temp);
 				addBuffer(temp, buffers, &buffCount);
 			}
-			else if ((strcmp(rot, "horizontal") == 0))
-			{
+			else if(strcmp(rot, "horizontal") == 0){
 				buffName = strtok(NULL, " ");
 				struct buff temp = buffSearch(buffName, buffers, buffCount);
 				temp = horizontalFlip(temp);

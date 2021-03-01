@@ -116,7 +116,7 @@ struct buff subtract(struct buff a, struct buff b, char* buffName) {
 // a * b
 struct buff multiply(struct buff a, struct buff b, char* buffName) {
 	if ((a.width != b.width) || (a.height != b.height) || (a.channels != b.channels)) { // Check for correct dimensions
-		printf("Wrong dimensions.\n");
+		printf(KRED"Error: "RESET"Wrong dimensions.\n");
 		exit(1);
 	}
 
@@ -141,7 +141,7 @@ struct buff multiply(struct buff a, struct buff b, char* buffName) {
 	size_t size = result.width * result.height * result.channels; // Allocate memory for result
 	unsigned char* result_img = malloc(size);
 	if (result_img == NULL) {
-		printf("Unable to allocate memory for the image.\n");
+		printf(KRED"Error: "RESET"Unable to allocate memory for the image.\n");
 		exit(1);
 	}
 
@@ -169,7 +169,7 @@ struct buff multiply(struct buff a, struct buff b, char* buffName) {
 // a / b
 struct buff divide(struct buff a, struct buff b, char* buffName) {
 	if ((a.width != b.width) || (a.height != b.height) || (a.channels != b.channels)) { // Check for correct dimensions
-		printf("Wrong dimensions.\n");
+		printf(KRED"Error: "RESET"Wrong dimensions.\n");
 		exit(1);
 	}
 
@@ -194,7 +194,7 @@ struct buff divide(struct buff a, struct buff b, char* buffName) {
 	size_t size = result.width * result.height * result.channels; // Allocate memory for result
 	unsigned char* result_img = malloc(size);
 	if (result_img == NULL) {
-		printf("Unable to allocate memory for the image.\n");
+		printf(KRED"Error: "RESET"Unable to allocate memory for the image.\n");
 		exit(1);
 	}
 
@@ -222,7 +222,7 @@ struct buff divide(struct buff a, struct buff b, char* buffName) {
 // Combining sobel/prewitt/kirsch
 struct buff combine(struct buff a, struct buff b, char* buffName) {
 	if ((a.width != b.width) || (a.height != b.height) || (a.channels != b.channels)) { // Check for correct dimensions
-		printf("Wrong dimensions.\n");
+		printf(KRED"Error: "RESET"Wrong dimensions.\n");
 		exit(1);
 	}
 
@@ -247,7 +247,7 @@ struct buff combine(struct buff a, struct buff b, char* buffName) {
 	size_t size = result.width * result.height * result.channels; // Allocate memory for result
 	unsigned char* result_img = malloc(size);
 	if (result_img == NULL) {
-		printf("Unable to allocate memory for the image.\n");
+		printf(KRED"Error:"RESET"Unable to allocate memory for the image.\n");
 		exit(1);
 	}
 

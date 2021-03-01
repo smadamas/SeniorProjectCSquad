@@ -61,7 +61,7 @@ void detectEdge(char *orientation, char *type, char *imageName)
     }
     else
     {
-        printf("This file type is not supported by this function.\n");
+        printf(KRED"Error: "RESET"This file type is not supported\n");
         return;
     }
 

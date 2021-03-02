@@ -209,7 +209,7 @@ int main(int argc, char **argv)
 				struct buff temp2 = readToBuff(horizname, "sobelhoriz");
 				addBuffer(temp1, buffers, &buffCount);
 				addBuffer(temp2, buffers, &buffCount);
-				addBuffer(combine(buffSearch("sobelvert", buffers, buffCount), buffSearch("sobelhoriz", buffers, buffCount), "combined"),
+				addBuffer(combine(buffSearch("sobelvert", buffers, buffCount), buffSearch("sobelhoriz", buffers, buffCount), "SobelCombined"),
 						  buffers, &buffCount);
 			}
 			else if (strcmp(type, "prewitt") == 0)
@@ -226,7 +226,7 @@ int main(int argc, char **argv)
 				struct buff temp2 = readToBuff(horizname, "prewitthoriz");
 				addBuffer(temp1, buffers, &buffCount);
 				addBuffer(temp2, buffers, &buffCount);
-				addBuffer(combine(buffSearch("prewittvert", buffers, buffCount), buffSearch("prewitthoriz", buffers, buffCount), "combined"),
+				addBuffer(combine(buffSearch("prewittvert", buffers, buffCount), buffSearch("prewitthoriz", buffers, buffCount), "PrewittCombined"),
 						  buffers, &buffCount);
 			}
 			else if (strcmp(type, "kirsch") == 0)
@@ -243,7 +243,7 @@ int main(int argc, char **argv)
 				struct buff temp2 = readToBuff(horizname, "kirschhoriz");
 				addBuffer(temp1, buffers, &buffCount);
 				addBuffer(temp2, buffers, &buffCount);
-				addBuffer(combine(buffSearch("kirschvert", buffers, buffCount), buffSearch("kirschhoriz", buffers, buffCount), "combined"),
+				addBuffer(combine(buffSearch("kirschvert", buffers, buffCount), buffSearch("kirschhoriz", buffers, buffCount), "KirschCombined"),
 						  buffers, &buffCount);
 			}
 		}

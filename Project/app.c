@@ -67,7 +67,7 @@ int main(int argc, char **argv)
 			imageName = strtok(NULL, " ");
 			if (strlen(imageName) > 14)
 			{
-				printf("Image name too long. Image + extension must be shorter than 14 characters.\n");
+				printf(KRED "Error: " RESET "Image name too long. Image + extension must be shorter than 14 characters.\n");
 			}
 			else
 			{
@@ -76,7 +76,7 @@ int main(int argc, char **argv)
 				int approved = check_types(ext, file_types);
 				if (approved != 1)
 				{
-					printf("Error: Image file type is not approved.\n");
+					printf(KRED "Error: " RESET "Image file type is not approved.\n");
 					exit(1);
 				}
 				strtok(NULL, " ");
@@ -92,13 +92,13 @@ int main(int argc, char **argv)
 			imageName = strtok(NULL, " ");
 			if (strlen(imageName) > 14)
 			{
-				printf("Image name too long. Image + extension must be shorter than 14 characters.\n");
+				printf(KRED "Error: " RESET "Image name too long. Image + extension must be shorter than 14 characters.\n");
 			}
 			else
 			{
-				printf("\nWriting %s into %s...\n", buffName, imageName);
+				printf(KYEL "\nWriting %s into %s...\n" RESET, buffName, imageName);
 				writeToImage(buffSearch(buffName, buffers, buffCount), imageName);
-				printf("Done writing!\n\n");
+				printf(KYEL "Done writing!\n\n" RESET);
 			}
 		}
 		else if (strcmp(command, "list") == 0)
@@ -112,7 +112,7 @@ int main(int argc, char **argv)
 			imageName = strtok(NULL, " ");
 			if (strlen(imageName) > 14)
 			{
-				printf("Image name too long. Image + extension must be shorter than 14 characters.\n");
+				printf(KRED "Error: " RESET "Image name too long. Image + extension must be shorter than 14 characters.\n");
 			}
 			else
 			{
@@ -128,7 +128,7 @@ int main(int argc, char **argv)
 			imageName = strtok(NULL, " ");
 			if (strlen(imageName) > 14)
 			{
-				printf("Image name too long. Image + extension must be shorter than 14 characters.\n");
+				printf(KRED "Error: " RESET "Image name too long. Image + extension must be shorter than 14 characters.\n");
 			}
 			else
 			{
@@ -161,7 +161,7 @@ int main(int argc, char **argv)
 			imageName = strtok(NULL, " ");
 			if (strlen(imageName) > 14)
 			{
-				printf("Image name too long. Image + extension must be shorter than 14 characters.\n");
+				printf(KRED "Error: " RESET "Image name too long. Image + extension must be shorter than 14 characters.\n");
 			}
 			else
 			{
@@ -275,7 +275,7 @@ int main(int argc, char **argv)
 			}
 			else
 			{
-				printf("\nError: Arithmetic syntax incorrect\n");
+				printf(KRED "Error:" RESET " Arithmetic syntax incorrect\n");
 			}
 		}
 		else if ((strcmp(command, "histeq") == 0))
@@ -295,7 +295,8 @@ int main(int argc, char **argv)
 				temp = verticalFlip(temp);
 				addBuffer(temp, buffers, &buffCount);
 			}
-			else if(strcmp(rot, "horizontal") == 0){
+			else if (strcmp(rot, "horizontal") == 0)
+			{
 				buffName = strtok(NULL, " ");
 				struct buff temp = buffSearch(buffName, buffers, buffCount);
 				temp = horizontalFlip(temp);
@@ -303,7 +304,7 @@ int main(int argc, char **argv)
 			}
 			else
 			{
-				printf("Invalid mirroring!\n");
+				printf(KRED "Error: " RESET "Invalid mirroring!\n");
 			}
 		}
 		else if ((strcmp(command, "rotate") == 0))
@@ -325,12 +326,12 @@ int main(int argc, char **argv)
 			}
 			else
 			{
-				printf("Invalid Rotation!\n");
+				printf(KRED "Error: " RESET " Invalid Rotation!\n");
 			}
 		}
 		else
 		{
-			printf("\nCommand not found or not supported, please type menu for list of commands.\n\n");
+			printf(KRED "Error: " RESET "Command not found or not supported, please type menu for list of commands.\n");
 		}
 
 		gets(p);
@@ -387,7 +388,6 @@ void addBuffer(struct buff buffer, struct buff *buffers, int *buffCount)
 		buffers[*buffCount].height = buffer.height;
 		buffers[*buffCount].channels = buffer.channels;
 		buffers[*buffCount].imrgb = buffer.imrgb;
-		// strcpy(buffers[*buffCount].imrgb, buffer.imrgb);
 		buffers[*buffCount].isLibgd = buffer.isLibgd;
 		(*buffCount)++;
 	}
@@ -400,7 +400,6 @@ void addBuffer(struct buff buffer, struct buff *buffers, int *buffCount)
 		buffers[k].height = buffer.height;
 		buffers[k].channels = buffer.channels;
 		buffers[k].imrgb = buffer.imrgb;
-		// strcpy(buffers[k].imrgb, buffer.imrgb);
 		buffers[k].isLibgd = buffer.isLibgd;
 	}
 
@@ -417,6 +416,7 @@ struct buff buffSearch(char *buffName, struct buff *buffers, int buffCount)
 		}
 	}
 	printf(KRED "Error:" RESET " buffer not found.\n");
+
 	struct buff temp;
 	strcpy(temp.status, "false");
 	return temp;

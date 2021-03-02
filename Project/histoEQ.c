@@ -109,7 +109,7 @@ struct buff histogramEqualization(struct buff a, char *buffName)
     strcpy(temp.imageName, "HisteQ.jpg");
     temp.imrgb = out;
 
-    printf(KYEL "Done equalizing!\n\n" RESET);
+    printf(KYEL "Done equalizing!\n" RESET);
 
     return temp;
 }

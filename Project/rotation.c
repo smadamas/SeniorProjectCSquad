@@ -3,6 +3,12 @@
 #include <string.h>
 #include <stdbool.h>
 #include "libgd/src/gd.h"
+#define KYEL "\x1B[33m"
+#define KBLU "\x1B[34m"
+#define KRED "\x1B[31m"
+#define KMAG "\x1B[35m"
+#define RESET "\x1B[0m"
+
 
 struct buff rightRotate(struct buff a)
 {
@@ -15,7 +21,7 @@ struct buff rightRotate(struct buff a)
     gdImagePtr out = gdImageRotateInterpolated(a.imrgb, 270.0, 0);
     temp.imrgb = out;
 
-    printf("Done rotating!\n");
+    printf(KYEL"Done rotating!\n"RESET);
 
     return temp;
 }
@@ -30,7 +36,7 @@ struct buff leftRotate(struct buff a)
     gdImagePtr out = gdImageRotateInterpolated(a.imrgb, 90.0, 0);
     temp.imrgb = out;
 
-    printf("Done rotating!\n");
+    printf(KYEL"Done rotating!\n"RESET);
 
     return temp;
 }

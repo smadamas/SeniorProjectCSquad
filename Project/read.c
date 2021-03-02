@@ -9,7 +9,7 @@
 
 struct buff readToBuff(char *imageName, char *const buffName)
 {
-	printf(KYEL"\nReading %s into %s...\n" RESET, imageName, buffName);
+	printf(KYEL"Reading %s into %s..."RESET"\n" , imageName, buffName);
 	int width, height, ch;
 	unsigned char *buff = stbi_load(imageName, &width, &height, &ch, 0);
 	if (buffName == NULL)
@@ -52,6 +52,6 @@ struct buff readToBuff(char *imageName, char *const buffName)
 	buffer.height = height;
 	buffer.channels = ch;
 	buffer.isLibgd = false;
-	printf(KYEL "Done reading!\n\n"RESET);
+	printf(KYEL "Done reading!\n"RESET);
 	return buffer;
 }

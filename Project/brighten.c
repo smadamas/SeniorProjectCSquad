@@ -42,6 +42,8 @@ struct buff brighten(struct buff input, char* buffName, bool choice, int amount)
 			for (int i = 0; i < 3; i++) {
 				if ((*(oldPtr + i) + amount) > 255)
 					*(newPtr + i) = (uint8_t)255;
+				else if ((*(oldPtr + i) + amount) < 0)
+					*(newPtr + i) = (uint8_t)0;
 				else
 					*(newPtr + i) = (uint8_t)(*(oldPtr + i) + amount);
 			}
@@ -50,6 +52,8 @@ struct buff brighten(struct buff input, char* buffName, bool choice, int amount)
 			for (int i = 0; i < 3; i++) {
 				if ((*(oldPtr + i) - amount) < 0)
 					*(newPtr + i) = (uint8_t)0;
+				else if ((*(oldPtr + i) + amount) > 255)
+					*(newPtr + i) = (uint8_t)255;
 				else
 					*(newPtr + i) = (uint8_t)(*(oldPtr + i) - amount);
 			}

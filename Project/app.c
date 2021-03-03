@@ -112,13 +112,18 @@ int main(int argc, char **argv)
 			imageName = strtok(NULL, " ");
 			if (strlen(imageName) > 14)
 			{
-				printf(KRED "Error: " RESET "Image name too long. Image + extension must be shorter than 14 characters.\n");
+				printf(KRED "Error: " RESET "Image name too long. Image + extension must be shorter than 14 characters.\n\n");
 			}
 			else
 			{
 				strtok(NULL, " ");
 				amount = strtok(NULL, " ");
-				addBuffer(brighten(buffSearch(buffName, buffers, buffCount), imageName, true, atoi(amount)), buffers, &buffCount);
+				if (amount != NULL){
+					addBuffer(brighten(buffSearch(buffName, buffers, buffCount), imageName, true, atoi(amount)), buffers, &buffCount);
+				}
+				else {
+					printf(KRED "Error: " RESET "Brightening routine not written in correct format.\n\n");
+				}
 			}
 		}
 		else if (strcmp(command, "darken") == 0)
@@ -134,7 +139,12 @@ int main(int argc, char **argv)
 			{
 				strtok(NULL, " ");
 				amount = strtok(NULL, " ");
-				addBuffer(brighten(buffSearch(buffName, buffers, buffCount), imageName, false, atoi(amount)), buffers, &buffCount);
+				if (amount != NULL){
+					addBuffer(brighten(buffSearch(buffName, buffers, buffCount), imageName, false, atoi(amount)), buffers, &buffCount);
+				}
+				else {
+					printf(KRED "Error: " RESET "Darkening routine not written in correct format.\n");
+				}
 			}
 		}
 		else if (strcmp(command, "display") == 0)
@@ -350,8 +360,8 @@ void printMenu()
 	printf(KBLU "Subtraction: " RESET "\"subtraction : <buffer2> - <buffer3>\"\n");
 	printf(KBLU "Multiplication " RESET "\"multiplication : <buffer2> * <buffer3>\"\n");
 	printf(KBLU "Division: " RESET "\"division : <buffer2> / <buffer3>\"\n");
-	printf(KBLU "Brightening: " RESET "\"brighten <buffer1> into <buffer2>\"\n");
-	printf(KBLU "Darkening: " RESET "\"darken <buffer1> into <buffer2>\"\n");
+	printf(KBLU "Brighten: " RESET "\"brighten <buffer1> into <buffer2> by <value between 0 and 255>\"\n");
+	printf(KBLU "Darken: " RESET "\"darken <buffer1> into <buffer2> by <value between 0 and 255>\"\n");
 	printf(KBLU "Edge Detection: " RESET "\"<horizontal/vertical/combined> <kirsch/prewitt/sobel> <image-name>\"\n");
 	printf(KBLU "Histogram Equalization: " RESET "\"histeq <buffer>\"\n");
 	printf(KBLU "Flip: " RESET "\"flip <vertical/horizontal> <buffer>\"\n");

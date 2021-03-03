@@ -182,7 +182,7 @@ int main(int argc, char **argv)
 				{
 					temp1 = readToBuff(name, strcat(command, "Pre"));
 				}
-				else
+				else if (strcmp(type, "kirsch") == 0)
 				{
 					temp1 = readToBuff(name, strcat(command, "Kir"));
 				}
@@ -207,6 +207,8 @@ int main(int argc, char **argv)
 				strcat(horizname, imageName);
 				struct buff temp1 = readToBuff(vertname, "sobelvert");
 				struct buff temp2 = readToBuff(horizname, "sobelhoriz");
+				remove(vertname);
+				remove(horizname);
 				addBuffer(temp1, buffers, &buffCount);
 				addBuffer(temp2, buffers, &buffCount);
 				addBuffer(combine(buffSearch("sobelvert", buffers, buffCount), buffSearch("sobelhoriz", buffers, buffCount), "SobelCombined"),
@@ -224,6 +226,8 @@ int main(int argc, char **argv)
 				strcat(horizname, imageName);
 				struct buff temp1 = readToBuff(vertname, "prewittvert");
 				struct buff temp2 = readToBuff(horizname, "prewitthoriz");
+				remove(vertname);
+				remove(horizname);
 				addBuffer(temp1, buffers, &buffCount);
 				addBuffer(temp2, buffers, &buffCount);
 				addBuffer(combine(buffSearch("prewittvert", buffers, buffCount), buffSearch("prewitthoriz", buffers, buffCount), "PrewittCombined"),
@@ -241,10 +245,15 @@ int main(int argc, char **argv)
 				strcat(horizname, imageName);
 				struct buff temp1 = readToBuff(vertname, "kirschvert");
 				struct buff temp2 = readToBuff(horizname, "kirschhoriz");
+				remove(vertname);
+				remove(horizname);
 				addBuffer(temp1, buffers, &buffCount);
 				addBuffer(temp2, buffers, &buffCount);
 				addBuffer(combine(buffSearch("kirschvert", buffers, buffCount), buffSearch("kirschhoriz", buffers, buffCount), "KirschCombined"),
 						  buffers, &buffCount);
+			}
+			else {
+				printf(KRED "\nError: " RESET "Phrase following combined must be edge detection type.\n\n");
 			}
 		}
 		else if (strcmp(command, "addition") == 0 || strcmp(command, "subtraction") == 0 || strcmp(command, "division") == 0 || strcmp(command, "multiplication") == 0)

@@ -72,7 +72,7 @@ int main(int argc, char **argv)
 			else
 			{
 				char *ext = get_filename_ext(imageName);
-				char *file_types[5] = {"jpeg", "jpg", "gif", "tiff", "png"}; //ALLOW NEW FILE TYPES HERE
+				char *file_types[4] = {"jpeg", "gif", "tiff", "png"}; //ALLOW NEW FILE TYPES HERE
 				int approved = check_types(ext, file_types);
 				if (approved != 1)
 				{
@@ -165,106 +165,18 @@ int main(int argc, char **argv)
 		{
 			break;
 		}
-		else if (strcmp(command, "horizontal") == 0 || strcmp(command, "vertical") == 0)
+		else if (strcmp(command, "horizontal") == 0 || strcmp(command, "vertical") == 0 || strcmp(command, "combined") == 0)
 		{
 			char *type = strtok(NULL, " ");
-			imageName = strtok(NULL, " ");
-			if (strlen(imageName) > 14)
-			{
-				printf(KRED "Error: " RESET "Image name too long. Image + extension must be shorter than 14 characters.\n");
-			}
-			else
-			{
-				detectEdge(command, type, imageName);
-				char name[50];
-				strcpy(name, type);
-				strcat(name, "-");
-				strcat(name, command);
-				strcat(name, "-");
-				strcat(name, imageName);
-
-				struct buff temp1;
-				if (strcmp(type, "sobel") == 0)
-				{
-					temp1 = readToBuff(name, strcat(command, "Sob"));
-				}
-				else if (strcmp(type, "prewitt") == 0)
-				{
-					temp1 = readToBuff(name, strcat(command, "Pre"));
-				}
-				else if (strcmp(type, "kirsch") == 0)
-				{
-					temp1 = readToBuff(name, strcat(command, "Kir"));
-				}
-
-				addBuffer(temp1, buffers, &buffCount);
-			}
-		}
-		else if (strcmp(command, "combined") == 0)
-		{
-
-			char *type = strtok(NULL, " ");
-			imageName = strtok(NULL, " ");
-			if (strcmp(type, "sobel") == 0)
-			{
-				detectEdge("vertical", type, imageName);
-				detectEdge("horizontal", type, imageName);
-				char vertname[50];
-				char horizname[50];
-				strcpy(vertname, "sobel-vertical-");
-				strcat(vertname, imageName);
-				strcpy(horizname, "sobel-horizontal-");
-				strcat(horizname, imageName);
-				struct buff temp1 = readToBuff(vertname, "sobelvert");
-				struct buff temp2 = readToBuff(horizname, "sobelhoriz");
-				remove(vertname);
-				remove(horizname);
-				addBuffer(temp1, buffers, &buffCount);
-				addBuffer(temp2, buffers, &buffCount);
-				addBuffer(combine(buffSearch("sobelvert", buffers, buffCount), buffSearch("sobelhoriz", buffers, buffCount), "SobelCombined"),
-						  buffers, &buffCount);
-			}
-			else if (strcmp(type, "prewitt") == 0)
-			{
-				detectEdge("vertical", type, imageName);
-				detectEdge("horizontal", type, imageName);
-				char vertname[50];
-				char horizname[50];
-				strcpy(vertname, "prewitt-vertical-");
-				strcat(vertname, imageName);
-				strcpy(horizname, "prewitt-horizontal-");
-				strcat(horizname, imageName);
-				struct buff temp1 = readToBuff(vertname, "prewittvert");
-				struct buff temp2 = readToBuff(horizname, "prewitthoriz");
-				remove(vertname);
-				remove(horizname);
-				addBuffer(temp1, buffers, &buffCount);
-				addBuffer(temp2, buffers, &buffCount);
-				addBuffer(combine(buffSearch("prewittvert", buffers, buffCount), buffSearch("prewitthoriz", buffers, buffCount), "PrewittCombined"),
-						  buffers, &buffCount);
-			}
-			else if (strcmp(type, "kirsch") == 0)
-			{
-				detectEdge("vertical", type, imageName);
-				detectEdge("horizontal", type, imageName);
-				char vertname[50];
-				char horizname[50];
-				strcpy(vertname, "kirsch-vertical-");
-				strcat(vertname, imageName);
-				strcpy(horizname, "kirsch-horizontal-");
-				strcat(horizname, imageName);
-				struct buff temp1 = readToBuff(vertname, "kirschvert");
-				struct buff temp2 = readToBuff(horizname, "kirschhoriz");
-				remove(vertname);
-				remove(horizname);
-				addBuffer(temp1, buffers, &buffCount);
-				addBuffer(temp2, buffers, &buffCount);
-				addBuffer(combine(buffSearch("kirschvert", buffers, buffCount), buffSearch("kirschhoriz", buffers, buffCount), "KirschCombined"),
-						  buffers, &buffCount);
-			}
-			else {
-				printf(KRED "\nError: " RESET "Phrase following combined must be edge detection type.\n\n");
-			}
+			buffName = strtok(NULL, " ");
+			strtok(NULL, " ");
+			char* resultBuffName = strtok(NULL, " ");
+		
+			struct buff temp = detectEdge(command, type, buffSearch(buffName, buffers, buffCount));
+			strcpy(temp.name, resultBuffName);
+			temp.isLibgd = 1;
+			addBuffer(temp, buffers, &buffCount);
+			
 		}
 		else if (strcmp(command, "addition") == 0 || strcmp(command, "subtraction") == 0 || strcmp(command, "division") == 0 || strcmp(command, "multiplication") == 0)
 		{
@@ -301,9 +213,14 @@ int main(int argc, char **argv)
 		}
 		else if ((strcmp(command, "histeq") == 0))
 		{
-			char *buff1 = strtok(NULL, " ");
-			struct buff temp = buffSearch(buff1, buffers, buffCount);
+			buffName = strtok(NULL, " ");
+			strtok(NULL, " ");
+			char *resultBuffName = strtok(NULL, " ");
+
+			struct buff temp = buffSearch(buffName, buffers, buffCount);
 			temp = histogramEqualization(temp, command);
+			
+			strcpy(temp.name, resultBuffName);
 			addBuffer(temp, buffers, &buffCount);
 		}
 		else if ((strcmp(command, "flip") == 0))
@@ -330,25 +247,18 @@ int main(int argc, char **argv)
 		}
 		else if ((strcmp(command, "rotate") == 0))
 		{
-			char *rot = strtok(NULL, " ");
-			if ((strcmp(rot, "left") == 0))
-			{
-				buffName = strtok(NULL, " ");
-				struct buff temp = buffSearch(buffName, buffers, buffCount);
-				temp = leftRotate(temp);
-				addBuffer(temp, buffers, &buffCount);
-			}
-			else if ((strcmp(rot, "right") == 0))
-			{
-				buffName = strtok(NULL, " ");
-				struct buff temp = buffSearch(buffName, buffers, buffCount);
-				temp = rightRotate(temp);
-				addBuffer(temp, buffers, &buffCount);
-			}
+			
+			buffName = strtok(NULL, " ");
+			strtok(NULL, " ");
+			char* degree = strtok(NULL, " ");
+
+			float degrees;
+			sscanf(degree, "%f", &degrees);
+
+			if(degrees>=(float)360 || degrees <=(float)-360)
+				printf("Error: degree of rotation is out of limits.\n\n");
 			else
-			{
-				printf(KRED "Error: " RESET " Invalid Rotation!\n");
-			}
+				addBuffer(rotate(buffSearch(buffName,buffers, buffCount), degrees), buffers, &buffCount);
 		}
 		else
 		{
@@ -365,20 +275,20 @@ void printMenu()
 	printf(KBLU "Exit Program: " RESET "\"quit\"\n");
 	printf(KBLU "List Buffers: " RESET "\"list\"\n");
 	printf(KBLU "Show Image in Buffer: " RESET "\"display <buffer-name>\"\n");
-	printf(KBLU "Input Image: " RESET "\"read <image-name> into <buffer-name>\"\n");
-	printf(KBLU "Output Image: " RESET "\"write <buffer-name> into <image-name>\"\n");
+	printf(KBLU "Input Image: " RESET "\"read <image-name> into <new-buffer-name>\"\n");
+	printf(KBLU "Output Image: " RESET "\"write <buffer-name> into <new-image-name>\"\n");
 
-	printf(KBLU "Addition: " RESET "\"addition : <buffer-name> = <buffer2> + <buffer3>\"\n");
-	printf(KBLU "Subtraction: " RESET "\"subtraction : <buffer-name> = <buffer2> - <buffer3>\"\n");
-	printf(KBLU "Multiplication " RESET "\"multiplication : <buffer-name> = <buffer2> * <buffer3>\"\n");
-	printf(KBLU "Division: " RESET "\"division : <buffer-name> = <buffer2> / <buffer3>\"\n");
-	printf(KBLU "Brighten: " RESET "\"brighten <buffer1> into <buffer2> by <value between 0 and 255>\"\n");
-	printf(KBLU "Darken: " RESET "\"darken <buffer1> into <buffer2> by <value between 0 and 255>\"\n");
+	printf(KBLU "Addition: " RESET "\"addition : <new-buffer-name> = <buffer1> + <buffer2>\"\n");
+	printf(KBLU "Subtraction: " RESET "\"subtraction : <new-buffer-name> = <buffer1> - <buffer2>\"\n");
+	printf(KBLU "Multiplication " RESET "\"multiplication : <new-buffer-name> = <buffer1> * <buffer2>\"\n");
+	printf(KBLU "Division: " RESET "\"division : <new-buffer-name> = <buffer1> / <buffer2>\"\n");
+	printf(KBLU "Brighten: " RESET "\"brighten <buffer-name> into <new-buffer-name> by <value between 0 and 255>\"\n");
+	printf(KBLU "Darken: " RESET "\"darken <buffer-name> into <new-buffer-name> by <value between 0 and 255>\"\n");
 
-	printf(KBLU "Edge Detection: " RESET "\"<horizontal/vertical/combined> <kirsch/prewitt/sobel> <image-name>\"\n");
-	printf(KBLU "Histogram Equalization: " RESET "\"histeq <buffer>\"\n");
-	printf(KBLU "Flip: " RESET "\"flip <vertical/horizontal> <buffer>\"\n");
-	printf(KBLU "Rotation: " RESET "\"rotate <left/right> <buffer>\"\n\n");
+	printf(KBLU "Edge Detection: " RESET "\"<horizontal/vertical/combined> <kirsch/prewitt/sobel> <buffer-name> into <new-buffer-name>\"\n");
+	printf(KBLU "Histogram Equalization: " RESET "\"histeq <buffer-name> into <new-buffer-name>\"\n");
+	printf(KBLU "Flip: " RESET "\"flip <vertical/horizontal> <buffer-name>\"\n");
+	printf(KBLU "Rotation: " RESET "\"rotate <buffer-name> by <degrees>\" where degrees exists in (-360, 360) \n\n");
 }
 
 void printBuffer(struct buff *buffers, int buffCount)
@@ -454,7 +364,7 @@ char *get_filename_ext(const char *filename)
 }
 int check_types(char *ext, char *file_types[])
 {
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 4; i++)
 	{
 		int temp = strcmp(ext, file_types[i]);
 		if (temp == 0)

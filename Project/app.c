@@ -112,13 +112,18 @@ int main(int argc, char **argv)
 			imageName = strtok(NULL, " ");
 			if (strlen(imageName) > 14)
 			{
-				printf(KRED "Error: " RESET "Image name too long. Image + extension must be shorter than 14 characters.\n");
+				printf(KRED "Error: " RESET "Image name too long. Image + extension must be shorter than 14 characters.\n\n");
 			}
 			else
 			{
 				strtok(NULL, " ");
 				amount = strtok(NULL, " ");
-				addBuffer(brighten(buffSearch(buffName, buffers, buffCount), imageName, true, atoi(amount)), buffers, &buffCount);
+				if (amount != NULL){
+					addBuffer(brighten(buffSearch(buffName, buffers, buffCount), imageName, true, atoi(amount)), buffers, &buffCount);
+				}
+				else {
+					printf(KRED "Error: " RESET "Brightening routine not written in correct format.\n\n");
+				}
 			}
 		}
 		else if (strcmp(command, "darken") == 0)
@@ -134,7 +139,12 @@ int main(int argc, char **argv)
 			{
 				strtok(NULL, " ");
 				amount = strtok(NULL, " ");
-				addBuffer(brighten(buffSearch(buffName, buffers, buffCount), imageName, false, atoi(amount)), buffers, &buffCount);
+				if (amount != NULL){
+					addBuffer(brighten(buffSearch(buffName, buffers, buffCount), imageName, false, atoi(amount)), buffers, &buffCount);
+				}
+				else {
+					printf(KRED "Error: " RESET "Darkening routine not written in correct format.\n");
+				}
 			}
 		}
 		else if (strcmp(command, "display") == 0)
@@ -182,7 +192,7 @@ int main(int argc, char **argv)
 				{
 					temp1 = readToBuff(name, strcat(command, "Pre"));
 				}
-				else
+				else if (strcmp(type, "kirsch") == 0)
 				{
 					temp1 = readToBuff(name, strcat(command, "Kir"));
 				}
@@ -207,9 +217,11 @@ int main(int argc, char **argv)
 				strcat(horizname, imageName);
 				struct buff temp1 = readToBuff(vertname, "sobelvert");
 				struct buff temp2 = readToBuff(horizname, "sobelhoriz");
+				remove(vertname);
+				remove(horizname);
 				addBuffer(temp1, buffers, &buffCount);
 				addBuffer(temp2, buffers, &buffCount);
-				addBuffer(combine(buffSearch("sobelvert", buffers, buffCount), buffSearch("sobelhoriz", buffers, buffCount), "combined"),
+				addBuffer(combine(buffSearch("sobelvert", buffers, buffCount), buffSearch("sobelhoriz", buffers, buffCount), "SobelCombined"),
 						  buffers, &buffCount);
 			}
 			else if (strcmp(type, "prewitt") == 0)
@@ -224,9 +236,11 @@ int main(int argc, char **argv)
 				strcat(horizname, imageName);
 				struct buff temp1 = readToBuff(vertname, "prewittvert");
 				struct buff temp2 = readToBuff(horizname, "prewitthoriz");
+				remove(vertname);
+				remove(horizname);
 				addBuffer(temp1, buffers, &buffCount);
 				addBuffer(temp2, buffers, &buffCount);
-				addBuffer(combine(buffSearch("prewittvert", buffers, buffCount), buffSearch("prewitthoriz", buffers, buffCount), "combined"),
+				addBuffer(combine(buffSearch("prewittvert", buffers, buffCount), buffSearch("prewitthoriz", buffers, buffCount), "PrewittCombined"),
 						  buffers, &buffCount);
 			}
 			else if (strcmp(type, "kirsch") == 0)
@@ -241,10 +255,15 @@ int main(int argc, char **argv)
 				strcat(horizname, imageName);
 				struct buff temp1 = readToBuff(vertname, "kirschvert");
 				struct buff temp2 = readToBuff(horizname, "kirschhoriz");
+				remove(vertname);
+				remove(horizname);
 				addBuffer(temp1, buffers, &buffCount);
 				addBuffer(temp2, buffers, &buffCount);
-				addBuffer(combine(buffSearch("kirschvert", buffers, buffCount), buffSearch("kirschhoriz", buffers, buffCount), "combined"),
+				addBuffer(combine(buffSearch("kirschvert", buffers, buffCount), buffSearch("kirschhoriz", buffers, buffCount), "KirschCombined"),
 						  buffers, &buffCount);
+			}
+			else {
+				printf(KRED "\nError: " RESET "Phrase following combined must be edge detection type.\n\n");
 			}
 		}
 		else if (strcmp(command, "addition") == 0 || strcmp(command, "subtraction") == 0 || strcmp(command, "division") == 0 || strcmp(command, "multiplication") == 0)
@@ -348,12 +367,14 @@ void printMenu()
 	printf(KBLU "Show Image in Buffer: " RESET "\"display <buffer-name>\"\n");
 	printf(KBLU "Input Image: " RESET "\"read <image-name> into <buffer-name>\"\n");
 	printf(KBLU "Output Image: " RESET "\"write <buffer-name> into <image-name>\"\n");
+
 	printf(KBLU "Addition: " RESET "\"addition : <buffer-name> = <buffer2> + <buffer3>\"\n");
 	printf(KBLU "Subtraction: " RESET "\"subtraction : <buffer-name> = <buffer2> - <buffer3>\"\n");
 	printf(KBLU "Multiplication " RESET "\"multiplication : <buffer-name> = <buffer2> * <buffer3>\"\n");
 	printf(KBLU "Division: " RESET "\"division : <buffer-name> = <buffer2> / <buffer3>\"\n");
-	printf(KBLU "Brightening: " RESET "\"brighten <buffer1> into <buffer2>\"\n");
-	printf(KBLU "Darkening: " RESET "\"darken <buffer1> into <buffer2>\"\n");
+	printf(KBLU "Brighten: " RESET "\"brighten <buffer1> into <buffer2> by <value between 0 and 255>\"\n");
+	printf(KBLU "Darken: " RESET "\"darken <buffer1> into <buffer2> by <value between 0 and 255>\"\n");
+
 	printf(KBLU "Edge Detection: " RESET "\"<horizontal/vertical/combined> <kirsch/prewitt/sobel> <image-name>\"\n");
 	printf(KBLU "Histogram Equalization: " RESET "\"histeq <buffer>\"\n");
 	printf(KBLU "Flip: " RESET "\"flip <vertical/horizontal> <buffer>\"\n");

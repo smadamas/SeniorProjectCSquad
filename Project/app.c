@@ -269,27 +269,29 @@ int main(int argc, char **argv)
 		else if (strcmp(command, "addition") == 0 || strcmp(command, "subtraction") == 0 || strcmp(command, "division") == 0 || strcmp(command, "multiplication") == 0)
 		{
 			strtok(NULL, " ");
+			buffName = strtok(NULL, " ");
+			strtok(NULL, " ");
 			char *buff1 = strtok(NULL, " ");
 			char *cmd = strtok(NULL, " ");
 			char *buff2 = strtok(NULL, " ");
 			if (strcmp(cmd, "+") == 0)
 			{
-				addBuffer(add(buffSearch(buff1, buffers, buffCount), buffSearch(buff2, buffers, buffCount), command),
+				addBuffer(add(buffSearch(buff1, buffers, buffCount), buffSearch(buff2, buffers, buffCount), buffName),
 						  buffers, &buffCount);
 			}
 			else if (strcmp(cmd, "-") == 0)
 			{
-				addBuffer(subtract(buffSearch(buff1, buffers, buffCount), buffSearch(buff2, buffers, buffCount), command),
+				addBuffer(subtract(buffSearch(buff1, buffers, buffCount), buffSearch(buff2, buffers, buffCount), buffName),
 						  buffers, &buffCount);
 			}
 			else if (strcmp(cmd, "*") == 0)
 			{
-				addBuffer(multiply(buffSearch(buff1, buffers, buffCount), buffSearch(buff2, buffers, buffCount), command),
+				addBuffer(multiply(buffSearch(buff1, buffers, buffCount), buffSearch(buff2, buffers, buffCount), buffName),
 						  buffers, &buffCount);
 			}
 			else if (strcmp(cmd, "/") == 0)
 			{
-				addBuffer(divide(buffSearch(buff1, buffers, buffCount), buffSearch(buff2, buffers, buffCount), command),
+				addBuffer(divide(buffSearch(buff1, buffers, buffCount), buffSearch(buff2, buffers, buffCount), buffName),
 						  buffers, &buffCount);
 			}
 			else
@@ -365,12 +367,14 @@ void printMenu()
 	printf(KBLU "Show Image in Buffer: " RESET "\"display <buffer-name>\"\n");
 	printf(KBLU "Input Image: " RESET "\"read <image-name> into <buffer-name>\"\n");
 	printf(KBLU "Output Image: " RESET "\"write <buffer-name> into <image-name>\"\n");
-	printf(KBLU "Addition: " RESET "\"addition : <buffer2> + <buffer3>\"\n");
-	printf(KBLU "Subtraction: " RESET "\"subtraction : <buffer2> - <buffer3>\"\n");
-	printf(KBLU "Multiplication " RESET "\"multiplication : <buffer2> * <buffer3>\"\n");
-	printf(KBLU "Division: " RESET "\"division : <buffer2> / <buffer3>\"\n");
+
+	printf(KBLU "Addition: " RESET "\"addition : <buffer-name> = <buffer2> + <buffer3>\"\n");
+	printf(KBLU "Subtraction: " RESET "\"subtraction : <buffer-name> = <buffer2> - <buffer3>\"\n");
+	printf(KBLU "Multiplication " RESET "\"multiplication : <buffer-name> = <buffer2> * <buffer3>\"\n");
+	printf(KBLU "Division: " RESET "\"division : <buffer-name> = <buffer2> / <buffer3>\"\n");
 	printf(KBLU "Brighten: " RESET "\"brighten <buffer1> into <buffer2> by <value between 0 and 255>\"\n");
 	printf(KBLU "Darken: " RESET "\"darken <buffer1> into <buffer2> by <value between 0 and 255>\"\n");
+
 	printf(KBLU "Edge Detection: " RESET "\"<horizontal/vertical/combined> <kirsch/prewitt/sobel> <image-name>\"\n");
 	printf(KBLU "Histogram Equalization: " RESET "\"histeq <buffer>\"\n");
 	printf(KBLU "Flip: " RESET "\"flip <vertical/horizontal> <buffer>\"\n");

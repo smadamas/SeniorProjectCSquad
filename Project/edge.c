@@ -102,6 +102,15 @@ void detectEdge(char *orientation, char *type, char *imageName)
         else if (strcmp(orientation, "combined") == 0)
         {
             gdImageConvolution(src, kirsch_mask_vert, 1.0, 0.0);
+            FILE *out;
+            char name[50];
+            strcpy(name, "kirsch-");
+            strcat(name, orientation);
+            strcat(name, "-");
+            strcat(name, temp);
+            out = fopen(name, "wb");
+            gdImagePngEx(src, out, 9);
+            fclose(out);
             copy = gdImageClone(src);
             gdImageConvolution(copy, kirsch_mask_horiz, 1.0, 0.0);
         }
@@ -118,18 +127,7 @@ void detectEdge(char *orientation, char *type, char *imageName)
             strcat(name, "-");
             strcat(name, temp);
             out = fopen(name, "wb");
-
-            //Experiemental trying to get other file types working!
-            switch (extType)
-            {
-            case 1:
-                gdImagePngEx(src, out, 9);
-            case 2:
-                gdImageJpeg(src, out, -1);
-            case 3:
-                gdImageGif(src, out);
-            }
-
+            gdImagePngEx(src, out, 9);
             fclose(out);
             gdImageDestroy(src);
             return;
@@ -152,6 +150,15 @@ void detectEdge(char *orientation, char *type, char *imageName)
         else if (strcmp(orientation, "combined") == 0)
         {
             gdImageConvolution(src, prewitt_mask_vert, 1.0, 0.0);
+            FILE *out;
+            char name[50];
+            strcpy(name, "prewitt-");
+            strcat(name, orientation);
+            strcat(name, "-");
+            strcat(name, temp);
+            out = fopen(name, "wb");
+            gdImagePngEx(src, out, 9);
+            fclose(out);
             copy = gdImageClone(src);
             gdImageConvolution(copy, prewitt_mask_horiz, 1.0, 0.0);
         }
@@ -191,6 +198,15 @@ void detectEdge(char *orientation, char *type, char *imageName)
         else if (strcmp(orientation, "combined") == 0)
         {
             gdImageConvolution(src, sobel_mask_vert, 1.0, 0.0);
+            FILE *out;
+            char name[50];
+            strcpy(name, "sobel-");
+            strcat(name, orientation);
+            strcat(name, "-");
+            strcat(name, temp);
+            out = fopen(name, "wb");
+            gdImagePngEx(src, out, 9);
+            fclose(out);
             copy = gdImageClone(src);
             gdImageConvolution(copy, sobel_mask_horiz, 1.0, 0.0);
         }

@@ -2,6 +2,11 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdbool.h>
+#define KYEL  "\x1B[33m"
+#define KBLU  "\x1B[34m"
+#define KRED  "\x1B[31m"
+#define KMAG  "\x1B[35m"
+#define RESET "\x1B[0m"
 
 //Brightening routine can accept darken or brightne commandds based on bool choice
 struct buff brighten(struct buff input, char* buffName, bool choice, int amount) {
@@ -24,7 +29,7 @@ struct buff brighten(struct buff input, char* buffName, bool choice, int amount)
 	size_t size = result.width * result.height * result.channels; // Allocate memory for result
 	unsigned char* result_img = malloc(size);
 	if (result_img == NULL) {
-		printf("Unable to allocate memory for the image.\n");
+		printf(KRED"Error: "RESET"Unable to allocate memory for the image.\n");
 		exit(1);
 	}
 
@@ -37,6 +42,8 @@ struct buff brighten(struct buff input, char* buffName, bool choice, int amount)
 			for (int i = 0; i < 3; i++) {
 				if ((*(oldPtr + i) + amount) > 255)
 					*(newPtr + i) = (uint8_t)255;
+				else if ((*(oldPtr + i) + amount) < 0)
+					*(newPtr + i) = (uint8_t)0;
 				else
 					*(newPtr + i) = (uint8_t)(*(oldPtr + i) + amount);
 			}
@@ -45,6 +52,8 @@ struct buff brighten(struct buff input, char* buffName, bool choice, int amount)
 			for (int i = 0; i < 3; i++) {
 				if ((*(oldPtr + i) - amount) < 0)
 					*(newPtr + i) = (uint8_t)0;
+				else if ((*(oldPtr + i) + amount) > 255)
+					*(newPtr + i) = (uint8_t)255;
 				else
 					*(newPtr + i) = (uint8_t)(*(oldPtr + i) - amount);
 			}
@@ -56,10 +65,10 @@ struct buff brighten(struct buff input, char* buffName, bool choice, int amount)
 	}
 
 	if (choice){
-		printf("\nBrightening completed into %s\n", result.imageName);
+		printf(KYEL"\nBrightening completed into %s\n" RESET, result.imageName);
 	}
 	else {
-		printf("\nDarkening completed into %s\n", result.imageName);
+		printf(KYEL"\nDarkening completed into %s\n"RESET, result.imageName);
 	}
 
 	return result;

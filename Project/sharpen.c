@@ -26,11 +26,11 @@ struct buff sharpen(struct buff buffer, double percent)
 	result.height = buffer.height;
 	result.channels = buffer.channels;
 
-    //Mean Image Removal Option
+    //Mean Image Removal Option "simple sharpen"
     gdImageMeanRemoval(copy);
 
-    //Adding to edges option
-    
+    //Adding to edges option "edge sharpen"
+
 
     result.imrgb = copy;
     result.isLibgd = 1;

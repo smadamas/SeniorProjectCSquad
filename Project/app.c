@@ -24,6 +24,7 @@ struct buff
 #include "display.c"
 #include "histoEQ.c"
 #include "rotation.c"
+#include "blurr.c"
 #define KGRN "\x1B[32m"
 #define KYEL "\x1B[33m"
 #define KBLU "\x1B[34m"
@@ -350,6 +351,14 @@ int main(int argc, char **argv)
 				printf(KRED "Error: " RESET " Invalid Rotation!\n");
 			}
 		}
+		else if((strcmp(command, "blurr") == 0))
+		{
+			buffName = strtok(NULL, " ");
+			char* radius = strtok(NULL, " ");
+			char* sigma = strtok(NULL, " ");
+			struct buff temp = blurr(buffSearch(buffName, buffers, buffCount), atoi(radius), atof(sigma));
+			addBuffer(temp, buffers, &buffCount);
+		}
 		else
 		{
 			printf(KRED "Error: " RESET "Command not found or not supported, please type menu for list of commands.\n");
@@ -379,6 +388,8 @@ void printMenu()
 	printf(KBLU "Histogram Equalization: " RESET "\"histeq <buffer>\"\n");
 	printf(KBLU "Flip: " RESET "\"flip <vertical/horizontal> <buffer>\"\n");
 	printf(KBLU "Rotation: " RESET "\"rotate <left/right> <buffer>\"\n\n");
+
+	printf(KBLU "Blurring: " RESET "\"blurr <buffer> <radius> <sigma>\"\n\n");
 }
 
 void printBuffer(struct buff *buffers, int buffCount)

@@ -10,7 +10,7 @@
 #define RESET "\x1B[0m"
 
 
-struct buff rightRotate(struct buff a)
+struct buff rotate(struct buff a, float degrees)
 {
     char input[100];
     printf("Enter name of buffer: \n");
@@ -20,25 +20,7 @@ struct buff rightRotate(struct buff a)
     temp.height = a.width;
     temp.width = a.height;
     strcpy(temp.name, input);
-    gdImagePtr out = gdImageRotateInterpolated(a.imrgb, 270.0, 0);
-    temp.imrgb = out;
-
-    printf(KYEL"Done rotating!\n"RESET);
-
-    return temp;
-}
-
-struct buff leftRotate(struct buff a)
-{
-    char input[100];
-    printf("Enter name of buffer: \n");
-    gets(input);
-    struct buff temp = a;
-    temp.isLibgd = 1;
-    temp.height = a.width;
-    temp.width = a.height;
-    strcpy(temp.name, input);
-    gdImagePtr out = gdImageRotateInterpolated(a.imrgb, 90.0, 0);
+    gdImagePtr out = gdImageRotateInterpolated(a.imrgb, (-1.0)*degrees, 0);
     temp.imrgb = out;
 
     printf(KYEL"Done rotating!\n"RESET);

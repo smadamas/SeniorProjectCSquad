@@ -25,6 +25,7 @@ struct buff
 #include "histoEQ.c"
 #include "rotation.c"
 #include "blurr.c"
+#include "sharpen.c"
 #define KGRN "\x1B[32m"
 #define KYEL "\x1B[33m"
 #define KBLU "\x1B[34m"
@@ -359,6 +360,14 @@ int main(int argc, char **argv)
 			struct buff temp = blurr(buffSearch(buffName, buffers, buffCount), atoi(radius), atof(sigma));
 			addBuffer(temp, buffers, &buffCount);
 		}
+		else if ((strcmp(command, "sharpen") == 0))
+		{			
+			buffName = strtok(NULL, " ");
+			strtok(NULL, " ");
+			char* resultBuffName = strtok(NULL, " ");
+
+			addBuffer(sharpen(buffSearch(buffName,buffers, buffCount), resultBuffName), buffers, &buffCount);
+		}
 		else
 		{
 			printf(KRED "Error: " RESET "Command not found or not supported, please type menu for list of commands.\n");
@@ -387,9 +396,10 @@ void printMenu()
 	printf(KBLU "Edge Detection: " RESET "\"<horizontal/vertical/combined> <kirsch/prewitt/sobel> <image-name>\"\n");
 	printf(KBLU "Histogram Equalization: " RESET "\"histeq <buffer>\"\n");
 	printf(KBLU "Flip: " RESET "\"flip <vertical/horizontal> <buffer>\"\n");
-	printf(KBLU "Rotation: " RESET "\"rotate <left/right> <buffer>\"\n\n");
+	printf(KBLU "Rotation: " RESET "\"rotate <left/right> <buffer>\"\n");
 
-	printf(KBLU "Blurring: " RESET "\"blurr <buffer> <radius> <sigma>\"\n\n");
+	printf(KBLU "Blurring: " RESET "\"blurr <buffer> <radius> <sigma>\"\n");
+	printf(KBLU "Sharpen: " RESET "\"sharpen <buffer-name> into <new-buffer-name>\"\n\n");
 }
 
 void printBuffer(struct buff *buffers, int buffCount)

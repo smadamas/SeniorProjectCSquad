@@ -4,6 +4,9 @@
 #include <stdbool.h>
 #include <setjmp.h>
 #include "libgd/src/gd.h"
+#include <unistd.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 
 struct buff
 {
@@ -58,6 +61,15 @@ int main(int argc, char **argv)
 		char *buffName;
 		char *amount;
 
+		//Allocate
+		char* input, shell_prompt[100];
+		//Bind Tab
+		rl_bind_key('\t', rl_complete);
+		//Console String
+		snprintf(shell_prompt, sizeof(shell_prompt), "%s:%s $ ", getenv("USER"), getcwd(NULL, 1024));
+		//Display Prompt
+		input = readline(shell_prompt);
+
 		command = strtok(p, " ");
 
 		if (strcmp(command, "menu") == 0)
@@ -66,6 +78,8 @@ int main(int argc, char **argv)
 		}
 		else if (strcmp(command, "read") == 0)
 		{
+			
+
 			imageName = strtok(NULL, " ");
 			if (strlen(imageName) > 14)
 			{
@@ -86,6 +100,8 @@ int main(int argc, char **argv)
 				struct buff temp = readToBuff(imageName, buffName);
 				addBuffer(temp, buffers, &buffCount);
 			}
+			
+
 		}
 		else if (strcmp(command, "write") == 0)
 		{
@@ -372,7 +388,7 @@ int main(int argc, char **argv)
 		{
 			printf(KRED "Error: " RESET "Command not found or not supported, please type menu for list of commands.\n");
 		}
-
+		free(input);
 		gets(p);
 	}
 }

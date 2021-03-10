@@ -1,5 +1,5 @@
 CC = gcc -g
 run: app.c
-	$(CC) -o run app.c -lm -lgd `pkg-config --cflags --libs gtk+-2.0`
+	$(CC) -o run app.c -lm -lgd -lreadline `pkg-config --cflags --libs gtk+-2.0`
 clean:
 	rm run

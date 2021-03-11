@@ -29,9 +29,9 @@ struct buff readToBuff(char *imageName, char *const buffName)
 		in = fopen(strcat(temp, ".png"), "rb");
 		buffer.imrgb = gdImageCreateFromPng(in);
 	}
-	else if (strcmp(ext, "jpg") == 0 || strcmp(ext, "jpeg") == 0)
+	else if (strcmp(ext, "jpeg") == 0)
 	{
-		in = fopen(strcat(temp, ".jpg"), "rb");
+		in = fopen(strcat(temp, ".jpeg"), "rb");
 		buffer.imrgb = gdImageCreateFromJpeg(in);
 	}
 	else if (strcmp(ext, "gif") == 0)

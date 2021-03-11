@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -120,12 +121,10 @@ int main(int argc, char **argv)
 			{
 				strtok(NULL, " ");
 				amount = strtok(NULL, " ");
-				if (amount != NULL)
-				{
+				if (amount != NULL){
 					addBuffer(brighten(buffSearch(buffName, buffers, buffCount), imageName, true, atoi(amount)), buffers, &buffCount);
 				}
-				else
-				{
+				else {
 					printf(KRED "Error: " RESET "Brightening routine not written in correct format.\n\n");
 				}
 			}
@@ -143,12 +142,10 @@ int main(int argc, char **argv)
 			{
 				strtok(NULL, " ");
 				amount = strtok(NULL, " ");
-				if (amount != NULL)
-				{
+				if (amount != NULL){
 					addBuffer(brighten(buffSearch(buffName, buffers, buffCount), imageName, false, atoi(amount)), buffers, &buffCount);
 				}
-				else
-				{
+				else {
 					printf(KRED "Error: " RESET "Darkening routine not written in correct format.\n");
 				}
 			}
@@ -176,12 +173,13 @@ int main(int argc, char **argv)
 			char *type = strtok(NULL, " ");
 			buffName = strtok(NULL, " ");
 			strtok(NULL, " ");
-			char *resultBuffName = strtok(NULL, " ");
-
+			char* resultBuffName = strtok(NULL, " ");
+		
 			struct buff temp = detectEdge(command, type, buffSearch(buffName, buffers, buffCount));
 			strcpy(temp.name, resultBuffName);
 			temp.isLibgd = 1;
 			addBuffer(temp, buffers, &buffCount);
+			
 		}
 		else if (strcmp(command, "addition") == 0 || strcmp(command, "subtraction") == 0 || strcmp(command, "division") == 0 || strcmp(command, "multiplication") == 0)
 		{
@@ -224,7 +222,7 @@ int main(int argc, char **argv)
 
 			struct buff temp = buffSearch(buffName, buffers, buffCount);
 			temp = histogramEqualization(temp, command);
-
+			
 			strcpy(temp.name, resultBuffName);
 			addBuffer(temp, buffers, &buffCount);
 		}
@@ -252,34 +250,38 @@ int main(int argc, char **argv)
 		}
 		else if ((strcmp(command, "rotate") == 0))
 		{
-
+			
 			buffName = strtok(NULL, " ");
 			strtok(NULL, " ");
-			char *degree = strtok(NULL, " ");
+			char* degree = strtok(NULL, " ");
 
 			float degrees;
 			sscanf(degree, "%f", &degrees);
 
-			if (degrees >= (float)360 || degrees <= (float)-360)
+			if(degrees>=(float)360 || degrees <=(float)-360)
 				printf("Error: degree of rotation is out of limits.\n\n");
 			else
-				addBuffer(rotate(buffSearch(buffName, buffers, buffCount), degrees), buffers, &buffCount);
+				addBuffer(rotate(buffSearch(buffName,buffers, buffCount), degrees), buffers, &buffCount);
 		}
-		else if ((strcmp(command, "blurr") == 0))
+		else if((strcmp(command, "blurr") == 0))
 		{
 			buffName = strtok(NULL, " ");
-			char *radius = strtok(NULL, " ");
-			char *sigma = strtok(NULL, " ");
+			char* radius = strtok(NULL, " ");
+			char* sigma = strtok(NULL, " ");
 			struct buff temp = blurr(buffSearch(buffName, buffers, buffCount), atoi(radius), atof(sigma));
 			addBuffer(temp, buffers, &buffCount);
 		}
-		else if ((strcmp(command, "sharpen") == 0))
+		else if((strcmp(command, "sharpen") == 0))
 		{
-			buffName = strtok(NULL, " ");
-			strtok(NULL, " ");
-			char *resultBuffName = strtok(NULL, " ");
-
-			addBuffer(sharpen(buffSearch(buffName, buffers, buffCount), resultBuffName), buffers, &buffCount);
+			char* choice = strtok(NULL, " ");
+			if (!(strcmp(choice, "low") == 0) && !(strcmp(choice, "high") == 0)){
+				printf(KRED "Error: " RESET "Invalid sharpening command.\n");
+			}
+			else {
+				buffName = strtok(NULL, " ");
+				struct buff temp = sharpen(buffSearch(buffName, buffers, buffCount), choice);
+				addBuffer(temp, buffers, &buffCount);
+			}
 		}
 		else
 		{
@@ -311,7 +313,7 @@ void printMenu()
 	printf(KBLU "Flip: " RESET "\"flip <vertical/horizontal> <buffer-name>\"\n");
 	printf(KBLU "Rotation: " RESET "\"rotate <buffer-name> by <degrees>\" where degrees exists in (-360, 360) \n");
 	printf(KBLU "Blurring: " RESET "\"blurr <buffer> <radius> <sigma>\"\n");
-	printf(KBLU "Sharpen: " RESET "\"sharpen <buffer-name> into <new-buffer-name>\"\n\n");
+	printf(KBLU "Sharpen: " RESET "\"sharpen <low/high> <buffer>\"\n\n");
 }
 
 void printBuffer(struct buff *buffers, int buffCount)

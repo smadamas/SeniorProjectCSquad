@@ -9,7 +9,7 @@
 
 // a + b
 struct buff add(struct buff a, struct buff b, char* buffName) {
-	if ((a.width != b.width) || (a.height != b.height)/* || (a.channels != b.channels)*/) { // Check for correct dimensions
+	if ((a.width != b.width) || (a.height != b.height) || (a.channels != b.channels)) { // Check for correct dimensions
 		printf(KRED"Error: "RESET"Wrong dimensions.\n");
 		exit(1);
 	}
@@ -51,9 +51,6 @@ struct buff add(struct buff a, struct buff b, char* buffName) {
 				*(ptrres + i) = (uint8_t)255;
 			else
 				*(ptrres + i) = (uint8_t)(*(ptra + i) + *(ptrb + i));
-				//printf(KRED"Img a: %u", *(ptra + i));
-				//printf(KRED" Img b: %u", *(ptrb + i));
-				//printf(KRED" Result: %u\n", *(ptrres + i));
 		}
 
 		if (result.channels == 4)

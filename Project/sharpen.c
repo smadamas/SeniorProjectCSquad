@@ -57,3 +57,4 @@ struct buff sharpen(struct buff buffer, char* choice)
 
     return result;
 }
+

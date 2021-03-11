@@ -5,6 +5,7 @@
 #define KMAG  "\x1B[35m"
 #define RESET "\x1B[0m"
 
+//struct buff sharpen(struct buff input, char * resultName){
 struct buff sharpen(struct buff buffer, char* choice)
 {
     char newBuff[100];
@@ -15,7 +16,7 @@ struct buff sharpen(struct buff buffer, char* choice)
     copy = gdImageClone(buffer.imrgb);
 
     struct buff result;
-    if (strcmp(choice, "simple") == 0){
+    if (strcmp(choice, "high") == 0){
         //Mean Image Removal Option "simple sharpen"
         char *temp = strtok(buffer.imageName, ".");
         char *ext = strtok(NULL, " ");
@@ -32,8 +33,24 @@ struct buff sharpen(struct buff buffer, char* choice)
         result.isLibgd = 1;
     }
     else {
-        //Adding to edges option "edge sharpen", using prewitt rn
-        result = add(buffer, detectEdge("combined", "prewitt", buffer), newBuff);
+        float mask[3][3] = {
+            {0, -1, 0},
+            {-1, 5, -1},
+            {0, -1, -0}
+        };
+
+        result = buffer;
+        result.isLibgd = 1;
+        gdImagePtr src = buffer.imrgb;
+        strcpy(result.name, newBuff);
+
+        char name[50];
+        strcpy(name, "sharp-");
+        strcat(name, result.imageName);
+        strcpy(result.imageName, name);
+
+        gdImageConvolution(src, mask, 1.0, 0.0);
+        result.imrgb = src;
     }
 
     printf(KYEL "Done sharpening!\n"RESET);

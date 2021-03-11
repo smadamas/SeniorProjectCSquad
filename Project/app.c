@@ -273,7 +273,7 @@ int main(int argc, char **argv)
 		else if((strcmp(command, "sharpen") == 0))
 		{
 			char* choice = strtok(NULL, " ");
-			if (!(strcmp(choice, "edge") == 0) && !(strcmp(choice, "simple") == 0)){
+			if (!(strcmp(choice, "low") == 0) && !(strcmp(choice, "high") == 0)){
 				printf(KRED "Error: " RESET "Invalid sharpening command.\n");
 			}
 			else {
@@ -312,7 +312,7 @@ void printMenu()
 	printf(KBLU "Flip: " RESET "\"flip <vertical/horizontal> <buffer-name>\"\n");
 	printf(KBLU "Rotation: " RESET "\"rotate <buffer-name> by <degrees>\" where degrees exists in (-360, 360) \n");
 	printf(KBLU "Blurring: " RESET "\"blurr <buffer> <radius> <sigma>\"\n");
-	printf(KBLU "Sharpen: " RESET "\"sharpen <simple/edge> <buffer>\"\n\n");
+	printf(KBLU "Sharpen: " RESET "\"sharpen <low/high> <buffer>\"\n\n");
 }
 
 void printBuffer(struct buff *buffers, int buffCount)

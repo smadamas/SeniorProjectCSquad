@@ -282,6 +282,16 @@ int main(int argc, char **argv)
 				addBuffer(temp, buffers, &buffCount);
 			}
 		}
+		else if((strcmp(command, "convolve3x3") == 0))
+		{
+			char* row1, *row2, *row3;
+			row1 = strtok(NULL, "]");
+			row2 = strtok(NULL, "]");
+			row3 = strtok(NULL, "]");
+			buffName = strtok(NULL, " ");	
+			struct buff temp = convolve3X3(buffSearch(buffName, buffers, buffCount), row1, row2, row3);
+			addBuffer(temp, buffers, &buffCount);
+		}
 		else
 		{
 			printf(KRED "Error: " RESET "Command not found or not supported, please type menu for list of commands.\n");
@@ -312,6 +322,7 @@ void printMenu()
 	printf(KBLU "Flip: " RESET "\"flip <vertical/horizontal> <buffer-name>\"\n");
 	printf(KBLU "Rotation: " RESET "\"rotate <buffer-name> by <degrees>\" where degrees exists in (-360, 360) \n");
 	printf(KBLU "Blurring: " RESET "\"blurr <buffer> <radius> <sigma>\"\n");
+	printf(KBLU "Convolution: " RESET "\"convolve3x3 <template> <buffer-name>\" template = [a b c][d e f][g h i] integers\n");
 	printf(KBLU "Sharpen: " RESET "\"sharpen <low/high> <buffer>\"\n\n");
 }
 

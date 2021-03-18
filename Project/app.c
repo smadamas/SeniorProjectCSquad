@@ -57,6 +57,8 @@ int main(int argc, char **argv)
 	struct buff buffers[10];
 	int buffCount = 0;
 
+	struct template T;
+
 	char p[100];
 	gets(p);
 
@@ -293,6 +295,7 @@ int main(int argc, char **argv)
 		}
 		else if((strcmp(command, "define_template") == 0))
 		{
+			
 			struct template temp;
 			char* name = strtok(NULL, " ");
 			strcpy(temp.name, name);
@@ -303,7 +306,7 @@ int main(int argc, char **argv)
 				temp.mask[row] = (float *)malloc(2 * sizeof(float)); // Hard coded 2x2 matrix
 			int i = 0;
 			int j = 0;
-			while(!(strcmp(coord, "tp") == 0)) {
+			while(!(strcmp(coords, "tp") == 0)) {
 				if(j == 0) {
 					coord = &coords[1];
 					temp.mask[i][j] = atof(coord); // If on the left side, input will be [<coord> (we ignore the square bracket)
@@ -317,7 +320,10 @@ int main(int argc, char **argv)
 					i++;
 					j = 0;
 				}
+				coords = strtok(NULL, " ");
 			}
+
+			
 			char* equal_sign = strtok(NULL, " ");
 			temp.mask_tp = (float **)malloc(3 * sizeof(float*));
 			for(int row = 0; row < 3; row++)
@@ -351,7 +357,36 @@ int main(int argc, char **argv)
 				temp.mask_tp[1][0] = temp.mask[1][0];
 				temp.mask_tp[1][1] = temp.mask[1][1];
 			}
-		}												
+			T=temp;
+		}
+		else if((strcmp(command, "convolve_template") == 0))
+		{
+			buffName = strtok(NULL, " ");
+			char* templateName = strtok(NULL, " ");
+
+			struct buff temp = (buffSearch(buffName, buffers, buffCount));
+
+			struct buff out = temp;
+
+			char input[100];
+    		printf("Enter name of buffer: \n");
+   			gets(input);
+			strcpy(out.name,input);
+
+			float mask[3][3] = {
+				{T.mask_tp[0][0], T.mask_tp[0][1], T.mask_tp[0][2]},
+				{T.mask_tp[1][0], T.mask_tp[1][1], T.mask_tp[1][2]},
+				{T.mask_tp[2][0], T.mask_tp[2][1], T.mask_tp[2][2]}
+			};
+
+
+			gdImageConvolution(out.imrgb, mask, 1.0,0.0);
+
+			out.isLibgd=1;
+
+			addBuffer(out, buffers, &buffCount);
+			
+		}									
 		else											
 		{												
 			printf(KRED "Error: " RESET "Command not found or not supported, please type menu for list of commands.\n");
@@ -382,6 +417,8 @@ void printMenu()
 	printf(KBLU "Flip: " RESET "\"flip <vertical/horizontal> <buffer-name>\"\n");
 	printf(KBLU "Rotation: " RESET "\"rotate <buffer-name> by <degrees>\" where degrees exists in (-360, 360) \n");
 	printf(KBLU "Blurring: " RESET "\"blurr <buffer> <radius> <sigma>\"\n");
+	printf(KBLU "Template: " RESET "\"define_template <template-name> <template-structure> = <(x,y)>\"\n");
+	printf(KBLU "Convolve_Template: " RESET "\"convolve_template <buff-name> <template-name>\"\n");
 	printf(KBLU "Sharpen: " RESET "\"sharpen <low/high> <buffer>\"\n\n");
 }
 

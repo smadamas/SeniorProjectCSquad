@@ -16,6 +16,15 @@ struct buff
 	int isLibgd;
 };
 
+struct template
+{
+	char name[30];
+	float** mask;
+	float** mask_tp; // modified mask for target pixel placement
+	int tpRow;
+	int tpColumn;
+};
+
 #include "read.c"
 #include "write.c"
 #include "arithmetics.c"
@@ -47,6 +56,8 @@ int main(int argc, char **argv)
 
 	struct buff buffers[10];
 	int buffCount = 0;
+
+	struct template T;
 
 	char p[100];
 	gets(p);
@@ -282,6 +293,75 @@ int main(int argc, char **argv)
 				addBuffer(temp, buffers, &buffCount);
 			}
 		}
+
+		else if((strcmp(command, "define_template") == 0))
+		{
+			
+			struct template temp;
+			char* name = strtok(NULL, " ");
+			strcpy(temp.name, name);
+			char* coords = strtok(NULL, " ");
+			char* coord;
+			temp.mask = (float **)malloc(2 * sizeof(float*));
+			for(int row = 0; row < 2; row++)
+				temp.mask[row] = (float *)malloc(2 * sizeof(float)); // Hard coded 2x2 matrix
+			int i = 0;
+			int j = 0;
+			while(!(strcmp(coords, "tp") == 0)) {
+				if(j == 0) {
+					coord = &coords[1];
+					temp.mask[i][j] = atof(coord); // If on the left side, input will be [<coord> (we ignore the square bracket)
+				}
+				else if(j == 1) // Harded coded 1, should be number of columns
+					coord = &coords[0];
+					temp.mask[i][j] = atof(coord); // If on the right side, input will be <coord>] (we ignore the square bracket)
+				if(j == 0)
+					j++;
+				else if(j == 1) {
+					i++;
+					j = 0;
+				}
+				coords = strtok(NULL, " ");
+			}
+
+			
+			char* equal_sign = strtok(NULL, " ");
+			temp.mask_tp = (float **)malloc(3 * sizeof(float*));
+			for(int row = 0; row < 3; row++)
+				temp.mask_tp[row] = (float *)malloc(3 * sizeof(float)); // Hard coded 3x3 matrix
+			char* tp_coords = strtok(NULL, " ");
+			coord = &tp_coords[1];
+			temp.tpRow = atof(coord);
+			coord = &tp_coords[3];
+			temp.tpColumn = atof(coord);
+			if((temp.tpRow == 0) && (temp.tpColumn == 0)) {
+				temp.mask_tp[1][1] = temp.mask[0][0];			 	// If matrix is  
+				temp.mask_tp[1][2] = temp.mask[0][1]; 				// [1 2]
+				temp.mask_tp[2][1] = temp.mask[1][0]; 				// [3 4], and target pixel is (0,0) (=1, top left), modify matrix to be
+				temp.mask_tp[2][2] = temp.mask[1][1]; 				// [0 0 0] 
+			}														// [0 1 2]
+			else if((temp.tpRow == 0) && (temp.tpColumn == 1)) {	// [0 3 4], such that a normal 3x3 convlution will output in the middle
+				temp.mask_tp[1][0] = temp.mask[0][0];				// which is the target pixel, added 0s will not change the result of the convolution
+				temp.mask_tp[1][1] = temp.mask[0][1];				// just a way to set the target pixel to the middle
+				temp.mask_tp[2][0] = temp.mask[1][0];
+				temp.mask_tp[2][1] = temp.mask[1][1];
+			}
+			else if((temp.tpRow == 1) && (temp.tpColumn == 0)) {
+				temp.mask_tp[0][1] = temp.mask[0][0];
+				temp.mask_tp[0][2] = temp.mask[0][1];
+				temp.mask_tp[1][1] = temp.mask[1][0];
+				temp.mask_tp[1][2] = temp.mask[1][1];
+			}
+			else if((temp.tpRow == 1) && (temp.tpColumn == 1)) {
+				temp.mask_tp[0][0] = temp.mask[0][0];
+				temp.mask_tp[0][1] = temp.mask[0][1];
+				temp.mask_tp[1][0] = temp.mask[1][0];
+				temp.mask_tp[1][1] = temp.mask[1][1];
+			}
+			T=temp;
+		}
+		
+
 		else if((strcmp(command, "convolve3x3") == 0))
 		{
 			char* row1, *row2, *row3;
@@ -292,8 +372,37 @@ int main(int argc, char **argv)
 			struct buff temp = convolve3X3(buffSearch(buffName, buffers, buffCount), row1, row2, row3);
 			addBuffer(temp, buffers, &buffCount);
 		}
-		else
+		else if((strcmp(command, "convolve_template") == 0))
+
 		{
+			buffName = strtok(NULL, " ");
+			char* templateName = strtok(NULL, " ");
+
+			struct buff temp = (buffSearch(buffName, buffers, buffCount));
+
+			struct buff out = temp;
+
+			char input[100];
+    		printf("Enter name of buffer: \n");
+   			gets(input);
+			strcpy(out.name,input);
+
+			float mask[3][3] = {
+				{T.mask_tp[0][0], T.mask_tp[0][1], T.mask_tp[0][2]},
+				{T.mask_tp[1][0], T.mask_tp[1][1], T.mask_tp[1][2]},
+				{T.mask_tp[2][0], T.mask_tp[2][1], T.mask_tp[2][2]}
+			};
+
+
+			gdImageConvolution(out.imrgb, mask, 1.0,0.0);
+
+			out.isLibgd=1;
+
+			addBuffer(out, buffers, &buffCount);
+			
+		}									
+		else											
+		{												
 			printf(KRED "Error: " RESET "Command not found or not supported, please type menu for list of commands.\n");
 		}
 
@@ -322,6 +431,8 @@ void printMenu()
 	printf(KBLU "Flip: " RESET "\"flip <vertical/horizontal> <buffer-name>\"\n");
 	printf(KBLU "Rotation: " RESET "\"rotate <buffer-name> by <degrees>\" where degrees exists in (-360, 360) \n");
 	printf(KBLU "Blurring: " RESET "\"blurr <buffer> <radius> <sigma>\"\n");
+	printf(KBLU "Template: " RESET "\"define_template <template-name> <template-structure> = <(x,y)>\"\n");
+	printf(KBLU "Convolve_Template: " RESET "\"convolve_template <buff-name> <template-name>\"\n");
 	printf(KBLU "Convolution: " RESET "\"convolve3x3 <template> <buffer-name>\" template = [a b c][d e f][g h i] integers\n");
 	printf(KBLU "Sharpen: " RESET "\"sharpen <low/high> <buffer>\"\n\n");
 }

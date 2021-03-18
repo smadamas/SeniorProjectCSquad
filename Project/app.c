@@ -293,6 +293,7 @@ int main(int argc, char **argv)
 				addBuffer(temp, buffers, &buffCount);
 			}
 		}
+
 		else if((strcmp(command, "define_template") == 0))
 		{
 			
@@ -359,7 +360,20 @@ int main(int argc, char **argv)
 			}
 			T=temp;
 		}
+		
+
+		else if((strcmp(command, "convolve3x3") == 0))
+		{
+			char* row1, *row2, *row3;
+			row1 = strtok(NULL, "]");
+			row2 = strtok(NULL, "]");
+			row3 = strtok(NULL, "]");
+			buffName = strtok(NULL, " ");	
+			struct buff temp = convolve3X3(buffSearch(buffName, buffers, buffCount), row1, row2, row3);
+			addBuffer(temp, buffers, &buffCount);
+		}
 		else if((strcmp(command, "convolve_template") == 0))
+
 		{
 			buffName = strtok(NULL, " ");
 			char* templateName = strtok(NULL, " ");
@@ -419,6 +433,7 @@ void printMenu()
 	printf(KBLU "Blurring: " RESET "\"blurr <buffer> <radius> <sigma>\"\n");
 	printf(KBLU "Template: " RESET "\"define_template <template-name> <template-structure> = <(x,y)>\"\n");
 	printf(KBLU "Convolve_Template: " RESET "\"convolve_template <buff-name> <template-name>\"\n");
+	printf(KBLU "Convolution: " RESET "\"convolve3x3 <template> <buffer-name>\" template = [a b c][d e f][g h i] integers\n");
 	printf(KBLU "Sharpen: " RESET "\"sharpen <low/high> <buffer>\"\n\n");
 }
 

@@ -12,9 +12,11 @@ This is a Unix command line application for quick and easy image manipulation.
 Pull the project from this repository.
 ### Step 2:
 Navigate into the project folder
+
     cd ../SeniorProjectCSquad/Project
 ### Step 3:
 To install the dependencies run these commands 
+
     sudo apt-get install libgtk2.0-dev
     sudo apt-get update -y
     sudo apt-get install -y libgd-dev
@@ -22,5 +24,6 @@ To install the dependencies run these commands
 Now the application is ready to run.
 ### Step 4:
 To run the program, use the commands
+
     make
     ./run

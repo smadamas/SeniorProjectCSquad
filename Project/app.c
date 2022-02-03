@@ -30,6 +30,7 @@ struct template
 #include "arithmetics.c"
 #include "brighten.c"
 #include "edge.c"
+#include "hadamard.c"
 #include "display.c"
 #include "histoEQ.c"
 #include "rotation.c"
@@ -137,6 +138,21 @@ int main(int argc, char **argv)
 				else {
 					printf(KRED "Error: " RESET "Brightening routine not written in correct format.\n\n");
 				}
+			}
+		}
+		else if (strcmp(command, "hadamard") == 0)
+		{
+			buffName = strtok(NULL, " ");
+			strtok(NULL, " ");
+			imageName = strtok(NULL, " ");
+			if (strlen(imageName) > 14)
+			{
+				printf(KRED "Error: " RESET "Image name too long. Image + extension must be shorter than 14 characters.\n\n");
+			}
+			else
+			{
+				
+				addBuffer(hadamard(buffSearch(buffName, buffers, buffCount), imageName), buffers, &buffCount);
 			}
 		}
 		else if (strcmp(command, "darken") == 0)

@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <setjmp.h>
-#include "libgd/src/gd.h"
+#include "gd.h"
 
 struct buff
 {

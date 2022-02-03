@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdbool.h>
-#include "libgd/src/gd.h"
+#include "gd.h"
 #define KYEL "\x1B[33m"
 #define KBLU "\x1B[34m"
 #define KRED "\x1B[31m"

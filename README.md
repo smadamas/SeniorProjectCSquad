@@ -79,6 +79,10 @@ To run the program, use the commands
 
     convolve3x3 <template> <buffer-name>
 * template in this case is a 3x3 array and the input must be in the form \[a b c\]\[d e f\]\[g h i\] where a,...,i are any rational numbers
+
+### Padding to nearest 2^n
+
+    pad <buffer> into <new-buffer-name>
 ### Define Template
 
     define_template <template-name> <template-structure> = <(x,y)>

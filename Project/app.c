@@ -31,6 +31,7 @@ struct template
 #include "brighten.c"
 #include "edge.c"
 #include "hadamard.c"
+#include "pad.c"
 #include "display.c"
 #include "histoEQ.c"
 #include "rotation.c"
@@ -153,6 +154,21 @@ int main(int argc, char **argv)
 			{
 				
 				addBuffer(hadamard(buffSearch(buffName, buffers, buffCount), imageName), buffers, &buffCount);
+			}
+		}
+		else if (strcmp(command, "pad") == 0)
+		{
+			buffName = strtok(NULL, " ");
+			strtok(NULL, " ");
+			imageName = strtok(NULL, " ");
+			if (strlen(imageName) > 14)
+			{
+				printf(KRED "Error: " RESET "Image name too long. Image + extension must be shorter than 14 characters.\n\n");
+			}
+			else
+			{
+				
+				addBuffer(pad(buffSearch(buffName, buffers, buffCount), imageName), buffers, &buffCount);
 			}
 		}
 		else if (strcmp(command, "darken") == 0)
@@ -451,6 +467,8 @@ void printMenu()
 	printf(KBLU "Convolve_Template: " RESET "\"convolve_template <buff-name> <template-name>\"\n");
 	printf(KBLU "Convolution: " RESET "\"convolve3x3 <template> <buffer-name>\" template = [a b c][d e f][g h i] integers\n");
 	printf(KBLU "Sharpen: " RESET "\"sharpen <low/high> <buffer>\"\n\n");
+	printf(KBLU "Pad: " RESET "\"pad <buffer> into <new-buffer-name>\"\n\n");
+
 }
 
 void printBuffer(struct buff *buffers, int buffCount)

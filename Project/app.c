@@ -14,6 +14,9 @@ struct buff
 	int width, height, channels;
 	gdImagePtr imrgb;
 	int isLibgd;
+	double* wht;
+	unsigned char* whtimg;
+	int has_wht;
 };
 
 struct template
@@ -30,12 +33,13 @@ struct template
 #include "arithmetics.c"
 #include "brighten.c"
 #include "edge.c"
-#include "hadamard.c"
 #include "display.c"
 #include "histoEQ.c"
 #include "rotation.c"
 #include "blurr.c"
 #include "sharpen.c"
+#include "grayscale.c" //included in wht.c already
+#include "wht.c"		 //included in read.c already
 #define KGRN "\x1B[32m"
 #define KYEL "\x1B[33m"
 #define KBLU "\x1B[34m"
@@ -49,6 +53,7 @@ void printBuffer(struct buff *buffer, int buffCount);
 void printMenu();
 char *get_filename_ext(const char *filename);
 int check_types(char *ext, char *file_types[]);
+int count_characters(const char* str, char character);
 
 int main(int argc, char **argv)
 {
@@ -61,7 +66,10 @@ int main(int argc, char **argv)
 	struct template T;
 
 	char p[100];
-	gets(p);
+
+	printf("UIMT> ");
+	fgets(p, 99, stdin);
+	p[strlen(p) - 1] = '\0';
 
 	while (1)
 	{
@@ -69,15 +77,24 @@ int main(int argc, char **argv)
 		char *imageName;
 		char *buffName;
 		char *amount;
-
+		char pCopy[100];
+		strcpy(pCopy, p);
+		int spaceCount = count_characters(pCopy, ' ');
+		if (strlen(p) == 0) {
+			strcpy(p, "XXXXX");
+		}
 		command = strtok(p, " ");
-
 		if (strcmp(command, "menu") == 0)
 		{
 			printMenu();
 		}
 		else if (strcmp(command, "read") == 0)
 		{
+			if (spaceCount != 3) {
+				printf(KRED "Error: " RESET "Incorrect syntax on Read command.\n       Use the syntax: read <file name> into <buffer name>\n");
+				p[0] = '\0';
+				continue;
+			}
 			imageName = strtok(NULL, " ");
 			if (strlen(imageName) > 14)
 			{
@@ -86,7 +103,7 @@ int main(int argc, char **argv)
 			else
 			{
 				char *ext = get_filename_ext(imageName);
-				char *file_types[4] = {"jpeg", "gif", "tiff", "png"}; //ALLOW NEW FILE TYPES HERE
+				char *file_types[5] = {"jpeg", "gif", "tiff", "png", "wht"}; //ALLOW NEW FILE TYPES HERE
 				int approved = check_types(ext, file_types);
 				if (approved != 1)
 				{
@@ -96,11 +113,21 @@ int main(int argc, char **argv)
 				strtok(NULL, " ");
 				buffName = strtok(NULL, " ");
 				struct buff temp = readToBuff(imageName, buffName);
+				if (temp.has_wht == 1) {
+					temp = iwht(temp);
+					whtHistEQ(&temp);
+					//temp.img = temp.whtimg;
+				}
 				addBuffer(temp, buffers, &buffCount);
 			}
 		}
 		else if (strcmp(command, "write") == 0)
 		{
+			if (spaceCount != 3) {
+				printf(KRED "Error: " RESET "Incorrect syntax on Write command.\n       Use the syntax: write <buffer name> to <file name>\n");
+				p[0] = '\0';
+				continue;
+			}
 			buffName = strtok(NULL, " ");
 			strtok(NULL, " ");
 			imageName = strtok(NULL, " ");
@@ -111,7 +138,28 @@ int main(int argc, char **argv)
 			else
 			{
 				printf(KYEL "\nWriting %s into %s...\n" RESET, buffName, imageName);
-				writeToImage(buffSearch(buffName, buffers, buffCount), imageName);
+				writeToImage(buffSearch(buffName, buffers, buffCount), imageName, 0);
+				printf(KYEL "Done writing!\n\n" RESET);
+			}
+		}
+		else if (strcmp(command, "write_wht") == 0)
+		{
+			if (spaceCount != 3) {
+				printf(KRED "Error: " RESET "Incorrect syntax on write_wht command.\n       Use the syntax: write_wht <buffer name> to <file name>\n");
+				p[0] = '\0';
+				continue;
+			}
+			buffName = strtok(NULL, " ");
+			strtok(NULL, " ");
+			imageName = strtok(NULL, " ");
+			if (strlen(imageName) > 14)
+			{
+				printf(KRED "Error: " RESET "Image name too long. Image + extension must be shorter than 14 characters.\n");
+			}
+			else
+			{
+				printf(KYEL "\nWriting %s into %s...\n" RESET, buffName, imageName);
+				writeToImage(buffSearch(buffName, buffers, buffCount), imageName, 1);
 				printf(KYEL "Done writing!\n\n" RESET);
 			}
 		}
@@ -121,6 +169,11 @@ int main(int argc, char **argv)
 		}
 		else if (strcmp(command, "brighten") == 0)
 		{
+			if (spaceCount != 5) {
+				printf(KRED "Error: " RESET "Incorrect syntax on brighten command.\n       Use the syntax: brighten <buffer name> into <new buffer name> by <value between 0 and 255>\n");
+				p[0] = '\0';
+				continue;
+			}
 			buffName = strtok(NULL, " ");
 			strtok(NULL, " ");
 			imageName = strtok(NULL, " ");
@@ -140,23 +193,13 @@ int main(int argc, char **argv)
 				}
 			}
 		}
-		else if (strcmp(command, "hadamard") == 0)
-		{
-			buffName = strtok(NULL, " ");
-			strtok(NULL, " ");
-			imageName = strtok(NULL, " ");
-			if (strlen(imageName) > 14)
-			{
-				printf(KRED "Error: " RESET "Image name too long. Image + extension must be shorter than 14 characters.\n\n");
-			}
-			else
-			{
-				
-				addBuffer(hadamard(buffSearch(buffName, buffers, buffCount), imageName), buffers, &buffCount);
-			}
-		}
 		else if (strcmp(command, "darken") == 0)
 		{
+			if (spaceCount != 5) {
+					printf(KRED "Error: " RESET "Incorrect syntax on darken command.\n       Use the syntax: darken <buffer name> into <new buffer name> by <value between 0 and 255>\n");
+				p[0] = '\0';
+				continue;
+			}
 			buffName = strtok(NULL, " ");
 			strtok(NULL, " ");
 			imageName = strtok(NULL, " ");
@@ -178,13 +221,40 @@ int main(int argc, char **argv)
 		}
 		else if (strcmp(command, "display") == 0)
 		{
+			if (spaceCount != 1) {
+				printf(KRED "Error: " RESET "Incorrect syntax on display command.\n       Use the syntax: display <buffer name>\n");
+				p[0] = '\0';
+				continue;
+			}
 			buffName = strtok(NULL, " ");
 			char tem[10] = "temp.png";
 
 			struct buff temp = buffSearch(buffName, buffers, buffCount);
 			if (strcmp(temp.status, "false") != 0)
 			{
-				writeToImage(temp, tem);
+				writeToImage(temp, tem, 0);
+				displayImage(tem, argc, argv);
+			}
+
+			remove(tem);
+		}
+		else if (strcmp(command, "display_wht") == 0)
+		{
+			if (spaceCount != 1) {
+				printf(KRED "Error: " RESET "Incorrect syntax on display_wht command.\n       Use the syntax: display_wht <buffer name>\n");
+				p[0] = '\0';
+				continue;
+			}
+			buffName = strtok(NULL, " ");
+			char tem[10] = "temp.png";
+
+			struct buff temp = buffSearch(buffName, buffers, buffCount);
+			if (temp.has_wht == 0) {
+				printf(KRED "Error: " RESET "Buffer does not contain a wht image.\n");
+			}
+			else if (strcmp(temp.status, "false") != 0)
+			{
+				writeToImage(temp, tem, 1);
 				displayImage(tem, argc, argv);
 			}
 
@@ -196,6 +266,11 @@ int main(int argc, char **argv)
 		}
 		else if (strcmp(command, "horizontal") == 0 || strcmp(command, "vertical") == 0 || strcmp(command, "combined") == 0)
 		{
+			if (spaceCount != 4) {
+				printf(KRED "Error: " RESET "Incorrect syntax on edge detection command.\n       Use the syntax: <horizontal/vertical/combined> <kirsch/prewitt/sobel> <buffer-name> into <new-buffer-name>\n");
+				p[0] = '\0';
+				continue;
+			}
 			char *type = strtok(NULL, " ");
 			buffName = strtok(NULL, " ");
 			strtok(NULL, " ");
@@ -209,6 +284,11 @@ int main(int argc, char **argv)
 		}
 		else if (strcmp(command, "addition") == 0 || strcmp(command, "subtraction") == 0 || strcmp(command, "division") == 0 || strcmp(command, "multiplication") == 0)
 		{
+			if (spaceCount != 6) {
+				printf(KRED "Error: " RESET "Incorrect syntax on arithmetic command.\n       Use the syntax: <addition/subtraction/multiplication/division> : <new buffer name> = <buffer 1> <+-*/> <buffer 2>\n");
+				p[0] = '\0';
+				continue;
+			}
 			strtok(NULL, " ");
 			buffName = strtok(NULL, " ");
 			strtok(NULL, " ");
@@ -242,6 +322,11 @@ int main(int argc, char **argv)
 		}
 		else if ((strcmp(command, "histeq") == 0))
 		{
+			if (spaceCount != 3) {
+				printf(KRED "Error: " RESET "Incorrect syntax on histeq command.\n       Use the syntax: histeq <buffer-name> into <new-buffer-name>\n");
+				p[0] = '\0';
+				continue;
+			}
 			buffName = strtok(NULL, " ");
 			strtok(NULL, " ");
 			char *resultBuffName = strtok(NULL, " ");
@@ -254,6 +339,11 @@ int main(int argc, char **argv)
 		}
 		else if ((strcmp(command, "flip") == 0))
 		{
+			if (spaceCount != 2) {
+				printf(KRED "Error: " RESET "Incorrect syntax on flip command.\n       Use the syntax: flip <vertical/horizontal> <buffer-name>\n");
+				p[0] = '\0';
+				continue;
+			}
 			char *rot = strtok(NULL, " ");
 			if ((strcmp(rot, "vertical") == 0))
 			{
@@ -276,7 +366,11 @@ int main(int argc, char **argv)
 		}
 		else if ((strcmp(command, "rotate") == 0))
 		{
-			
+			if (spaceCount != 3) {
+				printf(KRED "Error: " RESET "Incorrect syntax on rotate command.\n       Use the syntax: rotate <buffer-name> by <degrees between -360 and 360>\n");
+				p[0] = '\0';
+				continue;
+			}
 			buffName = strtok(NULL, " ");
 			strtok(NULL, " ");
 			char* degree = strtok(NULL, " ");
@@ -291,6 +385,11 @@ int main(int argc, char **argv)
 		}
 		else if((strcmp(command, "blurr") == 0))
 		{
+			if (spaceCount != 3) {
+				printf(KRED "Error: " RESET "Incorrect syntax on blur command.\n       Use the syntax: blurr <buffer> <radius> <sigma>\n");
+				p[0] = '\0';
+				continue;
+			}
 			buffName = strtok(NULL, " ");
 			char* radius = strtok(NULL, " ");
 			char* sigma = strtok(NULL, " ");
@@ -299,6 +398,11 @@ int main(int argc, char **argv)
 		}
 		else if((strcmp(command, "sharpen") == 0))
 		{
+			if (spaceCount != 2) {
+				printf(KRED "Error: " RESET "Incorrect syntax on sharpen command.\n       Use the syntax: sharpen <low/high> <buffer>\n");
+				p[0] = '\0';
+				continue;
+			}
 			char* choice = strtok(NULL, " ");
 			if (!(strcmp(choice, "low") == 0) && !(strcmp(choice, "high") == 0)){
 				printf(KRED "Error: " RESET "Invalid sharpening command.\n");
@@ -312,7 +416,6 @@ int main(int argc, char **argv)
 
 		else if((strcmp(command, "define_template") == 0))
 		{
-			
 			struct template temp;
 			char* name = strtok(NULL, " ");
 			strcpy(temp.name, name);
@@ -380,6 +483,11 @@ int main(int argc, char **argv)
 
 		else if((strcmp(command, "convolve3x3") == 0))
 		{
+			if (spaceCount != 8) {
+				printf(KRED "Error: " RESET "Incorrect syntax on convolve3x3 command.\n       Use the syntax: convolve3x3 <template> <buffer-name>\n       with template in the form [a b c][d e f][g h i] all integers\n");
+				p[0] = '\0';
+				continue;
+			}
 			char* row1, *row2, *row3;
 			row1 = strtok(NULL, "]");
 			row2 = strtok(NULL, "]");
@@ -389,8 +497,12 @@ int main(int argc, char **argv)
 			addBuffer(temp, buffers, &buffCount);
 		}
 		else if((strcmp(command, "convolve_template") == 0))
-
 		{
+			if (spaceCount != 2) {
+				printf(KRED "Error: " RESET "Incorrect syntax on convolve_template command.\n       Use the syntax: convolve_template <buff-name> <template-name>\n");
+				p[0] = '\0';
+				continue;
+			}
 			buffName = strtok(NULL, " ");
 			char* templateName = strtok(NULL, " ");
 
@@ -416,13 +528,66 @@ int main(int argc, char **argv)
 
 			addBuffer(out, buffers, &buffCount);
 			
-		}									
-		else											
+		}
+		else if ((strcmp(command, "test_hadamard") == 0)) {
+			print_matrix(hadamard(1), 2);
+			printf("\n");
+			print_matrix(hadamard(2), 4);
+			printf("\n");
+			print_matrix(hadamard(3), 8);
+			printf("\n");
+			print_matrix(hadamard(4), 16);
+			printf("\n");
+			print_matrix(hadamard(5), 32);
+			printf("\n");
+		}
+		else if ((strcmp(command, "details") == 0)) {
+			for (int i = 0; i < buffCount; i++) {
+				printf("Buffer: %s\n", buffers[i].name);
+				printf("Channels: %d\n", buffers[i].channels);
+				printf("Height: %d\n", buffers[i].height);
+				printf("Width: %d\n", buffers[i].width);
+				printf("has_wht: %d\n", buffers[i].has_wht);
+				printf("img_ptr: %p\n", buffers[i].img);
+				printf("whtimg_ptr: %p\n", buffers[i].whtimg);
+				printf("\n");
+			}
+		}
+		else if ((strcmp(command, "wht") == 0)) {
+			if (spaceCount != 3) {
+				printf(KRED "Error: " RESET "Incorrect syntax on wht command.\n       Use the syntax: wht <buffer> into <new buffer>\n");
+				p[0] = '\0';
+				continue;
+			}
+			imageName = strtok(NULL, " ");
+			strtok(NULL, " ");
+			buffName = strtok(NULL, " ");
+			struct buff temp = wht(buffSearch(imageName, buffers, buffCount), buffName);
+			whtHistEQ(&temp);
+			addBuffer(temp, buffers, &buffCount);
+		}
+		else if ((strcmp(command, "grayscale") == 0)) {
+			if (spaceCount != 3) {
+				printf(KRED "Error: " RESET "Incorrect syntax on grayscale command.\n       Use the syntax: grayscale <buffer> into <new buffer>\n");
+				p[0] = '\0';
+				continue;
+			}
+			imageName = strtok(NULL, " ");
+			strtok(NULL, " ");
+			buffName = strtok(NULL, " ");
+			struct buff temp = grayscale(buffSearch(imageName, buffers, buffCount), buffName);
+			addBuffer(temp, buffers, &buffCount);
+		}
+		else if ((strcmp(command, "XXXXX") == 0)) {
+			// do nothing! this is if the user types Enter only
+		}
+		else							
 		{												
 			printf(KRED "Error: " RESET "Command not found or not supported, please type menu for list of commands.\n");
 		}
-
-		gets(p);
+		printf("UIMT> ");
+		fgets(p, 99, stdin);
+		p[strlen(p) - 1] = '\0';
 	}
 }
 
@@ -432,8 +597,8 @@ void printMenu()
 	printf(KBLU "Exit Program: " RESET "\"quit\"\n");
 	printf(KBLU "List Buffers: " RESET "\"list\"\n");
 	printf(KBLU "Show Image in Buffer: " RESET "\"display <buffer-name>\"\n");
-	printf(KBLU "Input Image: " RESET "\"read <image-name> into <new-buffer-name>\"\n");
-	printf(KBLU "Output Image: " RESET "\"write <buffer-name> into <new-image-name>\"\n");
+	printf(KBLU "Input Image from file: " RESET "\"read <image-name> into <new-buffer-name>\"\n");
+	printf(KBLU "Output Image to file: " RESET "\"write <buffer-name> into <new-image-name>\"\n");
 
 	printf(KBLU "Addition: " RESET "\"addition : <new-buffer-name> = <buffer1> + <buffer2>\"\n");
 	printf(KBLU "Subtraction: " RESET "\"subtraction : <new-buffer-name> = <buffer1> - <buffer2>\"\n");
@@ -446,11 +611,19 @@ void printMenu()
 	printf(KBLU "Histogram Equalization: " RESET "\"histeq <buffer-name> into <new-buffer-name>\"\n");
 	printf(KBLU "Flip: " RESET "\"flip <vertical/horizontal> <buffer-name>\"\n");
 	printf(KBLU "Rotation: " RESET "\"rotate <buffer-name> by <degrees>\" where degrees exists in (-360, 360) \n");
-	printf(KBLU "Blurring: " RESET "\"blurr <buffer> <radius> <sigma>\"\n");
+	printf(KBLU "Blurring: " RESET "\"blurr <buffer> <radius> <sigma>\"\n");	
+	printf(KBLU "Sharpen: " RESET "\"sharpen <low/high> <buffer>\"\n\n");
 	printf(KBLU "Template: " RESET "\"define_template <template-name> <template-structure> = <(x,y)>\"\n");
 	printf(KBLU "Convolve_Template: " RESET "\"convolve_template <buff-name> <template-name>\"\n");
 	printf(KBLU "Convolution: " RESET "\"convolve3x3 <template> <buffer-name>\" template = [a b c][d e f][g h i] integers\n");
-	printf(KBLU "Sharpen: " RESET "\"sharpen <low/high> <buffer>\"\n\n");
+	printf(KBLU "Grayscale: " RESET "\"grayscale <buffer-name> into <new-buuffer-name>\"\n");
+	printf("\n");
+	printf(KBLU "Hadamard Transform (WHT): " RESET "\"wht <buffer-name> into <new-buffer-name>\"\n");
+	printf(KBLU "Display WHT image: " RESET "\"display_wht <buffer-name>\"\n");
+	printf(KBLU "Output WHT image to file: " RESET "\"write_wht <file-name> into <new-image-name>\"\n");
+	printf("\n");
+	printf(KBLU "Display all buffer details: " RESET "\"details\"\n");
+
 }
 
 void printBuffer(struct buff *buffers, int buffCount)
@@ -484,6 +657,9 @@ void addBuffer(struct buff buffer, struct buff *buffers, int *buffCount)
 		buffers[*buffCount].channels = buffer.channels;
 		buffers[*buffCount].imrgb = buffer.imrgb;
 		buffers[*buffCount].isLibgd = buffer.isLibgd;
+		buffers[*buffCount].has_wht = buffer.has_wht;
+		buffers[*buffCount].wht = buffer.wht;
+		buffers[*buffCount].whtimg = buffer.whtimg;
 		(*buffCount)++;
 	}
 	else
@@ -496,6 +672,9 @@ void addBuffer(struct buff buffer, struct buff *buffers, int *buffCount)
 		buffers[k].channels = buffer.channels;
 		buffers[k].imrgb = buffer.imrgb;
 		buffers[k].isLibgd = buffer.isLibgd;
+		buffers[k].has_wht = buffer.has_wht;
+		buffers[k].wht = buffer.wht;
+		buffers[k].whtimg = buffer.whtimg;
 	}
 
 	printf(KYEL "New buffer added\n\n" RESET);
@@ -526,11 +705,28 @@ char *get_filename_ext(const char *filename)
 }
 int check_types(char *ext, char *file_types[])
 {
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		int temp = strcmp(ext, file_types[i]);
 		if (temp == 0)
 			return 1;
 	}
 	return 0;
+}
+
+int count_characters(const char* str, char character)
+{
+	//this is to avoid strtok segfault errors.
+	// Count the number of spaces in pCopy and see if it matches the expectated input
+	//https://stackoverflow.com/questions/4235519/counting-number-of-occurrences-of-a-char-in-a-string-in-c
+	const char* c = str;
+	int count = 0;
+	
+	do {
+		if (*c == character)
+			count++;
+		
+	} while (*(c++));
+
+	return count;
 }

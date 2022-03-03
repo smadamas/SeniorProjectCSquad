@@ -1,0 +1,58 @@
+\hypertarget{write_8c}{}\doxysection{write.\+c File Reference}
+\label{write_8c}\index{write.c@{write.c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}stb\+\_\+image\+\_\+write.\+h\char`\"{}}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{write_8c_aefe397a94e8feddc652f92ef40ce9597}\label{write_8c_aefe397a94e8feddc652f92ef40ce9597}} 
+\#define {\bfseries STB\+\_\+\+IMAGE\+\_\+\+WRITE\+\_\+\+IMPLEMENTATION}
+\item 
+\mbox{\Hypertarget{write_8c_a897b10d246533c95ba86cb79f92e465a}\label{write_8c_a897b10d246533c95ba86cb79f92e465a}} 
+\#define {\bfseries KYEL}~\char`\"{}\textbackslash{}x1B\mbox{[}33m\char`\"{}
+\begin{DoxyCompactList}\small\item\em Yellow terminal text color. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{write_8c_a66290957baed5df3930ada4cb8caccf1}\label{write_8c_a66290957baed5df3930ada4cb8caccf1}} 
+\#define {\bfseries KRED}~\char`\"{}\textbackslash{}x1B\mbox{[}31m\char`\"{}
+\begin{DoxyCompactList}\small\item\em Red terminal text color. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{write_8c_ab702106cf3b3e96750b6845ded4e0299}\label{write_8c_ab702106cf3b3e96750b6845ded4e0299}} 
+\#define {\bfseries RESET}~\char`\"{}\textbackslash{}x1B\mbox{[}0m\char`\"{}
+\begin{DoxyCompactList}\small\item\em Reset terminal text color to default. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{write_8c_a0426986f743079a72dd878bcb5aeedf2}{write\+\_\+to\+\_\+wht}} (struct \mbox{\hyperlink{structbuff}{buff}} buffer, char $\ast$image\+Name)
+\item 
+void \mbox{\hyperlink{write_8c_a418ec5bcb5dbc99cf11748a61c77392b}{write\+To\+Image}} (struct \mbox{\hyperlink{structbuff}{buff}} buffer, char $\ast$image\+Name, int \mbox{\hyperlink{wht_8c_aec1d5604e17a155bc542c699fd04dc14}{wht}})
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{write_8c_a0426986f743079a72dd878bcb5aeedf2}\label{write_8c_a0426986f743079a72dd878bcb5aeedf2}} 
+\index{write.c@{write.c}!write\_to\_wht@{write\_to\_wht}}
+\index{write\_to\_wht@{write\_to\_wht}!write.c@{write.c}}
+\doxysubsubsection{\texorpdfstring{write\_to\_wht()}{write\_to\_wht()}}
+{\footnotesize\ttfamily void write\+\_\+to\+\_\+wht (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structbuff}{buff}}}]{buffer,  }\item[{char $\ast$}]{image\+Name }\end{DoxyParamCaption})}
+
+Write Walsh-\/\+Hadamard transformed buffer to disk with specified filename 
+\begin{DoxyParams}{Parameters}
+{\em buffer} & Source wht image buffer \\
+\hline
+{\em image\+Name} & Desired filename of image \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{write_8c_a418ec5bcb5dbc99cf11748a61c77392b}\label{write_8c_a418ec5bcb5dbc99cf11748a61c77392b}} 
+\index{write.c@{write.c}!writeToImage@{writeToImage}}
+\index{writeToImage@{writeToImage}!write.c@{write.c}}
+\doxysubsubsection{\texorpdfstring{writeToImage()}{writeToImage()}}
+{\footnotesize\ttfamily void write\+To\+Image (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structbuff}{buff}}}]{buffer,  }\item[{char $\ast$}]{image\+Name,  }\item[{int}]{wht }\end{DoxyParamCaption})}
+
+Writes a buffer to disk with specified filename (with extension) 
+\begin{DoxyParams}{Parameters}
+{\em buffer} & Source image buffer to be written to disk \\
+\hline
+{\em image\+Name} & Desired filename of image \\
+\hline
+{\em wht} & Specification of whether or not the buffer is a wht buffer \\
+\hline
+\end{DoxyParams}

@@ -1,0 +1,81 @@
+\hypertarget{rotation_8c}{}\doxysection{rotation.\+c File Reference}
+\label{rotation_8c}\index{rotation.c@{rotation.c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}gd.\+h\char`\"{}}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{rotation_8c_a897b10d246533c95ba86cb79f92e465a}\label{rotation_8c_a897b10d246533c95ba86cb79f92e465a}} 
+\#define {\bfseries KYEL}~\char`\"{}\textbackslash{}x1B\mbox{[}33m\char`\"{}
+\begin{DoxyCompactList}\small\item\em Yellow terminal text color. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{rotation_8c_a3f838f2fc3a9a3b434be606fc908964b}\label{rotation_8c_a3f838f2fc3a9a3b434be606fc908964b}} 
+\#define {\bfseries KBLU}~\char`\"{}\textbackslash{}x1B\mbox{[}34m\char`\"{}
+\begin{DoxyCompactList}\small\item\em Blue terminal text color. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{rotation_8c_a66290957baed5df3930ada4cb8caccf1}\label{rotation_8c_a66290957baed5df3930ada4cb8caccf1}} 
+\#define {\bfseries KRED}~\char`\"{}\textbackslash{}x1B\mbox{[}31m\char`\"{}
+\begin{DoxyCompactList}\small\item\em Red terminal text color. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{rotation_8c_a6825f05d3b9d619d91d79d0ef18bb8b2}\label{rotation_8c_a6825f05d3b9d619d91d79d0ef18bb8b2}} 
+\#define {\bfseries KMAG}~\char`\"{}\textbackslash{}x1B\mbox{[}35m\char`\"{}
+\begin{DoxyCompactList}\small\item\em Magenta terminal text color. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{rotation_8c_ab702106cf3b3e96750b6845ded4e0299}\label{rotation_8c_ab702106cf3b3e96750b6845ded4e0299}} 
+\#define {\bfseries RESET}~\char`\"{}\textbackslash{}x1B\mbox{[}0m\char`\"{}
+\begin{DoxyCompactList}\small\item\em Reset termina text color. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structbuff}{buff}} \mbox{\hyperlink{rotation_8c_a87100b0f8584cf8e36f55cc117caca43}{rotate}} (struct \mbox{\hyperlink{structbuff}{buff}} a, float degrees)
+\item 
+struct \mbox{\hyperlink{structbuff}{buff}} \mbox{\hyperlink{rotation_8c_aefd2617e4ccf96126846818fb6a992b4}{horizontal\+Flip}} (struct \mbox{\hyperlink{structbuff}{buff}} a)
+\item 
+struct \mbox{\hyperlink{structbuff}{buff}} \mbox{\hyperlink{rotation_8c_aa2ccfd64135109652ed28758ae634ff5}{vertical\+Flip}} (struct \mbox{\hyperlink{structbuff}{buff}} a)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{rotation_8c_aefd2617e4ccf96126846818fb6a992b4}\label{rotation_8c_aefd2617e4ccf96126846818fb6a992b4}} 
+\index{rotation.c@{rotation.c}!horizontalFlip@{horizontalFlip}}
+\index{horizontalFlip@{horizontalFlip}!rotation.c@{rotation.c}}
+\doxysubsubsection{\texorpdfstring{horizontalFlip()}{horizontalFlip()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structbuff}{buff}} horizontal\+Flip (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structbuff}{buff}}}]{a }\end{DoxyParamCaption})}
+
+Flips image horizontally using {\ttfamily libgd} 
+\begin{DoxyParams}{Parameters}
+{\em a} & Source image buffer\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+flipped {\ttfamily buff} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{rotation_8c_a87100b0f8584cf8e36f55cc117caca43}\label{rotation_8c_a87100b0f8584cf8e36f55cc117caca43}} 
+\index{rotation.c@{rotation.c}!rotate@{rotate}}
+\index{rotate@{rotate}!rotation.c@{rotation.c}}
+\doxysubsubsection{\texorpdfstring{rotate()}{rotate()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structbuff}{buff}} rotate (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structbuff}{buff}}}]{a,  }\item[{float}]{degrees }\end{DoxyParamCaption})}
+
+Rotate {\ttfamily buff a} by specified number of {\ttfamily float degrees}. 
+\begin{DoxyParams}{Parameters}
+{\em a} & Source image buffer \\
+\hline
+{\em degrees} & Amount to rotated image by, in degrees\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+rotated {\ttfamily buff} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{rotation_8c_aa2ccfd64135109652ed28758ae634ff5}\label{rotation_8c_aa2ccfd64135109652ed28758ae634ff5}} 
+\index{rotation.c@{rotation.c}!verticalFlip@{verticalFlip}}
+\index{verticalFlip@{verticalFlip}!rotation.c@{rotation.c}}
+\doxysubsubsection{\texorpdfstring{verticalFlip()}{verticalFlip()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structbuff}{buff}} vertical\+Flip (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structbuff}{buff}}}]{a }\end{DoxyParamCaption})}
+
+Flips {\ttfamily buff a} vertically using {\ttfamily libgd} 
+\begin{DoxyParams}{Parameters}
+{\em a} & Source image buffer\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+flipped {\ttfamily buff} 
+\end{DoxyReturn}

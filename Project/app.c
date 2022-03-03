@@ -40,6 +40,7 @@ struct template
 #include "sharpen.c"
 #include "grayscale.c" //included in wht.c already
 #include "wht.c"		 //included in read.c already
+#include "fwht.c"
 #define KGRN "\x1B[32m"
 #define KYEL "\x1B[33m"
 #define KBLU "\x1B[34m"
@@ -566,6 +567,21 @@ int main(int argc, char **argv)
 			whtHistEQ(&temp);
 			addBuffer(temp, buffers, &buffCount);
 		}
+		else if ((strcmp(command, "fwht") == 0)) {
+			if (spaceCount != 3) {
+				printf(KRED "Error: " RESET "Incorrect syntax on fwht command.\n       Use the syntax: fwht <buffer> into <new buffer>\n");
+				p[0] = '\0';
+				continue;
+			}
+			imageName = strtok(NULL, " ");
+			strtok(NULL, " ");
+			buffName = strtok(NULL, " ");
+			struct buff temp = grayscale(buffSearch(imageName, buffers, buffCount), buffName);
+			temp = fwht(temp, buffName);
+			// struct buff temp = fwht(buffSearch(imageName, buffers, buffCount), buffName);
+			// whtHistEQ(&temp);
+			addBuffer(temp, buffers, &buffCount);
+		}
 		else if ((strcmp(command, "grayscale") == 0)) {
 			if (spaceCount != 3) {
 				printf(KRED "Error: " RESET "Incorrect syntax on grayscale command.\n       Use the syntax: grayscale <buffer> into <new buffer>\n");
@@ -621,6 +637,7 @@ void printMenu()
 	printf(KBLU "Hadamard Transform (WHT): " RESET "\"wht <buffer-name> into <new-buffer-name>\"\n");
 	printf(KBLU "Display WHT image: " RESET "\"display_wht <buffer-name>\"\n");
 	printf(KBLU "Output WHT image to file: " RESET "\"write_wht <file-name> into <new-image-name>\"\n");
+	printf(KBLU "Fast Walsh-Hadamard Transform (FWHT): " RESET "\"fwht <buffer-name> into <new-buffer-name>\"\n");
 	printf("\n");
 	printf(KBLU "Display all buffer details: " RESET "\"details\"\n");
 

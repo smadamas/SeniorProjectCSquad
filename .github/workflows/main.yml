@@ -7,7 +7,6 @@ on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches:
-      - automaticDocs
       - main
 
   # Allows you to run this workflow manually from the Actions tab
@@ -27,20 +26,12 @@ jobs:
         with:
           token: ${{ secrets.PAT || github.token }}
 
-      # Runs a single command using the runners shell
       - name: Install doxygen
         run: sudo apt-get install doxygen
-      
-      - name: print cwd
-        working-directory: ./Project
-        run: pwd
         
       - name: run doxygen
         working-directory: ./Project
         run: doxygen doxConfig
-
-#       - name: rewrite first line at top of index.html file
-#         run: sed -i "1s/.*/'<!DOCTYPE html>'/" ./docs/index.html
         
       - name: Commit changes
         uses: EndBug/add-and-commit@v8

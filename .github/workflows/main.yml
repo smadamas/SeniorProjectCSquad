@@ -25,7 +25,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.PAT || github.token }}
 
       # Runs a single command using the runners shell
       - name: Install doxygen
@@ -42,7 +42,7 @@ jobs:
         
       - name: Commit docs change
         run: |
-          git config --global user.name 'DocUpdatingBot'
-          git config --global user.email 'DocUpdatingBot@users.noreply.github.com'
+          git config --global user.name 'morabrandoi'
+          git config --global user.email 'morabrandoi@users.noreply.github.com'
           git commit -am "Automated docs generation"
           git push

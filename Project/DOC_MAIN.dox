@@ -32,7 +32,7 @@
  * This tool manipulates images through buffers. To load an image into a buffer, use the `read` command. Now that the image is in a buffer, this buffer can
  * be manipulated (e.g. `brighten`, `fwht`, `flip`, etc.). Note that buffer content can be displayed at any time, without saving, using the `display` command. 
  *
- * Once the image has been manipulated as desired, the buffer can be saved into a file of type PNG,JPEG,TIFF,BMP through use of the `write` command.
+ * Once the image has been manipulated as desired, the buffer can be saved into a file of type PNG, JPEG, TIFF, BMP through use of the `write` command.
  */
 
 

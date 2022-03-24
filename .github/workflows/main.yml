@@ -30,21 +30,17 @@ jobs:
       # Runs a single command using the runners shell
       - name: Install doxygen
         run: sudo apt-get install doxygen
-        
+      
       - name: print cwd
-        run: pwd
-        
-      - name: cd into Project folder
-        run: cd ./Project
-        
-      - name: print cwd2
+        working-directory: ./Project
         run: pwd
         
       - name: run doxygen
+        working-directory: ./Project
         run: doxygen doxConfig
 
-      - name: rewrite first line at top of index.html file
-        run: sed -i "1s/.*/'<!DOCTYPE html>'/" ./docs/index.html
+#       - name: rewrite first line at top of index.html file
+#         run: sed -i "1s/.*/'<!DOCTYPE html>'/" ./docs/index.html
         
       - name: Commit docs change
         run: |

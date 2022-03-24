@@ -31,8 +31,14 @@ jobs:
       - name: Install doxygen
         run: sudo apt-get install doxygen
         
+      - name: print cwd
+        run: pwd
+        
       - name: cd into Project folder
         run: cd ./Project
+        
+      - name: print cwd2
+        run: pwd
         
       - name: run doxygen
         run: doxygen doxConfig

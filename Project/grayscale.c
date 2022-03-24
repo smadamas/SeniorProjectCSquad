@@ -1,3 +1,5 @@
+/// \file grayscale.c
+
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
@@ -5,14 +7,20 @@
 #include <stdint.h>
 #include <string.h>
 
-#define KYEL  "\x1B[33m"
-#define KBLU  "\x1B[34m"
-#define KRED  "\x1B[31m"
-#define KMAG  "\x1B[35m"
-#define RESET "\x1B[0m"
+#define KYEL  "\x1B[33m" ///< Yellow terminal text color
+#define KBLU  "\x1B[34m" ///< Blue terminal text color
+#define KRED  "\x1B[31m" ///< Red terminal text color
+#define KMAG  "\x1B[35m" ///< Magenta terminal text color
+#define RESET "\x1B[0m"  ///< Reset terminal text color
 
 
-// Convert an image to a 1-channel grayscale image
+/**
+ * Converts an image into a single channel (grayscale) image.
+ * \param img Input image buffer
+ * \param buffName Desired name of output buffer
+ *
+ * \return grayscale `buff` with `buffname`
+ */
 struct buff grayscale(struct buff img, char* buffname) {
 	struct buff result;
 	char* ext;

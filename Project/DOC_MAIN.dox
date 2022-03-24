@@ -1,0 +1,38 @@
+/**
+ * \mainpage Enhanced UNIX Image Manipulation Library
+ *
+ * \section intro_sec Introduction
+ *
+ * This is a command-line based image manipulation tool, designed for all UNIX systems.
+ * Written in ANSI-C (C99+ standard), this tool should be supported by any UNIX system with minimal extra dependency.
+ *
+ * The tool is lightweight, fast, and consistent in usage.
+ *
+ *
+ * The sections below outline \ref install_sec and \ref usage_sec of the tool for any prospective user.
+ *
+ *
+ * \section install_sec Installation
+ *
+ * This software requires `libgd` and `gtk-2.0`.
+ * Ensure your system is up-to-date, and reference your Linux distribution to identify packages for installation.
+ *
+ * E.g. On Ubuntu, you need to install the packages `libgd-dev` and `libgtk2.0-dev` through APT, while on Arch you need to install `gd` and `gtk2` through pacman.
+ *
+ *
+ * \section usage_sec Usage
+ *
+ * Once the source code and dependencies are installed, compile using the included Makefile included in `<path/to/source>/Project/Makefile`.
+ * After compilation, the tool can be used by executing the binary named "run": `./run`
+ *
+ * \subsection cmds_sec Commands
+ *
+ * For specific syntactic documentation, use the `menu` command within the tool.
+ *
+ * This tool manipulates images through buffers. To load an image into a buffer, use the `read` command. Now that the image is in a buffer, this buffer can
+ * be manipulated (e.g. `brighten`, `fwht`, `flip`, etc.). Note that buffer content can be displayed at any time, without saving, using the `display` command. 
+ *
+ * Once the image has been manipulated as desired, the buffer can be saved into a file of type PNG,JPEG,TIFF,BMP through use of the `write` command.
+ */
+
+

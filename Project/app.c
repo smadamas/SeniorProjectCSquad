@@ -1,3 +1,5 @@
+/// \file app.c
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,25 +9,27 @@
 
 struct buff
 {
-	char imageName[32];
-	char name[30];
-	char status[30];
-	unsigned char *img;
-	int width, height, channels;
-	gdImagePtr imrgb;
-	int isLibgd;
-	double* wht;
-	unsigned char* whtimg;
-	int has_wht;
+	char imageName[32];         ///< string name of the image loaded into buffer
+	char name[30];              ///< string name of the buffer
+	char status[30];            ///< string status of the buffer 
+	unsigned char *img;         ///< image data loaded by `stb_image.h`
+	int width,                  ///< width of image in pixels
+        height,                 ///< height of image in pixels
+        channels;               ///< number of RGBA channels within pixels
+	gdImagePtr imrgb;           ///< image data loaded by `libgd`
+	int isLibgd;                ///< signifies whether image has been loaded by `libgd`
+	double* wht;                ///< stores the walsh-hadamard 
+	unsigned char* whtimg;      ///< data for walsh-hadamard transformed image
+	int has_wht;                ///< signifies whether image has been transformed using Walsh-Hadamard 
 };
 
 struct template
 {
-	char name[30];
-	float** mask;
-	float** mask_tp; // modified mask for target pixel placement
-	int tpRow;
-	int tpColumn;
+	char name[30];      ///< template name
+	float** mask;       ///< masking matrix
+	float** mask_tp;    ///< modified mask for target pixel placement
+	int tpRow;          ///< target pixel number of rows
+	int tpColumn;       ///< target pixel number of columns
 };
 
 #include "read.c"
@@ -41,12 +45,13 @@ struct template
 #include "grayscale.c" //included in wht.c already
 #include "wht.c"		 //included in read.c already
 #include "fwht.c"
-#define KGRN "\x1B[32m"
-#define KYEL "\x1B[33m"
-#define KBLU "\x1B[34m"
-#define KRED "\x1B[31m"
-#define KMAG "\x1B[35m"
-#define RESET "\x1B[0m"
+
+#define KGRN "\x1B[32m"     ///< Escape code for green terminal text 
+#define KYEL "\x1B[33m"     ///< Escape code for yellow terminal text
+#define KBLU "\x1B[34m"     ///< Escape code for blue terminal text
+#define KRED "\x1B[31m"     ///< Escape code for red terminal text
+#define KMAG "\x1B[35m"     ///< Escape code for magenta terminal text
+#define RESET "\x1B[0m"     ///< Resets terminal text color to default (white)
 
 void addBuffer(struct buff buffer, struct buff *buffers, int *buffCount);
 struct buff buffSearch(char *buffName, struct buff *buffers, int buffCount);
@@ -607,6 +612,9 @@ int main(int argc, char **argv)
 	}
 }
 
+/**
+ * Prints a list of all usable commands and their input formats.
+ */
 void printMenu()
 {
 	printf(KGRN "\n----- Commands -----\n");
@@ -643,6 +651,12 @@ void printMenu()
 
 }
 
+
+/**
+ * Prints a list of all current buffer names, as well as the image names within them.
+ * \param buffers List of buffers in memory
+ * \param buffCount Number of buffers in memory
+ */
 void printBuffer(struct buff *buffers, int buffCount)
 {
 	printf(KGRN "\n----- Buffers -----\n" RESET);
@@ -653,6 +667,12 @@ void printBuffer(struct buff *buffers, int buffCount)
 	printf("\n");
 }
 
+/**
+ * Adds a buffer to the buffer list.
+ * \param buffer Buffer to be added to list
+ * \param buffers List of buffers in memory
+ * \param buffCount Number of buffers in list
+ */
 void addBuffer(struct buff buffer, struct buff *buffers, int *buffCount)
 {
 	int k = -1;
@@ -697,6 +717,14 @@ void addBuffer(struct buff buffer, struct buff *buffers, int *buffCount)
 	printf(KYEL "New buffer added\n\n" RESET);
 }
 
+/**
+ * Searches for a buffer, by name, from the buffer list.
+ * \param buffName String name of the buffer to be found
+ * \param buffers List of buffers in memory
+ * \param int buffCount Number of buffers in list
+ *
+ * \return requested buffer
+ */
 struct buff buffSearch(char *buffName, struct buff *buffers, int buffCount)
 {
 	for (int i = 0; i < buffCount; i++)
@@ -713,6 +741,12 @@ struct buff buffSearch(char *buffName, struct buff *buffers, int buffCount)
 	return temp;
 }
 
+/**
+ * Gets the extension of a requested file, by name.
+ * \param filename: String name of file, with extension
+ *
+ * \return string of file extension
+ */
 char *get_filename_ext(const char *filename)
 {
 	char *dot = strrchr(filename, '.');
@@ -720,6 +754,14 @@ char *get_filename_ext(const char *filename)
 		return "";
 	return dot + 1;
 }
+
+/**
+ * Validates that a file is of acceptable filetype.
+ * \param ext String value of file extension
+ * \param file_types Pointer to array of accepted filetypes
+ *
+ * \return 0 if invalid, 1 if valid
+ */
 int check_types(char *ext, char *file_types[])
 {
 	for (int i = 0; i < 5; i++)
@@ -731,6 +773,13 @@ int check_types(char *ext, char *file_types[])
 	return 0;
 }
 
+/**
+ * Counts the number of occurenced of `character` in a string. 
+ * \param str String to be evaluated
+ * \param character Character to count for
+ *
+ * \return int number of characters
+ */
 int count_characters(const char* str, char character)
 {
 	//this is to avoid strtok segfault errors.

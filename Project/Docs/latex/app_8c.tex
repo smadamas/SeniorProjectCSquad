@@ -1,0 +1,170 @@
+\hypertarget{app_8c}{}\doxysection{app.\+c File Reference}
+\label{app_8c}\index{app.c@{app.c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include $<$setjmp.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}gd.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}read.\+c\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}write.\+c\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}arithmetics.\+c\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}brighten.\+c\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}edge.\+c\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}display.\+c\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}histo\+EQ.\+c\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}rotation.\+c\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}blurr.\+c\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}sharpen.\+c\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}grayscale.\+c\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}wht.\+c\char`\"{}}\newline
+\doxysubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structbuff}{buff}}
+\item 
+struct \mbox{\hyperlink{structtemplate}{template}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{app_8c_ac081c83b067273757f7a2e54a5957d41}\label{app_8c_ac081c83b067273757f7a2e54a5957d41}} 
+\#define {\bfseries KGRN}~\char`\"{}\textbackslash{}x1B\mbox{[}32m\char`\"{}
+\begin{DoxyCompactList}\small\item\em Escape code for green terminal text. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{app_8c_a897b10d246533c95ba86cb79f92e465a}\label{app_8c_a897b10d246533c95ba86cb79f92e465a}} 
+\#define {\bfseries KYEL}~\char`\"{}\textbackslash{}x1B\mbox{[}33m\char`\"{}
+\begin{DoxyCompactList}\small\item\em Escape code for yellow terminal text. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{app_8c_a3f838f2fc3a9a3b434be606fc908964b}\label{app_8c_a3f838f2fc3a9a3b434be606fc908964b}} 
+\#define {\bfseries KBLU}~\char`\"{}\textbackslash{}x1B\mbox{[}34m\char`\"{}
+\begin{DoxyCompactList}\small\item\em Escape code for blue terminal text. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{app_8c_a66290957baed5df3930ada4cb8caccf1}\label{app_8c_a66290957baed5df3930ada4cb8caccf1}} 
+\#define {\bfseries KRED}~\char`\"{}\textbackslash{}x1B\mbox{[}31m\char`\"{}
+\begin{DoxyCompactList}\small\item\em Escape code for red terminal text. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{app_8c_a6825f05d3b9d619d91d79d0ef18bb8b2}\label{app_8c_a6825f05d3b9d619d91d79d0ef18bb8b2}} 
+\#define {\bfseries KMAG}~\char`\"{}\textbackslash{}x1B\mbox{[}35m\char`\"{}
+\begin{DoxyCompactList}\small\item\em Escape code for magenta terminal text. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{app_8c_ab702106cf3b3e96750b6845ded4e0299}\label{app_8c_ab702106cf3b3e96750b6845ded4e0299}} 
+\#define {\bfseries RESET}~\char`\"{}\textbackslash{}x1B\mbox{[}0m\char`\"{}
+\begin{DoxyCompactList}\small\item\em Resets terminal text color to default (white) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{app_8c_a0c37cab4e3dc881e79c8008fe2f7fa70}{add\+Buffer}} (struct \mbox{\hyperlink{structbuff}{buff}} buffer, struct \mbox{\hyperlink{structbuff}{buff}} $\ast$buffers, int $\ast$buff\+Count)
+\item 
+struct \mbox{\hyperlink{structbuff}{buff}} \mbox{\hyperlink{app_8c_acf6723d90077221defcbe4cc3c285aea}{buff\+Search}} (char $\ast$buff\+Name, struct \mbox{\hyperlink{structbuff}{buff}} $\ast$buffers, int buff\+Count)
+\item 
+void \mbox{\hyperlink{app_8c_a790425ec9e1daa1f614f54b46c18ec1e}{print\+Buffer}} (struct \mbox{\hyperlink{structbuff}{buff}} $\ast$buffer, int buff\+Count)
+\item 
+void \mbox{\hyperlink{app_8c_ab13e858612c64eeef73aff1d8a03945e}{print\+Menu}} ()
+\item 
+char $\ast$ \mbox{\hyperlink{app_8c_a0d6792f91e44d50ed1b25bb34ee86db5}{get\+\_\+filename\+\_\+ext}} (const char $\ast$filename)
+\item 
+int \mbox{\hyperlink{app_8c_a97233a5bdb7c766e27116c4831e62e53}{check\+\_\+types}} (char $\ast$ext, char $\ast$file\+\_\+types\mbox{[}$\,$\mbox{]})
+\item 
+int \mbox{\hyperlink{app_8c_aa2525915c6e4e5e135eda3021cb6ae12}{count\+\_\+characters}} (const char $\ast$str, char character)
+\item 
+\mbox{\Hypertarget{app_8c_a3c04138a5bfe5d72780bb7e82a18e627}\label{app_8c_a3c04138a5bfe5d72780bb7e82a18e627}} 
+int {\bfseries main} (int argc, char $\ast$$\ast$argv)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{app_8c_a0c37cab4e3dc881e79c8008fe2f7fa70}\label{app_8c_a0c37cab4e3dc881e79c8008fe2f7fa70}} 
+\index{app.c@{app.c}!addBuffer@{addBuffer}}
+\index{addBuffer@{addBuffer}!app.c@{app.c}}
+\doxysubsubsection{\texorpdfstring{addBuffer()}{addBuffer()}}
+{\footnotesize\ttfamily void add\+Buffer (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structbuff}{buff}}}]{buffer,  }\item[{struct \mbox{\hyperlink{structbuff}{buff}} $\ast$}]{buffers,  }\item[{int $\ast$}]{buff\+Count }\end{DoxyParamCaption})}
+
+Adds a buffer to the buffer list. 
+\begin{DoxyParams}{Parameters}
+{\em buffer} & Buffer to be added to list \\
+\hline
+{\em buffers} & List of buffers in memory \\
+\hline
+{\em buff\+Count} & Number of buffers in list \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{app_8c_acf6723d90077221defcbe4cc3c285aea}\label{app_8c_acf6723d90077221defcbe4cc3c285aea}} 
+\index{app.c@{app.c}!buffSearch@{buffSearch}}
+\index{buffSearch@{buffSearch}!app.c@{app.c}}
+\doxysubsubsection{\texorpdfstring{buffSearch()}{buffSearch()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structbuff}{buff}} buff\+Search (\begin{DoxyParamCaption}\item[{char $\ast$}]{buff\+Name,  }\item[{struct \mbox{\hyperlink{structbuff}{buff}} $\ast$}]{buffers,  }\item[{int}]{buff\+Count }\end{DoxyParamCaption})}
+
+Searches for a buffer, by name, from the buffer list. 
+\begin{DoxyParams}{Parameters}
+{\em buff\+Name} & String name of the buffer to be found \\
+\hline
+{\em buffers} & List of buffers in memory \\
+\hline
+{\em int} & buff\+Count Number of buffers in list\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+requested buffer 
+\end{DoxyReturn}
+\mbox{\Hypertarget{app_8c_a97233a5bdb7c766e27116c4831e62e53}\label{app_8c_a97233a5bdb7c766e27116c4831e62e53}} 
+\index{app.c@{app.c}!check\_types@{check\_types}}
+\index{check\_types@{check\_types}!app.c@{app.c}}
+\doxysubsubsection{\texorpdfstring{check\_types()}{check\_types()}}
+{\footnotesize\ttfamily int check\+\_\+types (\begin{DoxyParamCaption}\item[{char $\ast$}]{ext,  }\item[{char $\ast$}]{file\+\_\+types\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+Validates that a file is of acceptable filetype. 
+\begin{DoxyParams}{Parameters}
+{\em ext} & String value of file extension \\
+\hline
+{\em file\+\_\+types} & Pointer to array of accepted filetypes\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if invalid, 1 if valid 
+\end{DoxyReturn}
+\mbox{\Hypertarget{app_8c_aa2525915c6e4e5e135eda3021cb6ae12}\label{app_8c_aa2525915c6e4e5e135eda3021cb6ae12}} 
+\index{app.c@{app.c}!count\_characters@{count\_characters}}
+\index{count\_characters@{count\_characters}!app.c@{app.c}}
+\doxysubsubsection{\texorpdfstring{count\_characters()}{count\_characters()}}
+{\footnotesize\ttfamily int count\+\_\+characters (\begin{DoxyParamCaption}\item[{const char $\ast$}]{str,  }\item[{char}]{character }\end{DoxyParamCaption})}
+
+Counts the number of occurenced of {\ttfamily character} in a string. 
+\begin{DoxyParams}{Parameters}
+{\em str} & String to be evaluated \\
+\hline
+{\em character} & Character to count for\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int number of characters 
+\end{DoxyReturn}
+\mbox{\Hypertarget{app_8c_a0d6792f91e44d50ed1b25bb34ee86db5}\label{app_8c_a0d6792f91e44d50ed1b25bb34ee86db5}} 
+\index{app.c@{app.c}!get\_filename\_ext@{get\_filename\_ext}}
+\index{get\_filename\_ext@{get\_filename\_ext}!app.c@{app.c}}
+\doxysubsubsection{\texorpdfstring{get\_filename\_ext()}{get\_filename\_ext()}}
+{\footnotesize\ttfamily char $\ast$ get\+\_\+filename\+\_\+ext (\begin{DoxyParamCaption}\item[{const char $\ast$}]{filename }\end{DoxyParamCaption})}
+
+Gets the extension of a requested file, by name. 
+\begin{DoxyParams}{Parameters}
+{\em filename} & String name of file, with extension\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+string of file extension 
+\end{DoxyReturn}
+\mbox{\Hypertarget{app_8c_a790425ec9e1daa1f614f54b46c18ec1e}\label{app_8c_a790425ec9e1daa1f614f54b46c18ec1e}} 
+\index{app.c@{app.c}!printBuffer@{printBuffer}}
+\index{printBuffer@{printBuffer}!app.c@{app.c}}
+\doxysubsubsection{\texorpdfstring{printBuffer()}{printBuffer()}}
+{\footnotesize\ttfamily void print\+Buffer (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structbuff}{buff}} $\ast$}]{buffers,  }\item[{int}]{buff\+Count }\end{DoxyParamCaption})}
+
+Prints a list of all current buffer names, as well as the image names within them. 
+\begin{DoxyParams}{Parameters}
+{\em buffers} & List of buffers in memory \\
+\hline
+{\em buff\+Count} & Number of buffers in memory \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{app_8c_ab13e858612c64eeef73aff1d8a03945e}\label{app_8c_ab13e858612c64eeef73aff1d8a03945e}} 
+\index{app.c@{app.c}!printMenu@{printMenu}}
+\index{printMenu@{printMenu}!app.c@{app.c}}
+\doxysubsubsection{\texorpdfstring{printMenu()}{printMenu()}}
+{\footnotesize\ttfamily void print\+Menu (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Prints a list of all usable commands and their input formats. 

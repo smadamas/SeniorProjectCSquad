@@ -1,3 +1,4 @@
+/// \file wht.c
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
@@ -6,11 +7,11 @@
 #include <string.h>
 
 
-#define KYEL  "\x1B[33m"
-#define KBLU  "\x1B[34m"
-#define KRED  "\x1B[31m"
-#define KMAG  "\x1B[35m"
-#define RESET "\x1B[0m"
+#define KYEL  "\x1B[33m" ///< Yellow terminal text color
+#define KBLU  "\x1B[34m" ///< Blue terminal text color
+#define KRED  "\x1B[31m" ///< Red terminal text color
+#define KMAG  "\x1B[35m" ///< Magenta terminal text color
+#define RESET "\x1B[0m"  ///< Reset terminal text color to default
 
 signed char* hadamard(int n);
 signed char* hadamard_recursive(int i, int n, signed char* temp);
@@ -19,9 +20,12 @@ void print_matrixf(double* n, int length);
 void print_matrixu(unsigned char* n, int length);
 
 
-// Generate natural-ordering Hadamard matrix of size (2^n)x(2^n). 
-// n is log2 of the length or width of the input image (with zero padding). 
-// n is the number of iterations required to generate the Hadamard matrix.
+/** 
+ * Generate natural-ordering Hadamard matrix of size (2^n)x(2^n). 
+ * \param n log2 of the length or width of the input image (with zero padding), and the number of iterations required to generate the Hadamard matrix.
+ *
+ * \return `char*` Hadamard matrix data
+ */
 signed char* hadamard(int n) {
 	//dim = width of the final matrix, and of the input image. Add dim to ptr to get next row
 	int dim = 1 << n;		
@@ -48,6 +52,14 @@ signed char* hadamard(int n) {
 	
 }
 
+/**
+ * Helper function for `hadamard()`. Recursively generates the natural-ordered Hadamard matrix of size (2^n)x(2^n)
+ * \param i i is log2 of the length of each row in temp
+ * \param n log2 of the length or width of the input image (with zero padding), and the number of iterations required to generate the Hadamard matrix.
+ * \param temp temporary matrix for Hadamard(1)
+ *
+ * \return `char*` Hadamard matrix data
+ */
 signed char* hadamard_recursive(int i, int n, signed char* temp) {
 	// iterate i by 1 each recursion until i = n
 	
@@ -102,6 +114,13 @@ signed char* hadamard_recursive(int i, int n, signed char* temp) {
 	return hadamard_recursive(i, n, temp2);
 }
 
+/**
+ * Performs Walsh-Hadamard transform onto buffer `buff`.
+ * \param buffer Source image buffer
+ * \param buffname Name of resultant buffer
+ *
+ * \return transformed `buff`
+ */
 struct buff wht(struct buff buffer, char* buffname) {
 	struct buff result;
 	int w = buffer.width;
@@ -276,6 +295,13 @@ struct buff wht(struct buff buffer, char* buffname) {
 	return result;
 }
 
+
+/** 
+ * Inverse Hadamard transform, takes an wft image as input and recovers the original image from it.
+ * \param img Source wht buffer
+ * 
+ * \return `buff` original image
+ */
 struct buff iwht(struct buff img) {
 	// Inverse Hadamard transform, takes an wft image as input and recovers the original image from it.
 	// To invert, run the normal transform in reverse, i.e. transform rows then columns. (H*A)*H instead of H*(A*H)
@@ -369,6 +395,11 @@ struct buff iwht(struct buff img) {
 
 
 
+/**
+ * Prints the `signed` format Hadamard matrix.
+ * \param n `signed` Hadamard matrix
+ * \param length Length of matrix
+ */
 void print_matrix(signed char* n, int length) {
 	printf("Printing Hadamard Matrix of Length %d:\n", length);
 	signed int pixel = 0;
@@ -390,6 +421,11 @@ void print_matrix(signed char* n, int length) {
 	}
 }
 
+/**
+ * Prints the `unsigned` format Hadamard matrix.
+ * \param n `unsigned` Hadamard matrix
+ * \param length Length of matrix
+ */
 void print_matrixu(unsigned char* n, int length) {
 	for (int i = 0; i < length; i++) {
 		for (int j = 0; j < length; j++) {
@@ -398,6 +434,12 @@ void print_matrixu(unsigned char* n, int length) {
 		printf("\n");
 	}
 }
+
+/**
+ * Prints the `double` format Hadamard matrix.
+ * \param n `double` Hadamard matrix
+ * \param length Length of matrix
+ */
 void print_matrixf(double* n, int length) {
 	for (int i = 0; i < length; i++) {
 		for (int j = 0; j < length; j++) {

@@ -1,11 +1,18 @@
+/// \file sharpen.c
 #include "gd.h"
-#define KYEL  "\x1B[33m"
-#define KBLU  "\x1B[34m"
-#define KRED  "\x1B[31m"
-#define KMAG  "\x1B[35m"
-#define RESET "\x1B[0m"
+#define KYEL  "\x1B[33m" ///< Yellow terminal text color
+#define KBLU  "\x1B[34m" ///< Blue terminal text color
+#define KRED  "\x1B[31m" ///< Red terminal text color
+#define KMAG  "\x1B[35m" ///< Magenta terminal text color
+#define RESET "\x1B[0m"  ///< Reset terminal text color
 
-//struct buff sharpen(struct buff input, char * resultName){
+/**
+ * Sharpen a buffer, using `libgd`. `char* choice` specifies `high` or not sharpening.
+ * \param buffer Source image buffer
+ * \param choice String choice for type of sharpening -- `high` performs simple sharpening; other inputs perform a 3x3 convolution with a mask.
+ *
+ * \return sharpened `buff`
+ */
 struct buff sharpen(struct buff buffer, char* choice)
 {
     char newBuff[100];

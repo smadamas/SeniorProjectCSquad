@@ -1,0 +1,46 @@
+# This is a basic workflow to help you get started with Actions
+
+name: doxygenBuild
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ automaticDocs ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.PAT }}
+
+      # Runs a single command using the runners shell
+      - name: Install doxygen
+        run: sudo apt-get install doxygen
+        
+      - name: cd into Project folder
+        run: cd ./Project
+        
+      - name: run doxygen
+        run: doxygen doxConfig
+
+      - name: rewrite first line at top of index.html file
+        run: sed -i "1s/.*/'<!DOCTYPE html>'/" ../docs/index.html
+        
+      - name: Commit docs change
+        run: |
+          git config --global user.name 'DocUpdatingBot'
+          git config --global user.email 'DocUpdatingBot@users.noreply.github.com'
+          git commit -am "Automated docs generation"
+          git push

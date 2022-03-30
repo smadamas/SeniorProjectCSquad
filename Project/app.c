@@ -37,6 +37,8 @@ struct template
 #include "arithmetics.c"
 #include "brighten.c"
 #include "edge.c"
+#include "hadamard.c"
+#include "pad.c"
 #include "display.c"
 #include "histoEQ.c"
 #include "rotation.c"
@@ -197,6 +199,36 @@ int main(int argc, char **argv)
 				else {
 					printf(KRED "Error: " RESET "Brightening routine not written in correct format.\n\n");
 				}
+			}
+		}
+		else if (strcmp(command, "hadamard") == 0)
+		{
+			buffName = strtok(NULL, " ");
+			strtok(NULL, " ");
+			imageName = strtok(NULL, " ");
+			if (strlen(imageName) > 14)
+			{
+				printf(KRED "Error: " RESET "Image name too long. Image + extension must be shorter than 14 characters.\n\n");
+			}
+			else
+			{
+				
+				addBuffer(hadamard(buffSearch(buffName, buffers, buffCount), imageName), buffers, &buffCount);
+			}
+		}
+		else if (strcmp(command, "pad") == 0)
+		{
+			buffName = strtok(NULL, " ");
+			strtok(NULL, " ");
+			imageName = strtok(NULL, " ");
+			if (strlen(imageName) > 14)
+			{
+				printf(KRED "Error: " RESET "Image name too long. Image + extension must be shorter than 14 characters.\n\n");
+			}
+			else
+			{
+				
+				addBuffer(pad(buffSearch(buffName, buffers, buffCount), imageName), buffers, &buffCount);
 			}
 		}
 		else if (strcmp(command, "darken") == 0)
@@ -640,14 +672,8 @@ void printMenu()
 	printf(KBLU "Template: " RESET "\"define_template <template-name> <template-structure> = <(x,y)>\"\n");
 	printf(KBLU "Convolve_Template: " RESET "\"convolve_template <buff-name> <template-name>\"\n");
 	printf(KBLU "Convolution: " RESET "\"convolve3x3 <template> <buffer-name>\" template = [a b c][d e f][g h i] integers\n");
-	printf(KBLU "Grayscale: " RESET "\"grayscale <buffer-name> into <new-buuffer-name>\"\n");
-	printf("\n");
-	printf(KBLU "Hadamard Transform (WHT): " RESET "\"wht <buffer-name> into <new-buffer-name>\"\n");
-	printf(KBLU "Display WHT image: " RESET "\"display_wht <buffer-name>\"\n");
-	printf(KBLU "Output WHT image to file: " RESET "\"write_wht <file-name> into <new-image-name>\"\n");
-	printf(KBLU "Fast Walsh-Hadamard Transform (FWHT): " RESET "\"fwht <buffer-name> into <new-buffer-name>\"\n");
-	printf("\n");
-	printf(KBLU "Display all buffer details: " RESET "\"details\"\n");
+	printf(KBLU "Sharpen: " RESET "\"sharpen <low/high> <buffer>\"\n\n");
+	printf(KBLU "Pad: " RESET "\"pad <buffer> into <new-buffer-name>\"\n\n");
 
 }
 

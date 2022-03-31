@@ -1,0 +1,49 @@
+\hypertarget{grayscale_8c}{}\doxysection{grayscale.\+c File Reference}
+\label{grayscale_8c}\index{grayscale.c@{grayscale.c}}
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{grayscale_8c_a897b10d246533c95ba86cb79f92e465a}\label{grayscale_8c_a897b10d246533c95ba86cb79f92e465a}} 
+\#define {\bfseries KYEL}~\char`\"{}\textbackslash{}x1B\mbox{[}33m\char`\"{}
+\begin{DoxyCompactList}\small\item\em Yellow terminal text color. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{grayscale_8c_a3f838f2fc3a9a3b434be606fc908964b}\label{grayscale_8c_a3f838f2fc3a9a3b434be606fc908964b}} 
+\#define {\bfseries KBLU}~\char`\"{}\textbackslash{}x1B\mbox{[}34m\char`\"{}
+\begin{DoxyCompactList}\small\item\em Blue terminal text color. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{grayscale_8c_a66290957baed5df3930ada4cb8caccf1}\label{grayscale_8c_a66290957baed5df3930ada4cb8caccf1}} 
+\#define {\bfseries KRED}~\char`\"{}\textbackslash{}x1B\mbox{[}31m\char`\"{}
+\begin{DoxyCompactList}\small\item\em Red terminal text color. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{grayscale_8c_a6825f05d3b9d619d91d79d0ef18bb8b2}\label{grayscale_8c_a6825f05d3b9d619d91d79d0ef18bb8b2}} 
+\#define {\bfseries KMAG}~\char`\"{}\textbackslash{}x1B\mbox{[}35m\char`\"{}
+\begin{DoxyCompactList}\small\item\em Magenta terminal text color. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{grayscale_8c_ab702106cf3b3e96750b6845ded4e0299}\label{grayscale_8c_ab702106cf3b3e96750b6845ded4e0299}} 
+\#define {\bfseries RESET}~\char`\"{}\textbackslash{}x1B\mbox{[}0m\char`\"{}
+\begin{DoxyCompactList}\small\item\em Reset terminal text color. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structbuff}{buff}} \mbox{\hyperlink{grayscale_8c_ac537b9b42808d84c6aea2c43d81ff134}{grayscale}} (struct \mbox{\hyperlink{structbuff}{buff}} img, char $\ast$buffname)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{grayscale_8c_ac537b9b42808d84c6aea2c43d81ff134}\label{grayscale_8c_ac537b9b42808d84c6aea2c43d81ff134}} 
+\index{grayscale.c@{grayscale.c}!grayscale@{grayscale}}
+\index{grayscale@{grayscale}!grayscale.c@{grayscale.c}}
+\doxysubsubsection{\texorpdfstring{grayscale()}{grayscale()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structbuff}{buff}} grayscale (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structbuff}{buff}}}]{img,  }\item[{char $\ast$}]{buffname }\end{DoxyParamCaption})}
+
+Converts an image into a single channel (grayscale) image. 
+\begin{DoxyParams}{Parameters}
+{\em img} & Input image buffer \\
+\hline
+{\em buff\+Name} & Desired name of output buffer\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+grayscale {\ttfamily buff} with {\ttfamily buffname} 
+\end{DoxyReturn}

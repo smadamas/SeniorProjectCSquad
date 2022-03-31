@@ -1,0 +1,34 @@
+\hypertarget{display_8c}{}\doxysection{display.\+c File Reference}
+\label{display_8c}\index{display.c@{display.c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include $<$gtk/gtk.\+h$>$}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{display_8c_a753e3cdb094f7b939f247bd7e16fe04a}{destroy}} (void)
+\item 
+void \mbox{\hyperlink{display_8c_ac3ea10765736c5bbcac98392602ce987}{display\+Image}} (char $\ast$img, int argc, char $\ast$$\ast$argv)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{display_8c_a753e3cdb094f7b939f247bd7e16fe04a}\label{display_8c_a753e3cdb094f7b939f247bd7e16fe04a}} 
+\index{display.c@{display.c}!destroy@{destroy}}
+\index{destroy@{destroy}!display.c@{display.c}}
+\doxysubsubsection{\texorpdfstring{destroy()}{destroy()}}
+{\footnotesize\ttfamily void destroy (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Ends gtk session \mbox{\Hypertarget{display_8c_ac3ea10765736c5bbcac98392602ce987}\label{display_8c_ac3ea10765736c5bbcac98392602ce987}} 
+\index{display.c@{display.c}!displayImage@{displayImage}}
+\index{displayImage@{displayImage}!display.c@{display.c}}
+\doxysubsubsection{\texorpdfstring{displayImage()}{displayImage()}}
+{\footnotesize\ttfamily void display\+Image (\begin{DoxyParamCaption}\item[{char $\ast$}]{img,  }\item[{int}]{argc,  }\item[{char $\ast$$\ast$}]{argv }\end{DoxyParamCaption})}
+
+Displays an image based on raw data, by starting and joining a gtk session. 
+\begin{DoxyParams}{Parameters}
+{\em \`{}char} & $\ast$img{\ttfamily \+: Raw image data \textbackslash{}param}int argc{\ttfamily \+: Command for gtk\+\_\+init \textbackslash{}param}char $\ast$$\ast$argv\`{}\+: Arguments for gtk\+\_\+init \\
+\hline
+\end{DoxyParams}

@@ -1,0 +1,127 @@
+\hypertarget{arithmetics_8c}{}\doxysection{arithmetics.\+c File Reference}
+\label{arithmetics_8c}\index{arithmetics.c@{arithmetics.c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{arithmetics_8c_a897b10d246533c95ba86cb79f92e465a}\label{arithmetics_8c_a897b10d246533c95ba86cb79f92e465a}} 
+\#define {\bfseries KYEL}~\char`\"{}\textbackslash{}x1B\mbox{[}33m\char`\"{}
+\begin{DoxyCompactList}\small\item\em Yellow terminal text color escape. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{arithmetics_8c_a3f838f2fc3a9a3b434be606fc908964b}\label{arithmetics_8c_a3f838f2fc3a9a3b434be606fc908964b}} 
+\#define {\bfseries KBLU}~\char`\"{}\textbackslash{}x1B\mbox{[}34m\char`\"{}
+\begin{DoxyCompactList}\small\item\em Blue terminal text color escape. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{arithmetics_8c_a66290957baed5df3930ada4cb8caccf1}\label{arithmetics_8c_a66290957baed5df3930ada4cb8caccf1}} 
+\#define {\bfseries KRED}~\char`\"{}\textbackslash{}x1B\mbox{[}31m\char`\"{}
+\begin{DoxyCompactList}\small\item\em Red terminal text color escape. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{arithmetics_8c_a6825f05d3b9d619d91d79d0ef18bb8b2}\label{arithmetics_8c_a6825f05d3b9d619d91d79d0ef18bb8b2}} 
+\#define {\bfseries KMAG}~\char`\"{}\textbackslash{}x1B\mbox{[}35m\char`\"{}
+\begin{DoxyCompactList}\small\item\em Magenta terminal text color escape. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{arithmetics_8c_ab702106cf3b3e96750b6845ded4e0299}\label{arithmetics_8c_ab702106cf3b3e96750b6845ded4e0299}} 
+\#define {\bfseries RESET}~\char`\"{}\textbackslash{}x1B\mbox{[}0m\char`\"{}
+\begin{DoxyCompactList}\small\item\em Reset terminal text color. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structbuff}{buff}} \mbox{\hyperlink{arithmetics_8c_a7588b20a486b3633bd99b2f4b45fbc64}{add}} (struct \mbox{\hyperlink{structbuff}{buff}} a, struct \mbox{\hyperlink{structbuff}{buff}} b, char $\ast$buff\+Name)
+\item 
+struct \mbox{\hyperlink{structbuff}{buff}} \mbox{\hyperlink{arithmetics_8c_a4c0c320fa197c11cdd2fa89bbfd3c96a}{subtract}} (struct \mbox{\hyperlink{structbuff}{buff}} a, struct \mbox{\hyperlink{structbuff}{buff}} b, char $\ast$buff\+Name)
+\item 
+struct \mbox{\hyperlink{structbuff}{buff}} \mbox{\hyperlink{arithmetics_8c_aed1b55c0a3c073efca8e8b0cb5ed4809}{multiply}} (struct \mbox{\hyperlink{structbuff}{buff}} a, struct \mbox{\hyperlink{structbuff}{buff}} b, char $\ast$buff\+Name)
+\item 
+struct \mbox{\hyperlink{structbuff}{buff}} \mbox{\hyperlink{arithmetics_8c_af04478ec7bebc449f83f139171428c6e}{divide}} (struct \mbox{\hyperlink{structbuff}{buff}} a, struct \mbox{\hyperlink{structbuff}{buff}} b, char $\ast$buff\+Name)
+\item 
+struct \mbox{\hyperlink{structbuff}{buff}} \mbox{\hyperlink{arithmetics_8c_a957086fc6d154367f398b679a5ba35bd}{combine}} (struct \mbox{\hyperlink{structbuff}{buff}} a, struct \mbox{\hyperlink{structbuff}{buff}} b)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{arithmetics_8c_a7588b20a486b3633bd99b2f4b45fbc64}\label{arithmetics_8c_a7588b20a486b3633bd99b2f4b45fbc64}} 
+\index{arithmetics.c@{arithmetics.c}!add@{add}}
+\index{add@{add}!arithmetics.c@{arithmetics.c}}
+\doxysubsubsection{\texorpdfstring{add()}{add()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structbuff}{buff}} add (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structbuff}{buff}}}]{a,  }\item[{struct \mbox{\hyperlink{structbuff}{buff}}}]{b,  }\item[{char $\ast$}]{buff\+Name }\end{DoxyParamCaption})}
+
+Adds two buffers together, pixelwise 
+\begin{DoxyParams}{Parameters}
+{\em a} & Buffer on LHS of operator \\
+\hline
+{\em b} & Buffer on RHS of operator \\
+\hline
+{\em buff\+Name} & String name of outputted buffer\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+new {\ttfamily buff} with name {\ttfamily buff\+Name} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{arithmetics_8c_a957086fc6d154367f398b679a5ba35bd}\label{arithmetics_8c_a957086fc6d154367f398b679a5ba35bd}} 
+\index{arithmetics.c@{arithmetics.c}!combine@{combine}}
+\index{combine@{combine}!arithmetics.c@{arithmetics.c}}
+\doxysubsubsection{\texorpdfstring{combine()}{combine()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structbuff}{buff}} combine (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structbuff}{buff}}}]{a,  }\item[{struct \mbox{\hyperlink{structbuff}{buff}}}]{b }\end{DoxyParamCaption})}
+
+Combine buffers {\ttfamily a} and {\ttfamily b} using Sobel/\+Prewitt/\+Kirsch algorithms 
+\begin{DoxyParams}{Parameters}
+{\em a} & Buffer to be combined \\
+\hline
+{\em b} & Buffer to be combined\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+overwritten buff {\ttfamily a} with combined pixel data 
+\end{DoxyReturn}
+\mbox{\Hypertarget{arithmetics_8c_af04478ec7bebc449f83f139171428c6e}\label{arithmetics_8c_af04478ec7bebc449f83f139171428c6e}} 
+\index{arithmetics.c@{arithmetics.c}!divide@{divide}}
+\index{divide@{divide}!arithmetics.c@{arithmetics.c}}
+\doxysubsubsection{\texorpdfstring{divide()}{divide()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structbuff}{buff}} divide (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structbuff}{buff}}}]{a,  }\item[{struct \mbox{\hyperlink{structbuff}{buff}}}]{b,  }\item[{char $\ast$}]{buff\+Name }\end{DoxyParamCaption})}
+
+Divides buffer {\ttfamily a} by buffer {\ttfamily b}. 
+\begin{DoxyParams}{Parameters}
+{\em a} & Buffer on LHS of operator \\
+\hline
+{\em b} & Buffer on RHS of operator \\
+\hline
+{\em buff\+Name} & String name of outputted buffer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+new {\ttfamily buff} with name {\ttfamily buff\+Name} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{arithmetics_8c_aed1b55c0a3c073efca8e8b0cb5ed4809}\label{arithmetics_8c_aed1b55c0a3c073efca8e8b0cb5ed4809}} 
+\index{arithmetics.c@{arithmetics.c}!multiply@{multiply}}
+\index{multiply@{multiply}!arithmetics.c@{arithmetics.c}}
+\doxysubsubsection{\texorpdfstring{multiply()}{multiply()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structbuff}{buff}} multiply (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structbuff}{buff}}}]{a,  }\item[{struct \mbox{\hyperlink{structbuff}{buff}}}]{b,  }\item[{char $\ast$}]{buff\+Name }\end{DoxyParamCaption})}
+
+Multiplies buffers together, pixelwise. 
+\begin{DoxyParams}{Parameters}
+{\em a} & Buffer on LHS of operator \\
+\hline
+{\em b} & Buffer on RHS of operator \\
+\hline
+{\em buff\+Name} & String name of outputted buffer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+new {\ttfamily buff} with name {\ttfamily buff\+Name} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{arithmetics_8c_a4c0c320fa197c11cdd2fa89bbfd3c96a}\label{arithmetics_8c_a4c0c320fa197c11cdd2fa89bbfd3c96a}} 
+\index{arithmetics.c@{arithmetics.c}!subtract@{subtract}}
+\index{subtract@{subtract}!arithmetics.c@{arithmetics.c}}
+\doxysubsubsection{\texorpdfstring{subtract()}{subtract()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structbuff}{buff}} subtract (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structbuff}{buff}}}]{a,  }\item[{struct \mbox{\hyperlink{structbuff}{buff}}}]{b,  }\item[{char $\ast$}]{buff\+Name }\end{DoxyParamCaption})}
+
+Subtracts buffer b from buffer a, pixelwise 
+\begin{DoxyParams}{Parameters}
+{\em a} & Buffer on LHS of operator \\
+\hline
+{\em b} & Buffer on RHS of operator \\
+\hline
+{\em buff\+Name} & String name of outputted buffer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+new {\ttfamily buff} with name {\ttfamily buff\+Name} 
+\end{DoxyReturn}

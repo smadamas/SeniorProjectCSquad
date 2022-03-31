@@ -1,7 +1,7 @@
-
+.vscode
 Project/run
-*.jpg
-*.png
-*.gif
-*.tiff
-*.jpeg
+Project/*.jpg
+Project/*.png
+Project/*.gif
+Project/*.tiff
+Project/*.jpeg

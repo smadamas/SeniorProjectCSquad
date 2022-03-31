@@ -1,13 +1,22 @@
+/// \file arithmetics.c
+
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
-#define KYEL  "\x1B[33m"
-#define KBLU  "\x1B[34m"
-#define KRED  "\x1B[31m"
-#define KMAG  "\x1B[35m"
-#define RESET "\x1B[0m"
+#define KYEL  "\x1B[33m" ///< Yellow terminal text color escape
+#define KBLU  "\x1B[34m" ///< Blue terminal text color escape
+#define KRED  "\x1B[31m" ///< Red terminal text color escape
+#define KMAG  "\x1B[35m" ///< Magenta terminal text color escape
+#define RESET "\x1B[0m"  ///< Reset terminal text color 
 
-// a + b
+/**
+ * Adds two buffers together, pixelwise
+ * \param a Buffer on LHS of operator
+ * \param b Buffer on RHS of operator
+ * \param buffName String name of outputted buffer
+ *
+ * \return new `buff` with name `buffName`
+ */
 struct buff add(struct buff a, struct buff b, char* buffName) {
 	if ((a.width != b.width) || (a.height != b.height) || (a.channels != b.channels)) { // Check for correct dimensions
 		printf(KRED"Error: "RESET"Wrong dimensions.\n");
@@ -60,7 +69,13 @@ struct buff add(struct buff a, struct buff b, char* buffName) {
 	return result;
 }
 
-// a - b
+/**
+ * Subtracts buffer b from buffer a, pixelwise
+ * \param a Buffer on LHS of operator
+ * \param b Buffer on RHS of operator
+ * \param buffName String name of outputted buffer
+ * \return new `buff` with name `buffName`
+ */
 struct buff subtract(struct buff a, struct buff b, char* buffName) {
 	if ((a.width != b.width) || (a.height != b.height) || (a.channels != b.channels)) { // Check for correct dimensions
 		printf(KRED"Error: "RESET"Wrong dimensions.\n");
@@ -114,6 +129,13 @@ struct buff subtract(struct buff a, struct buff b, char* buffName) {
 }
 
 // a * b
+/**
+ * Multiplies buffers together, pixelwise.
+ * \param a Buffer on LHS of operator
+ * \param b Buffer on RHS of operator
+ * \param buffName String name of outputted buffer
+ * \return new `buff` with name `buffName`
+ */
 struct buff multiply(struct buff a, struct buff b, char* buffName) {
 	if ((a.width != b.width) || (a.height != b.height) || (a.channels != b.channels)) { // Check for correct dimensions
 		printf(KRED"Error: "RESET"Wrong dimensions.\n");
@@ -167,6 +189,13 @@ struct buff multiply(struct buff a, struct buff b, char* buffName) {
 }
 
 // a / b
+/**
+ * Divides buffer `a` by buffer `b`.
+ * \param a Buffer on LHS of operator
+ * \param b Buffer on RHS of operator
+ * \param buffName String name of outputted buffer
+ * \return new `buff` with name `buffName`
+ */
 struct buff divide(struct buff a, struct buff b, char* buffName) {
 	if ((a.width != b.width) || (a.height != b.height) || (a.channels != b.channels)) { // Check for correct dimensions
 		printf(KRED"Error: "RESET"Wrong dimensions.\n");
@@ -220,6 +249,13 @@ struct buff divide(struct buff a, struct buff b, char* buffName) {
 }
 
 // Combining sobel/prewitt/kirsch
+/**
+ * Combine buffers `a` and `b` using Sobel/Prewitt/Kirsch algorithms
+ * \param a Buffer to be combined 
+ * \param b Buffer to be combined
+ *
+ * \return overwritten buff `a` with combined pixel data
+ */
 struct buff combine(struct buff a, struct buff b) {
 	if ((a.width != b.width) || (a.height != b.height) || (a.channels != b.channels)) { // Check for correct dimensions
 		printf(KRED"Error: "RESET"Wrong dimensions.\n");

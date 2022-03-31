@@ -1,14 +1,23 @@
+/// \file brighten.c
+
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
 #include <stdbool.h>
-#define KYEL  "\x1B[33m"
-#define KBLU  "\x1B[34m"
-#define KRED  "\x1B[31m"
-#define KMAG  "\x1B[35m"
-#define RESET "\x1B[0m"
+#define KYEL  "\x1B[33m" ///< Yellow terminal text color
+#define KBLU  "\x1B[34m" ///< Blue terminal text color
+#define KRED  "\x1B[31m" ///< Red terminal text color
+#define KMAG  "\x1B[35m" ///< Magenta terminal text color
+#define RESET "\x1B[0m"  ///< Reset terminal text color
 
-//Brightening routine can accept darken or brightne commandds based on bool choice
+/**
+ * Brighten or Darken a `buff` based on `bool choice` by a specified amount.
+ * \param input Source image buffer
+ * \param buffName Name of output buffer
+ * \param choice true = brighten, false = darken
+ *
+ * \return brightened/darkened `buff` with `input`'s metadata
+ */
 struct buff brighten(struct buff input, char* buffName, bool choice, int amount) {
 
 	struct buff result;

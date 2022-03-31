@@ -17,6 +17,7 @@ struct buff
 	double* wht;
 	unsigned char* whtimg;
 	int has_wht;
+	// int has_fwht;
 };
 
 struct template
@@ -116,6 +117,11 @@ int main(int argc, char **argv)
 				struct buff temp = readToBuff(imageName, buffName);
 				if (temp.has_wht == 1) {
 					temp = iwht(temp);
+					whtHistEQ(&temp);
+					//temp.img = temp.whtimg;
+				}
+				else if (temp.has_wht == 2) { //fwht 
+					temp = ifwht(temp);
 					whtHistEQ(&temp);
 					//temp.img = temp.whtimg;
 				}

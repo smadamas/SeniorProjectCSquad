@@ -19,7 +19,7 @@
  */
 struct buff readToBuff(char *imageName, char *const buffName)
 {
-	char* name;
+	char* name = malloc(sizeof(char)*14);
 	strcpy(name, imageName);
 	char *temp = strtok(name, ".");
 	char *ext = strtok(NULL, " ");

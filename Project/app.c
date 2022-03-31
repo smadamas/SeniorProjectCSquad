@@ -39,6 +39,7 @@ struct template
 #include "edge.c"
 #include "hadamard.c"
 #include "pad.c"
+#include "errorcheck.c"
 #include "display.c"
 #include "histoEQ.c"
 #include "rotation.c"
@@ -107,6 +108,10 @@ int main(int argc, char **argv)
 			if (strlen(imageName) > 14)
 			{
 				printf(KRED "Error: " RESET "Image name too long. Image + extension must be shorter than 14 characters.\n");
+			}
+			if (checkImageFileExists(imageName))
+			{
+				printf(KRED "Error: " RESET "Image file not found.\n");
 			}
 			else
 			{

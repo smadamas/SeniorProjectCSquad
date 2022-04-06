@@ -136,6 +136,7 @@ void write_to_wht(struct buff buffer, char* imageName) {
 	fwrite(&buffer.height, sizeof(int), 1, fp);
 	fwrite(&buffer.width, sizeof(int), 1, fp);
 	fwrite(&buffer.channels, sizeof(int), 1, fp);
+	fwrite(&buffer.has_wht, sizeof(int), 1, fp);
 	fwrite(buffer.wht, sizeof(double), size, fp);
 	fclose(fp);
 

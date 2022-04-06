@@ -1,15 +1,23 @@
+/// \file rotation.c
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
 #include <stdbool.h>
-#include "libgd/src/gd.h"
-#define KYEL "\x1B[33m"
-#define KBLU "\x1B[34m"
-#define KRED "\x1B[31m"
-#define KMAG "\x1B[35m"
-#define RESET "\x1B[0m"
+#include "gd.h"
+#define KYEL "\x1B[33m" ///< Yellow terminal text color
+#define KBLU "\x1B[34m" ///< Blue terminal text color
+#define KRED "\x1B[31m" ///< Red terminal text color
+#define KMAG "\x1B[35m" ///< Magenta terminal text color
+#define RESET "\x1B[0m" ///< Reset termina text color
 
 
+/**
+ * Rotate `buff a` by specified number of `float degrees`.
+ * \param a Source image buffer
+ * \param degrees Amount to rotated image by, in degrees
+ *
+ * \return rotated `buff`
+ */
 struct buff rotate(struct buff a, float degrees)
 {
     char input[100];
@@ -28,6 +36,12 @@ struct buff rotate(struct buff a, float degrees)
     return temp;
 }
 
+/**
+ * Flips image horizontally using `libgd`
+ * \param a Source image buffer
+ *
+ * \return flipped `buff`
+ */
 struct buff horizontalFlip(struct buff a)
 {
     char input[100];
@@ -41,6 +55,12 @@ struct buff horizontalFlip(struct buff a)
     return temp;
 }
 
+/**
+ * Flips `buff a` vertically using `libgd`
+ * \param a Source image buffer
+ *
+ * \return flipped `buff`
+ */
 struct buff verticalFlip(struct buff a)
 {
     char input[100];

@@ -1,10 +1,19 @@
-#include "libgd/src/gd.h"
+/// \file edge.c
+#include "gd.h"
 #define KYEL  "\x1B[33m"
 #define KBLU  "\x1B[34m"
 #define KRED  "\x1B[31m"
 #define KMAG  "\x1B[35m"
 #define RESET "\x1B[0m"
 
+/**
+ * Detects edges using Kirsch/Prewitt/Sobel algorithms, based on an `orientation`, as specified by user.
+ * \param orientation Desired orientation ("vertical", "horizontal", "combined")
+ * \param type Desired edge-detection algorithm ("kirsch", "prewitt", "sobel")
+ * \param image Image to perform edge-detection on
+ *
+ * \return edge-detected `buff` 
+ */
 struct buff detectEdge(char *orientation, char *type, struct buff image)
 {
     float kirsch_mask_horiz[3][3] = {
@@ -123,6 +132,15 @@ struct buff detectEdge(char *orientation, char *type, struct buff image)
     }
 }
 
+/**
+ * Interactively convolves a 3x3 matrix into a new buffer.
+ * \param buffer Input buffer data
+ * \param row1 Top row data
+ * \param row2 Middle row data
+ * \param row3 Bottom row data
+ *
+ * \return new `buff` with interactively specified name
+ */
 struct buff convolve3X3(struct buff buffer, char* row1, char* row2, char* row3 ){
 
     struct buff temp;

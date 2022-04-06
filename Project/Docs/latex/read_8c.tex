@@ -1,0 +1,43 @@
+\hypertarget{read_8c}{}\doxysection{read.\+c File Reference}
+\label{read_8c}\index{read.c@{read.c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$errno.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}stb\+\_\+image.\+h\char`\"{}}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{read_8c_a18372412ad2fc3ce1e3240b3cf0efe78}\label{read_8c_a18372412ad2fc3ce1e3240b3cf0efe78}} 
+\#define {\bfseries STB\+\_\+\+IMAGE\+\_\+\+IMPLEMENTATION}
+\item 
+\mbox{\Hypertarget{read_8c_a897b10d246533c95ba86cb79f92e465a}\label{read_8c_a897b10d246533c95ba86cb79f92e465a}} 
+\#define {\bfseries KYEL}~\char`\"{}\textbackslash{}x1B\mbox{[}33m\char`\"{}
+\begin{DoxyCompactList}\small\item\em Yellow terminal text color. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{read_8c_a66290957baed5df3930ada4cb8caccf1}\label{read_8c_a66290957baed5df3930ada4cb8caccf1}} 
+\#define {\bfseries KRED}~\char`\"{}\textbackslash{}x1B\mbox{[}31m\char`\"{}
+\begin{DoxyCompactList}\small\item\em Red terminal text color. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{read_8c_ab702106cf3b3e96750b6845ded4e0299}\label{read_8c_ab702106cf3b3e96750b6845ded4e0299}} 
+\#define {\bfseries RESET}~\char`\"{}\textbackslash{}x1B\mbox{[}0m\char`\"{}
+\begin{DoxyCompactList}\small\item\em Reset terminal text color. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structbuff}{buff}} \mbox{\hyperlink{read_8c_a290d3680cd4c87696f105a80ab3e0af5}{read\+To\+Buff}} (char $\ast$image\+Name, char $\ast$const buff\+Name)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{read_8c_a290d3680cd4c87696f105a80ab3e0af5}\label{read_8c_a290d3680cd4c87696f105a80ab3e0af5}} 
+\index{read.c@{read.c}!readToBuff@{readToBuff}}
+\index{readToBuff@{readToBuff}!read.c@{read.c}}
+\doxysubsubsection{\texorpdfstring{readToBuff()}{readToBuff()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structbuff}{buff}} read\+To\+Buff (\begin{DoxyParamCaption}\item[{char $\ast$}]{image\+Name,  }\item[{char $\ast$const}]{buff\+Name }\end{DoxyParamCaption})}
+
+Reads any image of supported filetype into an internal buffer of name {\ttfamily buff\+Name} 
+\begin{DoxyParams}{Parameters}
+{\em image\+Name} & Name of the image on the disk to be read \textbackslash{}parma buff\+Name Desired name of the loaded buffer\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+loaded {\ttfamily buff} 
+\end{DoxyReturn}

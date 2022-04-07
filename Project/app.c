@@ -866,7 +866,6 @@ struct buff buffSearch(char *buffName, struct buff *buffers, int buffCount)
 			return buffers[i];
 		}
 	}
-	printf(KRED "Error:" RESET " buffer not found.\n");
 	struct buff temp;
 	strcpy(temp.status, "false");
 	return temp;

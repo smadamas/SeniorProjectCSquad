@@ -5,11 +5,15 @@
 #include <stdbool.h>
 #include <setjmp.h>
 #include "gd.h"
-
-bool checkImageFileExists(char* const fileName) //returns true if file exists (stat() returns 0)
+/**
+ * Checks for the existence of a non-directory file on the system .
+ * \param fileName C-String relative path/to/file
+ * \return returns boolean true if a file is found, otherwise false.
+ */
+bool checkImageFileExists(char* const fileName)
 {
-    struct stat buf;
-    int fileStatus = stat(fileName, &buf);
+    struct stat st;
+    int fileStatus = stat(fileName, &st);
     if(fileStatus == 0)
     {
         return true;
@@ -19,6 +23,11 @@ bool checkImageFileExists(char* const fileName) //returns true if file exists (s
         return false;
     }
 }
+/**
+ * Checks if a buffer exists based on the value of buff.status.
+ * \param bufferStatus string value of a buffer object's status variable.
+ * \return returns boolean true if the status denotes a valid buffer, otherwise false.
+ */
 bool checkBufferExists(char* const bufferStatus)
 {
     if(strcmp("false", bufferStatus) == 0)

@@ -129,6 +129,11 @@ int main(int argc, char **argv)
 					whtHistEQ(&temp);
 					//temp.img = temp.whtimg;
 				}
+				else if (temp.has_wht == 2) { //fwht 
+					temp = ifwht(temp);
+					whtHistEQ(&temp);
+					//temp.img = temp.whtimg;
+				}
 				addBuffer(temp, buffers, &buffCount);
 			}
 		}

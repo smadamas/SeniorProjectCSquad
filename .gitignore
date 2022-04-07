@@ -5,3 +5,5 @@ Project/*.png
 Project/*.gif
 Project/*.tiff
 Project/*.jpeg
+
+.vscode/*

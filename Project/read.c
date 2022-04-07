@@ -19,7 +19,8 @@
  */
 struct buff readToBuff(char *imageName, char *const buffName)
 {
-	char* name = malloc(sizeof(char)*14);
+
+	char* name = malloc(30*sizeof(char));
 	strcpy(name, imageName);
 	char *temp = strtok(name, ".");
 	char *ext = strtok(NULL, " ");
@@ -33,6 +34,7 @@ struct buff readToBuff(char *imageName, char *const buffName)
 		fread(&buffer.width, sizeof(int), 1, in);
 		fread(&buffer.height, sizeof(int), 1, in);
 		fread(&buffer.channels, sizeof(int), 1, in);
+		fread(&buffer.has_wht, sizeof(int), 1, in);
 		int size = buffer.width * buffer.height * buffer.channels;
 		//printf("size: %d\n", size);
 		buffer.wht = malloc(size * sizeof(double));
@@ -41,7 +43,7 @@ struct buff readToBuff(char *imageName, char *const buffName)
 		strcpy(buffer.name, buffName);
 		strcpy(buffer.imageName, imageName);
 		buffer.isLibgd = false;
-		buffer.has_wht = 1;
+		// buffer.has_wht = 1;
 		fclose(in);
 		//print_matrixf(buffer.wht, buffer.width);
 		

@@ -8,6 +8,7 @@
 /**
  * Checks for the existence of a non-directory file on the system .
  * \param fileName C-String relative path/to/file
+ * 
  * \return returns boolean true if a file is found, otherwise false.
  */
 bool checkImageFileExists(char* const fileName)
@@ -26,6 +27,7 @@ bool checkImageFileExists(char* const fileName)
 /**
  * Checks if a buffer exists based on the value of buff.status.
  * \param bufferStatus string value of a buffer object's status variable.
+ * 
  * \return returns boolean true if the status denotes a valid buffer, otherwise false.
  */
 bool checkBufferExists(char* const bufferStatus)

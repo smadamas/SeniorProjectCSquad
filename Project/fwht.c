@@ -18,7 +18,6 @@
  * \param dst `int[]` that will store the transformed data
  */
 void fwht_transform(int n, const int *src, int *dst);
-void dbl_fwht_transform(int n, const double *src, double *dst);
 
 void dbl_fwht_transform(int n, const double *src, double *dst);
 /**

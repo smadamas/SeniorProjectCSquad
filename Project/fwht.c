@@ -18,6 +18,7 @@
  * \param dst `int[]` that will store the transformed data
  */
 void fwht_transform(int n, const int *src, int *dst);
+void dbl_fwht_transform(int n, const double *src, double *dst);
 
 void dbl_fwht_transform(int n, const double *src, double *dst);
 /**
@@ -153,6 +154,43 @@ struct buff fwht(struct buff buffer, char* buffname){
 			*(img.img + i) = (uint8_t)(round(*(img.wht + i)));
 		}*/
 	}
+	// printf("MAX: %d\n", max);
+	// printf("MIN: %d\n", min);
+	
+	// result.img = malloc(size * c);
+	//convert temp2 back to a char array image, should already be correct values minus float errors
+	for (int i = 0; i < size * c; i++) {
+		double scaled_dbl = (*(result.wht + i) - min) / (max - min) * 255;
+		int value = (uint8_t)(round(scaled_dbl));
+		*(result.img + i) = value;
+		//printf("%f\n", *(temp2 + i));
+		/*if (*(img.wht + i) > 255) {
+			//printf("255\n");
+			*(img.img + i) = 255;
+		}
+		else if (*(img.wht + i) < 0) {
+			//printf("0\n");
+			*(img.img + i) = 0;
+	// result.img = malloc(size * c);
+	//convert temp2 back to a char array image, should already be correct values minus float errors
+	for (int i = 0; i < size * c; i++) {
+		double scaled_dbl = (*(result.wht + i) - min) / (max - min) * 255;
+		int value = (uint8_t)(round(scaled_dbl));
+		*(result.img + i) = value;
+		//printf("%f\n", *(temp2 + i));
+		/*if (*(img.wht + i) > 255) {
+			//printf("255\n");
+			*(img.img + i) = 255;
+		}
+		else if (*(img.wht + i) < 0) {
+			//printf("0\n");
+			*(img.img + i) = 0;
+		}
+		else {
+			//printf("%f\n", *(temp2 + i));
+			*(img.img + i) = (uint8_t)(round(*(img.wht + i)));
+		}*/
+	}
     return result;
 	}
 
@@ -167,6 +205,29 @@ struct buff fwht(struct buff buffer, char* buffname){
 		if(min > val){
 			min = val;
 		}
+	}
+	// printf("MAX: %d\n", max);
+	// printf("MIN: %d\n", min);
+	
+	// result.img = malloc(size * c);
+	//convert temp2 back to a char array image, should already be correct values minus float errors
+	for (int i = 0; i < size * c; i++) {
+		double scaled_dbl = (*(result.wht + i) - min) / (max - min) * 255;
+		int value = (uint8_t)(round(scaled_dbl));
+		*(result.img + i) = value;
+		//printf("%f\n", *(temp2 + i));
+		/*if (*(img.wht + i) > 255) {
+			//printf("255\n");
+			*(img.img + i) = 255;
+		}
+		else if (*(img.wht + i) < 0) {
+			//printf("0\n");
+			*(img.img + i) = 0;
+		}
+		else {
+			//printf("%f\n", *(temp2 + i));
+			*(img.img + i) = (uint8_t)(round(*(img.wht + i)));
+		}*/
 	}
 	// printf("MAX: %d\n", max);
 	// printf("MIN: %d\n", min);

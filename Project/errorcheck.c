@@ -6,10 +6,10 @@
 #include <setjmp.h>
 #include "gd.h"
 /**
- * Checks for the existence of a non-directory file on the system .
+ * Checks for the existence of a non-directory file on the system.
  * \param fileName C-String relative path/to/file
  * 
- * \return returns boolean true if a file is found, otherwise false.
+ * \return returns `bool true` if a file is found, otherwise `false`.
  */
 bool checkImageFileExists(char* const fileName)
 {
@@ -25,10 +25,10 @@ bool checkImageFileExists(char* const fileName)
     }
 }
 /**
- * Checks if a buffer exists based on the value of buff.status.
- * \param bufferStatus string value of a buffer object's status variable.
+ * Checks if a buffer exists based on the value of `buff.status`.
+ * \param bufferStatus string value of `buff.status`.
  * 
- * \return returns boolean true if the status denotes a valid buffer, otherwise false.
+ * \return returns `boolean true` if `buff.status` denotes a valid `buff`, otherwise false.
  */
 bool checkBufferExists(char* const bufferStatus)
 {

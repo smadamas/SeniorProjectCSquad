@@ -11,10 +11,22 @@
 #define KRED  "\x1B[31m"
 #define KMAG  "\x1B[35m"
 #define RESET "\x1B[0m"
-
+/**
+ * Helper function for Fast Walsh-Hadamard Transform
+ * \param n the length of one side of the padded n by n image in pixels
+ * \param src `int[]` containing the data to be transformed
+ * \param dst `int[]` that will store the transformed data
+ */
 void fwht_transform(int n, const int *src, int *dst);
-void dbl_fwht_transform(int n, const double *src, double *dst);
 
+void dbl_fwht_transform(int n, const double *src, double *dst);
+/**
+ * Performs a Fast Walsh-Hadamard Transform on an input `buff` and returns the output image as a `buff`.
+ * \param buffer `buff` containing the image information before the Fast Walsh-Hadamard Transform
+ * \param buffname name of the `buff` that will be output
+ *  
+ * \return `buff` containing the Fast Walsh-Hadamard transformed image data.
+ */
 struct buff fwht(struct buff buffer, char* buffname){
     // printf("Hellow World!\n");
     struct buff result;
@@ -117,10 +129,51 @@ struct buff fwht(struct buff buffer, char* buffname){
 		if(min > val){
 			min = val;
 		}
+		else {
+			//printf("%f\n", *(temp2 + i));
+			*(img.img + i) = (uint8_t)(round(*(img.wht + i)));
+		}*/
 	}
 	// printf("MAX: %d\n", max);
 	// printf("MIN: %d\n", min);
 	
+	// result.img = malloc(size * c);
+	//convert temp2 back to a char array image, should already be correct values minus float errors
+	for (int i = 0; i < size * c; i++) {
+		double scaled_dbl = (*(result.wht + i) - min) / (max - min) * 255;
+		int value = (uint8_t)(round(scaled_dbl));
+		*(result.img + i) = value;
+		//printf("%f\n", *(temp2 + i));
+		/*if (*(img.wht + i) > 255) {
+			//printf("255\n");
+			*(img.img + i) = 255;
+		}
+		else if (*(img.wht + i) < 0) {
+			//printf("0\n");
+			*(img.img + i) = 0;
+		}
+		else {
+			//printf("%f\n", *(temp2 + i));
+			*(img.img + i) = (uint8_t)(round(*(img.wht + i)));
+		}*/
+	}
+	// printf("MAX: %d\n", max);
+	// printf("MIN: %d\n", min);
+	
+	// result.img = malloc(size * c);
+	//convert temp2 back to a char array image, should already be correct values minus float errors
+	for (int i = 0; i < size * c; i++) {
+		double scaled_dbl = (*(result.wht + i) - min) / (max - min) * 255;
+		int value = (uint8_t)(round(scaled_dbl));
+		*(result.img + i) = value;
+		//printf("%f\n", *(temp2 + i));
+		/*if (*(img.wht + i) > 255) {
+			//printf("255\n");
+			*(img.img + i) = 255;
+		}
+		else if (*(img.wht + i) < 0) {
+			//printf("0\n");
+			*(img.img + i) = 0;
 	// result.img = malloc(size * c);
 	//convert temp2 back to a char array image, should already be correct values minus float errors
 	for (int i = 0; i < size * c; i++) {
@@ -289,7 +342,6 @@ void fwht_normalize(int n, int *src)
     int i;
     for (i = 0; i < n; i++) src[i] /= n;
 }
-
 double fwht_sum_absolute_difference(int n, int *a, int *b)
 {
     long sum = 0;

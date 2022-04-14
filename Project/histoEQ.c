@@ -1,3 +1,4 @@
+/// \file histoEQ.c
 #include <fcntl.h>
 #include <math.h>
 #include <stdio.h>
@@ -12,6 +13,13 @@
 
 int compare_doubles(const void* a, const void* b);
 
+/**
+ * Performs histogram equalization on specified buffer using `libgd`.
+ * \param a Buffer to be equalized
+ * \param buffName Name of output buffer
+ *
+ * \return equalized `buff`
+ */
 struct buff histogramEqualization(struct buff a, char* buffName)
 {
 	// gdImageGrayScale(a.imrgb);
@@ -360,6 +368,12 @@ struct buff histogramEqualization(struct buff a, char* buffName)
 	return temp;
 }
 
+/**
+ * Perform histogram equalization to set up for Walsh-Hadamard transforms.
+ * \param buffer Source image buffer for Walsh-Hadamard equalization
+ *
+ * \return equalized `buff` ready for WHT
+ */
 void whtHistEQ(struct buff *buffer) {
 	int size = buffer->width * buffer->height * buffer->channels;
 	int bin = 0;
@@ -456,6 +470,14 @@ void whtHistEQ(struct buff *buffer) {
 }
 
 //https://en.cppreference.com/w/c/algorithm/qsort
+/**
+ * `double` comparison helper, similar to C++ `.compare()`.
+ * Source: https://en.cppreference.com/w/c/algorithm/qsort
+ * \param a LHS of comparison, gets casted to `double`
+ * \param b RHS of comparison, gets casted to `double`
+ *
+ * \return `int` = -1 (a < b), 1 (a > b), 0 (a == b)
+ */
 int compare_doubles(const void* a, const void* b)
 {
 	double arg1 = *(const double*)a;

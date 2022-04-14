@@ -1,17 +1,25 @@
+/// \file read.c
 #include <stdio.h>
 #include <stdint.h>
 #include <errno.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-#define KYEL  "\x1B[33m"
-#define KRED  "\x1B[31m"
-#define RESET "\x1B[0m"
+#define KYEL  "\x1B[33m" ///< Yellow terminal text color
+#define KRED  "\x1B[31m" ///< Red terminal text color
+#define RESET "\x1B[0m"  ///< Reset terminal text color
 
 
+/**
+ * Reads any image of supported filetype into an internal buffer of name `buffName`
+ * \param imageName Name of the image on the disk to be read
+ * \parma buffName Desired name of the loaded buffer
+ * 
+ * \return loaded `buff`
+ */
 struct buff readToBuff(char *imageName, char *const buffName)
 {
-	char* name;
+	char* name = malloc(sizeof(char)*14);
 	strcpy(name, imageName);
 	char *temp = strtok(name, ".");
 	char *ext = strtok(NULL, " ");

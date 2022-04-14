@@ -1,10 +1,20 @@
-#include "gd.h"
-#define KYEL  "\x1B[33m"
-#define KBLU  "\x1B[34m"
-#define KRED  "\x1B[31m"
-#define KMAG  "\x1B[35m"
-#define RESET "\x1B[0m"
+/// \file blurr.c
 
+#include "gd.h"
+#define KYEL  "\x1B[33m" ///< Yellow term. text color 
+#define KBLU  "\x1B[34m" ///< Blue term. text color
+#define KRED  "\x1B[31m" ///< Red term. text color
+#define KMAG  "\x1B[35m" ///< Magenta term. text color
+#define RESET "\x1B[0m"  ///< Reset term. text color
+
+/**
+ * Perform Gaussian Blur onto `libgd` loaded image.
+ * \param buffer Buffer to be blurred
+ * \param radius Desired radius of Gaussian blur
+ * \prarm sigma Desired sigma of Gaussian blur
+ *
+ * \return `buff` with blurred image data, other data copied from `buffer`
+ */
 struct buff blurr(struct buff buffer, int radius, double sigma)
 {
     char newBuff[100];

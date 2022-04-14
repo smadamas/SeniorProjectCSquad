@@ -1,3 +1,5 @@
+/// \file app.c
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,25 +9,27 @@
 
 struct buff
 {
-	char imageName[32];
-	char name[30];
-	char status[30];
-	unsigned char *img;
-	int width, height, channels;
-	gdImagePtr imrgb;
-	int isLibgd;
-	double* wht;
-	unsigned char* whtimg;
-	int has_wht;
+	char imageName[32];         ///< string name of the image loaded into buffer
+	char name[30];              ///< string name of the buffer
+	char status[30];            ///< string status of the buffer 
+	unsigned char *img;         ///< image data loaded by `stb_image.h`
+	int width,                  ///< width of image in pixels
+        height,                 ///< height of image in pixels
+        channels;               ///< number of RGBA channels within pixels
+	gdImagePtr imrgb;           ///< image data loaded by `libgd`
+	int isLibgd;                ///< signifies whether image has been loaded by `libgd`
+	double* wht;                ///< stores the walsh-hadamard 
+	unsigned char* whtimg;      ///< data for walsh-hadamard transformed image
+	int has_wht;                ///< signifies whether image has been transformed using Walsh-Hadamard 
 };
 
 struct template
 {
-	char name[30];
-	float** mask;
-	float** mask_tp; // modified mask for target pixel placement
-	int tpRow;
-	int tpColumn;
+	char name[30];      ///< template name
+	float** mask;       ///< masking matrix
+	float** mask_tp;    ///< modified mask for target pixel placement
+	int tpRow;          ///< target pixel number of rows
+	int tpColumn;       ///< target pixel number of columns
 };
 
 #include "read.c"
@@ -33,6 +37,7 @@ struct template
 #include "arithmetics.c"
 #include "brighten.c"
 #include "edge.c"
+#include "errorcheck.c"
 #include "display.c"
 #include "histoEQ.c"
 #include "rotation.c"
@@ -40,12 +45,14 @@ struct template
 #include "sharpen.c"
 #include "grayscale.c" //included in wht.c already
 #include "wht.c"		 //included in read.c already
-#define KGRN "\x1B[32m"
-#define KYEL "\x1B[33m"
-#define KBLU "\x1B[34m"
-#define KRED "\x1B[31m"
-#define KMAG "\x1B[35m"
-#define RESET "\x1B[0m"
+#include "fwht.c"
+
+#define KGRN "\x1B[32m"     ///< Escape code for green terminal text 
+#define KYEL "\x1B[33m"     ///< Escape code for yellow terminal text
+#define KBLU "\x1B[34m"     ///< Escape code for blue terminal text
+#define KRED "\x1B[31m"     ///< Escape code for red terminal text
+#define KMAG "\x1B[35m"     ///< Escape code for magenta terminal text
+#define RESET "\x1B[0m"     ///< Resets terminal text color to default (white)
 
 void addBuffer(struct buff buffer, struct buff *buffers, int *buffCount);
 struct buff buffSearch(char *buffName, struct buff *buffers, int buffCount);
@@ -100,6 +107,10 @@ int main(int argc, char **argv)
 			{
 				printf(KRED "Error: " RESET "Image name too long. Image + extension must be shorter than 14 characters.\n");
 			}
+			else if (!checkImageFileExists(imageName))
+			{
+				printf(KRED "Error: " RESET "Image file not found.\n");
+			}
 			else
 			{
 				char *ext = get_filename_ext(imageName);
@@ -137,9 +148,17 @@ int main(int argc, char **argv)
 			}
 			else
 			{
-				printf(KYEL "\nWriting %s into %s...\n" RESET, buffName, imageName);
-				writeToImage(buffSearch(buffName, buffers, buffCount), imageName, 0);
-				printf(KYEL "Done writing!\n\n" RESET);
+				struct buff temp = buffSearch(buffName, buffers, buffCount);
+				if(!checkBufferExists(temp.status))
+				{
+					printf(KRED "Error: " RESET "Specified buffer \"%s\" does not exist.\n", buffName);
+				}
+				else
+				{
+					printf(KYEL "\nWriting %s into %s...\n" RESET, buffName, imageName);
+					writeToImage(temp, imageName, 0);
+					printf(KYEL "Done writing!\n\n" RESET);
+				}
 			}
 		}
 		else if (strcmp(command, "write_wht") == 0)
@@ -158,9 +177,17 @@ int main(int argc, char **argv)
 			}
 			else
 			{
-				printf(KYEL "\nWriting %s into %s...\n" RESET, buffName, imageName);
-				writeToImage(buffSearch(buffName, buffers, buffCount), imageName, 1);
-				printf(KYEL "Done writing!\n\n" RESET);
+				struct buff temp = buffSearch(buffName, buffers, buffCount);
+				if(!checkBufferExists(temp.status))
+				{
+					printf(KRED "Error: " RESET "Specified buffer \"%s\" does not exist.\n", buffName);
+				}
+				else
+				{
+					printf(KYEL "\nWriting %s into %s...\n" RESET, buffName, imageName);
+					writeToImage(temp, imageName, 1);
+					printf(KYEL "Done writing!\n\n" RESET);
+				}
 			}
 		}
 		else if (strcmp(command, "list") == 0)
@@ -169,7 +196,8 @@ int main(int argc, char **argv)
 		}
 		else if (strcmp(command, "brighten") == 0)
 		{
-			if (spaceCount != 5) {
+			if (spaceCount != 5) 
+			{
 				printf(KRED "Error: " RESET "Incorrect syntax on brighten command.\n       Use the syntax: brighten <buffer name> into <new buffer name> by <value between 0 and 255>\n");
 				p[0] = '\0';
 				continue;
@@ -185,10 +213,20 @@ int main(int argc, char **argv)
 			{
 				strtok(NULL, " ");
 				amount = strtok(NULL, " ");
-				if (amount != NULL){
-					addBuffer(brighten(buffSearch(buffName, buffers, buffCount), imageName, true, atoi(amount)), buffers, &buffCount);
+				if (amount != NULL)
+				{
+					struct buff temp = buffSearch(buffName, buffers, buffCount);
+					if(!checkBufferExists(temp.status))
+					{
+						printf(KRED "Error: " RESET "Specified buffer \"%s\" does not exist.\n", buffName);
+					}
+					else
+					{
+						addBuffer(brighten(temp, imageName, true, atoi(amount)), buffers, &buffCount);
+					}
 				}
-				else {
+				else
+				{
 					printf(KRED "Error: " RESET "Brightening routine not written in correct format.\n\n");
 				}
 			}
@@ -211,31 +249,44 @@ int main(int argc, char **argv)
 			{
 				strtok(NULL, " ");
 				amount = strtok(NULL, " ");
-				if (amount != NULL){
-					addBuffer(brighten(buffSearch(buffName, buffers, buffCount), imageName, false, atoi(amount)), buffers, &buffCount);
+				if (amount != NULL)
+				{
+					struct buff temp = buffSearch(buffName, buffers, buffCount);
+					if(!checkBufferExists(temp.status))
+					{
+						printf(KRED "Error: " RESET "Specified buffer \"%s\" does not exist.\n", buffName);
+					}
+					else
+					{
+						addBuffer(brighten(temp, imageName, false, atoi(amount)), buffers, &buffCount);
+					}
 				}
-				else {
+				else 
+				{
 					printf(KRED "Error: " RESET "Darkening routine not written in correct format.\n");
 				}
 			}
 		}
 		else if (strcmp(command, "display") == 0)
 		{
-			if (spaceCount != 1) {
+			if (spaceCount != 1) 
+			{
 				printf(KRED "Error: " RESET "Incorrect syntax on display command.\n       Use the syntax: display <buffer name>\n");
 				p[0] = '\0';
 				continue;
 			}
 			buffName = strtok(NULL, " ");
 			char tem[10] = "temp.png";
-
 			struct buff temp = buffSearch(buffName, buffers, buffCount);
-			if (strcmp(temp.status, "false") != 0)
+			if(!checkBufferExists(temp.status))
+			{
+				printf(KRED "Error: " RESET "Specified buffer \"%s\" does not exist.\n", buffName);
+			}
+			else
 			{
 				writeToImage(temp, tem, 0);
 				displayImage(tem, argc, argv);
 			}
-
 			remove(tem);
 		}
 		else if (strcmp(command, "display_wht") == 0)
@@ -249,15 +300,18 @@ int main(int argc, char **argv)
 			char tem[10] = "temp.png";
 
 			struct buff temp = buffSearch(buffName, buffers, buffCount);
-			if (temp.has_wht == 0) {
+			if(!checkBufferExists(temp.status))
+			{
+				printf(KRED "Error: " RESET "Specified buffer \"%s\" does not exist.\n", buffName);
+			}
+			else if (temp.has_wht == 0) {
 				printf(KRED "Error: " RESET "Buffer does not contain a wht image.\n");
 			}
-			else if (strcmp(temp.status, "false") != 0)
+			else
 			{
 				writeToImage(temp, tem, 1);
 				displayImage(tem, argc, argv);
 			}
-
 			remove(tem);
 		}
 		else if (strcmp(command, "quit") == 0)
@@ -275,12 +329,18 @@ int main(int argc, char **argv)
 			buffName = strtok(NULL, " ");
 			strtok(NULL, " ");
 			char* resultBuffName = strtok(NULL, " ");
-		
-			struct buff temp = detectEdge(command, type, buffSearch(buffName, buffers, buffCount));
-			strcpy(temp.name, resultBuffName);
-			temp.isLibgd = 1;
-			addBuffer(temp, buffers, &buffCount);
-			
+			struct buff temp = buffSearch(buffName, buffers, buffCount);
+			if(!checkBufferExists(temp.status))
+			{
+				printf(KRED "Error: " RESET "Specified buffer \"%s\" does not exist.\n", buffName);
+			}
+			else
+			{
+				struct buff newBuff = detectEdge(command, type, temp);
+				strcpy(newBuff.name, resultBuffName);
+				newBuff.isLibgd = 1;
+				addBuffer(newBuff, buffers, &buffCount);
+			}
 		}
 		else if (strcmp(command, "addition") == 0 || strcmp(command, "subtraction") == 0 || strcmp(command, "division") == 0 || strcmp(command, "multiplication") == 0)
 		{
@@ -295,29 +355,41 @@ int main(int argc, char **argv)
 			char *buff1 = strtok(NULL, " ");
 			char *cmd = strtok(NULL, " ");
 			char *buff2 = strtok(NULL, " ");
-			if (strcmp(cmd, "+") == 0)
+			struct buff temp1 = buffSearch(buff1, buffers, buffCount);
+			struct buff temp2 = buffSearch(buff2, buffers, buffCount);
+			if(!checkBufferExists(temp1.status) || !checkBufferExists(temp2.status))
 			{
-				addBuffer(add(buffSearch(buff1, buffers, buffCount), buffSearch(buff2, buffers, buffCount), buffName),
-						  buffers, &buffCount);
-			}
-			else if (strcmp(cmd, "-") == 0)
-			{
-				addBuffer(subtract(buffSearch(buff1, buffers, buffCount), buffSearch(buff2, buffers, buffCount), buffName),
-						  buffers, &buffCount);
-			}
-			else if (strcmp(cmd, "*") == 0)
-			{
-				addBuffer(multiply(buffSearch(buff1, buffers, buffCount), buffSearch(buff2, buffers, buffCount), buffName),
-						  buffers, &buffCount);
-			}
-			else if (strcmp(cmd, "/") == 0)
-			{
-				addBuffer(divide(buffSearch(buff1, buffers, buffCount), buffSearch(buff2, buffers, buffCount), buffName),
-						  buffers, &buffCount);
+				if(!checkBufferExists(temp1.status))
+					printf(KRED "Error: " RESET "Specified buffer \"%s\" does not exist.\n", buff1);
+				if(!checkBufferExists(temp2.status))
+					printf(KRED "Error: " RESET "Specified buffer \"%s\" does not exist.\n", buff2);
 			}
 			else
 			{
-				printf(KRED "Error:" RESET " Arithmetic syntax incorrect\n");
+				if (strcmp(cmd, "+") == 0)
+				{
+					addBuffer(add(temp1, temp2, buffName),
+							  buffers, &buffCount);
+				}
+				else if (strcmp(cmd, "-") == 0)
+				{
+					addBuffer(subtract(temp1, temp2, buffName),
+							  buffers, &buffCount);
+				}
+				else if (strcmp(cmd, "*") == 0)
+				{
+					addBuffer(multiply(temp1, temp2, buffName),
+							  buffers, &buffCount);
+				}
+				else if (strcmp(cmd, "/") == 0)
+				{
+					addBuffer(divide(temp1, temp2, buffName),
+							  buffers, &buffCount);
+				}
+				else
+				{
+					printf(KRED "Error:" RESET " Arithmetic syntax incorrect\n");
+				}
 			}
 		}
 		else if ((strcmp(command, "histeq") == 0))
@@ -330,12 +402,17 @@ int main(int argc, char **argv)
 			buffName = strtok(NULL, " ");
 			strtok(NULL, " ");
 			char *resultBuffName = strtok(NULL, " ");
-
 			struct buff temp = buffSearch(buffName, buffers, buffCount);
-			temp = histogramEqualization(temp, command);
-			
-			strcpy(temp.name, resultBuffName);
-			addBuffer(temp, buffers, &buffCount);
+			if(!checkBufferExists(temp.status))
+			{
+				printf(KRED "Error: " RESET "Specified buffer \"%s\" does not exist.\n", buffName);
+			}
+			else
+			{
+				temp = histogramEqualization(temp, command);
+				strcpy(temp.name, resultBuffName);
+				addBuffer(temp, buffers, &buffCount);
+			}
 		}
 		else if ((strcmp(command, "flip") == 0))
 		{
@@ -345,23 +422,28 @@ int main(int argc, char **argv)
 				continue;
 			}
 			char *rot = strtok(NULL, " ");
-			if ((strcmp(rot, "vertical") == 0))
+			buffName = strtok(NULL, " ");
+			struct buff temp = buffSearch(buffName, buffers, buffCount);
+			if(!checkBufferExists(temp.status))
 			{
-				buffName = strtok(NULL, " ");
-				struct buff temp = buffSearch(buffName, buffers, buffCount);
-				temp = verticalFlip(temp);
-				addBuffer(temp, buffers, &buffCount);
-			}
-			else if (strcmp(rot, "horizontal") == 0)
-			{
-				buffName = strtok(NULL, " ");
-				struct buff temp = buffSearch(buffName, buffers, buffCount);
-				temp = horizontalFlip(temp);
-				addBuffer(temp, buffers, &buffCount);
+				printf(KRED "Error: " RESET "Specified buffer \"%s\" does not exist.\n", buffName);
 			}
 			else
 			{
-				printf(KRED "Error: " RESET "Invalid mirroring!\n");
+				if ((strcmp(rot, "vertical") == 0))
+				{
+					temp = verticalFlip(temp);
+					addBuffer(temp, buffers, &buffCount);
+				}
+				else if (strcmp(rot, "horizontal") == 0)
+				{
+					temp = horizontalFlip(temp);
+					addBuffer(temp, buffers, &buffCount);
+				}
+				else
+				{
+					printf(KRED "Error: " RESET "Invalid mirroring!\n");
+				}
 			}
 		}
 		else if ((strcmp(command, "rotate") == 0))
@@ -377,11 +459,15 @@ int main(int argc, char **argv)
 
 			float degrees;
 			sscanf(degree, "%f", &degrees);
-
-			if(degrees>=(float)360 || degrees <=(float)-360)
+			struct buff temp = buffSearch(buffName, buffers, buffCount);
+			if(!checkBufferExists(temp.status))
+			{
+				printf(KRED "Error: " RESET "Specified buffer \"%s\" does not exist.\n", buffName);
+			}
+			else if(degrees>=(float)360 || degrees <=(float)-360)
 				printf("Error: degree of rotation is out of limits.\n\n");
 			else
-				addBuffer(rotate(buffSearch(buffName,buffers, buffCount), degrees), buffers, &buffCount);
+				addBuffer(rotate(temp, degrees), buffers, &buffCount);
 		}
 		else if((strcmp(command, "blurr") == 0))
 		{
@@ -393,8 +479,16 @@ int main(int argc, char **argv)
 			buffName = strtok(NULL, " ");
 			char* radius = strtok(NULL, " ");
 			char* sigma = strtok(NULL, " ");
-			struct buff temp = blurr(buffSearch(buffName, buffers, buffCount), atoi(radius), atof(sigma));
-			addBuffer(temp, buffers, &buffCount);
+			struct buff temp = buffSearch(buffName, buffers, buffCount);
+			if(!checkBufferExists(temp.status))
+			{
+				printf(KRED "Error: " RESET "Specified buffer \"%s\" does not exist.\n", buffName);
+			}
+			else
+			{
+				struct buff newBuff = blurr(temp, atoi(radius), atof(sigma));
+				addBuffer(newBuff, buffers, &buffCount);
+			}
 		}
 		else if((strcmp(command, "sharpen") == 0))
 		{
@@ -404,16 +498,21 @@ int main(int argc, char **argv)
 				continue;
 			}
 			char* choice = strtok(NULL, " ");
-			if (!(strcmp(choice, "low") == 0) && !(strcmp(choice, "high") == 0)){
+			buffName = strtok(NULL, " ");
+			struct buff temp = buffSearch(buffName, buffers, buffCount);
+			if(!checkBufferExists(temp.status))
+			{
+				printf(KRED "Error: " RESET "Specified buffer \"%s\" does not exist.\n", buffName);
+			}
+			else if (!(strcmp(choice, "low") == 0) && !(strcmp(choice, "high") == 0)){
 				printf(KRED "Error: " RESET "Invalid sharpening command.\n");
 			}
-			else {
-				buffName = strtok(NULL, " ");
-				struct buff temp = sharpen(buffSearch(buffName, buffers, buffCount), choice);
-				addBuffer(temp, buffers, &buffCount);
+			else 
+			{
+				struct buff newBuff = sharpen(temp, choice);
+				addBuffer(newBuff, buffers, &buffCount);
 			}
 		}
-
 		else if((strcmp(command, "define_template") == 0))
 		{
 			struct template temp;
@@ -492,9 +591,17 @@ int main(int argc, char **argv)
 			row1 = strtok(NULL, "]");
 			row2 = strtok(NULL, "]");
 			row3 = strtok(NULL, "]");
-			buffName = strtok(NULL, " ");	
-			struct buff temp = convolve3X3(buffSearch(buffName, buffers, buffCount), row1, row2, row3);
-			addBuffer(temp, buffers, &buffCount);
+			buffName = strtok(NULL, " ");
+			struct buff temp = buffSearch(buffName, buffers, buffCount);
+			if(!checkBufferExists(temp.status))
+			{
+				printf(KRED "Error: " RESET "Specified buffer \"%s\" does not exist.\n", buffName);
+			}
+			else
+			{
+				struct buff newBuff = convolve3X3(temp, row1, row2, row3);
+				addBuffer(newBuff, buffers, &buffCount);
+			}
 		}
 		else if((strcmp(command, "convolve_template") == 0))
 		{
@@ -506,28 +613,33 @@ int main(int argc, char **argv)
 			buffName = strtok(NULL, " ");
 			char* templateName = strtok(NULL, " ");
 
-			struct buff temp = (buffSearch(buffName, buffers, buffCount));
+			struct buff temp = buffSearch(buffName, buffers, buffCount);
+			if(!checkBufferExists(temp.status))
+			{
+				printf(KRED "Error: " RESET "Specified buffer \"%s\" does not exist.\n", buffName);
+			}
+			else
+			{
+				struct buff out = temp;
 
-			struct buff out = temp;
+				char input[100];
+				printf("Enter name of buffer: \n");
+				gets(input);
+				strcpy(out.name,input);
 
-			char input[100];
-    		printf("Enter name of buffer: \n");
-   			gets(input);
-			strcpy(out.name,input);
-
-			float mask[3][3] = {
-				{T.mask_tp[0][0], T.mask_tp[0][1], T.mask_tp[0][2]},
-				{T.mask_tp[1][0], T.mask_tp[1][1], T.mask_tp[1][2]},
-				{T.mask_tp[2][0], T.mask_tp[2][1], T.mask_tp[2][2]}
-			};
+				float mask[3][3] = {
+					{T.mask_tp[0][0], T.mask_tp[0][1], T.mask_tp[0][2]},
+					{T.mask_tp[1][0], T.mask_tp[1][1], T.mask_tp[1][2]},
+					{T.mask_tp[2][0], T.mask_tp[2][1], T.mask_tp[2][2]}
+				};
 
 
-			gdImageConvolution(out.imrgb, mask, 1.0,0.0);
+				gdImageConvolution(out.imrgb, mask, 1.0,0.0);
 
-			out.isLibgd=1;
+				out.isLibgd=1;
 
-			addBuffer(out, buffers, &buffCount);
-			
+				addBuffer(out, buffers, &buffCount);
+			}
 		}
 		else if ((strcmp(command, "test_hadamard") == 0)) {
 			print_matrix(hadamard(1), 2);
@@ -562,9 +674,40 @@ int main(int argc, char **argv)
 			imageName = strtok(NULL, " ");
 			strtok(NULL, " ");
 			buffName = strtok(NULL, " ");
-			struct buff temp = wht(buffSearch(imageName, buffers, buffCount), buffName);
-			whtHistEQ(&temp);
-			addBuffer(temp, buffers, &buffCount);
+			struct buff temp = buffSearch(imageName, buffers, buffCount);
+			if(!checkBufferExists(temp.status))
+			{
+				printf(KRED "Error: " RESET "Specified buffer \"%s\" does not exist.\n", imageName);
+			}
+			else
+			{
+				struct buff newBuff = wht(temp, buffName);
+				whtHistEQ(&newBuff);
+				addBuffer(newBuff, buffers, &buffCount);
+			}
+		}
+		else if ((strcmp(command, "fwht") == 0)) {
+			if (spaceCount != 3) {
+				printf(KRED "Error: " RESET "Incorrect syntax on fwht command.\n       Use the syntax: fwht <buffer> into <new buffer>\n");
+				p[0] = '\0';
+				continue;
+			}
+			imageName = strtok(NULL, " ");
+			strtok(NULL, " ");
+			buffName = strtok(NULL, " ");
+			struct buff temp = buffSearch(imageName, buffers, buffCount);
+			if(!checkBufferExists(temp.status))
+			{
+				printf(KRED "Error: " RESET "Specified buffer \"%s\" does not exist.\n", imageName);
+			}
+			else
+			{
+				struct buff newBuff = grayscale(temp, buffName);
+				newBuff = fwht(newBuff, buffName);
+				// struct buff newBuff = fwht(temp, buffName);
+				// whtHistEQ(&newBuff);
+				addBuffer(newBuff, buffers, &buffCount);
+			}
 		}
 		else if ((strcmp(command, "grayscale") == 0)) {
 			if (spaceCount != 3) {
@@ -575,8 +718,16 @@ int main(int argc, char **argv)
 			imageName = strtok(NULL, " ");
 			strtok(NULL, " ");
 			buffName = strtok(NULL, " ");
-			struct buff temp = grayscale(buffSearch(imageName, buffers, buffCount), buffName);
-			addBuffer(temp, buffers, &buffCount);
+			struct buff temp = buffSearch(imageName, buffers, buffCount);
+			if(!checkBufferExists(temp.status))
+			{
+				printf(KRED "Error: " RESET "Specified buffer \"%s\" does not exist.\n", imageName);
+			}
+			else
+			{
+				struct buff newBuff = grayscale(temp, buffName);
+				addBuffer(newBuff, buffers, &buffCount);
+			}
 		}
 		else if ((strcmp(command, "XXXXX") == 0)) {
 			// do nothing! this is if the user types Enter only
@@ -591,6 +742,9 @@ int main(int argc, char **argv)
 	}
 }
 
+/**
+ * Prints a list of all usable commands and their input formats.
+ */
 void printMenu()
 {
 	printf(KGRN "\n----- Commands -----\n");
@@ -616,16 +770,23 @@ void printMenu()
 	printf(KBLU "Template: " RESET "\"define_template <template-name> <template-structure> = <(x,y)>\"\n");
 	printf(KBLU "Convolve_Template: " RESET "\"convolve_template <buff-name> <template-name>\"\n");
 	printf(KBLU "Convolution: " RESET "\"convolve3x3 <template> <buffer-name>\" template = [a b c][d e f][g h i] integers\n");
-	printf(KBLU "Grayscale: " RESET "\"grayscale <buffer-name> into <new-buuffer-name>\"\n");
+	printf(KBLU "Grayscale: " RESET "\"grayscale <buffer-name> into <new-buffer-name>\"\n");
 	printf("\n");
 	printf(KBLU "Hadamard Transform (WHT): " RESET "\"wht <buffer-name> into <new-buffer-name>\"\n");
 	printf(KBLU "Display WHT image: " RESET "\"display_wht <buffer-name>\"\n");
 	printf(KBLU "Output WHT image to file: " RESET "\"write_wht <file-name> into <new-image-name>\"\n");
+	printf(KBLU "Fast Walsh-Hadamard Transform (FWHT): " RESET "\"fwht <buffer-name> into <new-buffer-name>\"\n");
 	printf("\n");
 	printf(KBLU "Display all buffer details: " RESET "\"details\"\n");
 
 }
 
+
+/**
+ * Prints a list of all current buffer names, as well as the image names within them.
+ * \param buffers List of buffers in memory
+ * \param buffCount Number of buffers in memory
+ */
 void printBuffer(struct buff *buffers, int buffCount)
 {
 	printf(KGRN "\n----- Buffers -----\n" RESET);
@@ -636,6 +797,12 @@ void printBuffer(struct buff *buffers, int buffCount)
 	printf("\n");
 }
 
+/**
+ * Adds a buffer to the buffer list.
+ * \param buffer Buffer to be added to list
+ * \param buffers List of buffers in memory
+ * \param buffCount Number of buffers in list
+ */
 void addBuffer(struct buff buffer, struct buff *buffers, int *buffCount)
 {
 	int k = -1;
@@ -652,6 +819,7 @@ void addBuffer(struct buff buffer, struct buff *buffers, int *buffCount)
 		buffers[*buffCount].img = buffer.img;
 		strcpy(buffers[*buffCount].imageName, buffer.imageName);
 		strcpy(buffers[*buffCount].name, buffer.name);
+		strcpy(buffers[*buffCount].status, "true");
 		buffers[*buffCount].width = buffer.width;
 		buffers[*buffCount].height = buffer.height;
 		buffers[*buffCount].channels = buffer.channels;
@@ -667,6 +835,7 @@ void addBuffer(struct buff buffer, struct buff *buffers, int *buffCount)
 		buffers[k].img = buffer.img;
 		strcpy(buffers[k].imageName, buffer.imageName);
 		strcpy(buffers[k].name, buffer.name);
+		strcpy(buffers[k].status, "true");
 		buffers[k].width = buffer.width;
 		buffers[k].height = buffer.height;
 		buffers[k].channels = buffer.channels;
@@ -680,6 +849,14 @@ void addBuffer(struct buff buffer, struct buff *buffers, int *buffCount)
 	printf(KYEL "New buffer added\n\n" RESET);
 }
 
+/**
+ * Searches for a buffer, by name, from the buffer list.
+ * \param buffName String name of the buffer to be found
+ * \param buffers List of buffers in memory
+ * \param int buffCount Number of buffers in list
+ *
+ * \return requested buffer
+ */
 struct buff buffSearch(char *buffName, struct buff *buffers, int buffCount)
 {
 	for (int i = 0; i < buffCount; i++)
@@ -689,13 +866,17 @@ struct buff buffSearch(char *buffName, struct buff *buffers, int buffCount)
 			return buffers[i];
 		}
 	}
-	printf(KRED "Error:" RESET " buffer not found.\n");
-
 	struct buff temp;
 	strcpy(temp.status, "false");
 	return temp;
 }
 
+/**
+ * Gets the extension of a requested file, by name.
+ * \param filename: String name of file, with extension
+ *
+ * \return string of file extension
+ */
 char *get_filename_ext(const char *filename)
 {
 	char *dot = strrchr(filename, '.');
@@ -703,6 +884,14 @@ char *get_filename_ext(const char *filename)
 		return "";
 	return dot + 1;
 }
+
+/**
+ * Validates that a file is of acceptable filetype.
+ * \param ext String value of file extension
+ * \param file_types Pointer to array of accepted filetypes
+ *
+ * \return 0 if invalid, 1 if valid
+ */
 int check_types(char *ext, char *file_types[])
 {
 	for (int i = 0; i < 5; i++)
@@ -714,6 +903,13 @@ int check_types(char *ext, char *file_types[])
 	return 0;
 }
 
+/**
+ * Counts the number of occurenced of `character` in a string. 
+ * \param str String to be evaluated
+ * \param character Character to count for
+ *
+ * \return int number of characters
+ */
 int count_characters(const char* str, char character)
 {
 	//this is to avoid strtok segfault errors.

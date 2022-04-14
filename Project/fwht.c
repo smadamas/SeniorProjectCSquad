@@ -118,8 +118,8 @@ struct buff fwht(struct buff buffer, char* buffname){
 			min = val;
 		}
 	}
-	printf("MAX: %d\n", max);
-	printf("MIN: %d\n", min);
+	// printf("MAX: %d\n", max);
+	// printf("MIN: %d\n", min);
 	
 	// result.img = malloc(size * c);
 	//convert temp2 back to a char array image, should already be correct values minus float errors
@@ -213,8 +213,8 @@ struct buff ifwht(struct buff img) {
 			min = val;
 		}
 	}
-	printf("MAX: %d\n", max);
-	printf("MIN: %d\n", min);
+	// printf("MAX: %d\n", max);
+	// printf("MIN: %d\n", min);
 	
 	img.img = malloc(size * c);
 	//convert temp2 back to a char array image, should already be correct values minus float errors

@@ -19,6 +19,7 @@
  */
 struct buff readToBuff(char *imageName, char *const buffName)
 {
+
 	char path[32 + 7] = "./img/";     // max size of imageName + size of folder name
 	char* name = malloc(14);
 	strcpy(name, imageName);

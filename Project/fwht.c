@@ -18,6 +18,8 @@
  * \param dst `int[]` that will store the transformed data
  */
 void fwht_transform(int n, const int *src, int *dst);
+
+void dbl_fwht_transform(int n, const double *src, double *dst);
 /**
  * Performs a Fast Walsh-Hadamard Transform on an input `buff` and returns the output image as a `buff`.
  * \param buffer `buff` containing the image information before the Fast Walsh-Hadamard Transform
@@ -47,7 +49,7 @@ struct buff fwht(struct buff buffer, char* buffname){
 	strcat(result.imageName, ext);
 	strcpy(result.name, buffname);
 	strcpy(result.status, "true");
-	result.has_wht = 1;
+	result.has_wht = 2;
 	result.isLibgd = 0;
 
 	// Get the size of the square image: dim = 2^n
@@ -82,50 +84,172 @@ struct buff fwht(struct buff buffer, char* buffname){
     for (int k = 0; k < c; k++) { // for each channel
 		for (int d = 0; d < dim; d++) {    // for each column
 			//printf("column1\n");
-            int temp[dim];
+            double temp[dim];
 			for (int a = 0; a < dim; a++) { // for each pixel
                 temp[a] = *(result.img + (d * c) + k + (a * dim * c));
-                
-                // printf("%d\n", temp[a]);
-				//*(result.wht + (a * c) + k + (d * dim * c)) = 0;
-				// printf("pixel: %d\n", (a * c) + k + (d * dim * c));
-				//for (int b = 0; b < dim; b++) {
-					//*(result.wht + (a * c) + k + (d * dim * c)) = *(result.wht + (a * c) + k + (d * dim * c)) + ((double)(*(result.img + (a * c) + k + (b * dim * c))) * (double)(*(H + b + (d * dim)))) / (double)dim;
-					
-					//printf("%f * %f = %f\n", (double)(*(result.img + (a * c) + k + (b * dim * c))), (double)(*(H + b + (d * dim))), (double)(*(result.img + (a * c) + k + (b * dim * c))) * (double)(*(H + b + (d * dim))));
-					//printf("%f\t/\t%f\t=\t%f\n", ((double)(*(result.img + (a * c) + k + (b * dim * c))) * (double)(*(H + b + (d * dim)))), (double)dim, ((double)(*(result.img + (a * c) + k + (b * dim * c))) * (double)(*(H + b + (d * dim)))) / (double)dim);
-				//}
-				//printf("%f\t", *(result.wht + (a * c) + k + (d * dim * c)));
-				//printf("\n");
 			}
 
 
-			fwht_transform(dim, temp, temp); // perform column-wise fast transform
+			dbl_fwht_transform(dim, temp, temp); // perform column-wise fast transform
 
             for(int a = 0; a < dim; a++){
-                *(result.img + (d * c) + k + (a * dim * c)) = temp[a];
+				*(result.wht + (d * c) + k + (a * dim * c)) = temp[a];
+                // *(result.img + (d * c) + k + (a * dim * c)) = temp[a];  // put values back into wht image
             }
         
 			//printf("\n");
 		}
 
-		for (int d = 0; d < dim; d++) {    // for each row
+		/*for (int d = 0; d < dim; d++) {    // for each row
 			//printf("column1\n");
-            int temp[dim];
+            double temp[dim];
 			for (int a = 0; a < dim; a++) { // for each pixel
                 temp[a] = *(result.img + (a * c) + k + (d * dim * c));
 			}
 
-			fwht_transform(dim, temp, temp); // perform row-wise fast transform
+			dbl_fwht_transform(dim, temp, temp); // perform row-wise fast transform
 
             for(int a = 0; a < dim; a++){
-                *(result.img + (d * c) + k + (a * dim * c)) = temp[a];
+				*(result.wht + (a * c) + k + (d * dim * c)) = temp[a];
+                // *(result.img + (d * c) + k + (a * dim * c)) = temp[a];
+            }
+        
+			//printf("\n");
+		}*/
+	}
+
+	int max = 0;
+	int min = 10000000;
+	int val = 0;
+	for(int i = 0; i < size; i++){
+		val = (int)*(result.wht + i);
+		if(val > max){ 
+			max = val;
+		}
+		if(min > val){
+			min = val;
+		}
+	}
+	// printf("MAX: %d\n", max);
+	// printf("MIN: %d\n", min);
+	
+	// result.img = malloc(size * c);
+	//convert temp2 back to a char array image, should already be correct values minus float errors
+	for (int i = 0; i < size * c; i++) {
+		double scaled_dbl = (*(result.wht + i) - min) / (max - min) * 255;
+		int value = (uint8_t)(round(scaled_dbl));
+		*(result.img + i) = value;
+		//printf("%f\n", *(temp2 + i));
+		/*if (*(img.wht + i) > 255) {
+			//printf("255\n");
+			*(img.img + i) = 255;
+		}
+		else if (*(img.wht + i) < 0) {
+			//printf("0\n");
+			*(img.img + i) = 0;
+		}
+		else {
+			//printf("%f\n", *(temp2 + i));
+			*(img.img + i) = (uint8_t)(round(*(img.wht + i)));
+		}*/
+	}
+    return result;
+}
+
+struct buff ifwht(struct buff img) {
+	// Inverse FWHT transform, takes an wft image as input and recovers the original image from it.
+	// To invert, run the normal transform in reverse, i.e. transform rows then columns
+
+	struct buff result;
+	int w = img.width;
+	int h = img.height;
+	int c = img.channels;
+	//printf("iwht\n");
+	int n = (int)ceil(log2(fmax(w, h)));
+	int dim = 1 << n;
+	int size = dim * dim;
+	if (w != h || dim != w) {
+		printf(KRED "ERROR: " RESET "WHT data dimensions are not square and a power of 2.");
+		return img;
+	}
+
+
+	for (int k = 0; k < c; k++) { // for each channel
+
+		/* for (int d = 0; d < dim; d++) {    // for each row
+			//printf("column1\n");
+            double temp[dim];
+			for (int a = 0; a < dim; a++) { // for each pixel
+                temp[a] = *(img.wht + (a * c) + k + (d * dim * c));
+			}
+
+			dbl_fwht_transform(dim, temp, temp); // perform row-wise fast transform
+
+            for(int a = 0; a < dim; a++){
+				*(img.wht + (a * c) + k + (a * dim * c)) = temp[a];
+                // *(result.img + (d * c) + k + (a * dim * c)) = temp[a];
+            }
+        
+			//printf("\n");
+		} */
+
+		for (int d = 0; d < dim; d++) {    // for each column
+			//printf("column1\n");
+            double temp[dim];
+			for (int a = 0; a < dim; a++) { // for each pixel
+                temp[a] = *(img.wht + (d * c) + k + (a * dim * c));
+			}
+
+
+			dbl_fwht_transform(dim, temp, temp); // perform column-wise fast transform
+
+            for(int a = 0; a < dim; a++){
+				*(img.wht + (d * c) + k + (a * dim * c)) = temp[a];
+                // *(result.img + (d * c) + k + (a * dim * c)) = temp[a];  // put values back into wht image
             }
         
 			//printf("\n");
 		}
 	}
-    return result;
+
+	// find min and max value for scaling
+	int max = 0;
+	int min = 10000000;
+	int val = 0;
+	for(int i = 0; i < size; i++){
+		val = (int)*(img.wht + i);
+		if(val > max){ 
+			max = val;
+		}
+		if(min > val){
+			min = val;
+		}
+	}
+	// printf("MAX: %d\n", max);
+	// printf("MIN: %d\n", min);
+	
+	img.img = malloc(size * c);
+	//convert temp2 back to a char array image, should already be correct values minus float errors
+	for (int i = 0; i < size * c; i++) {
+		double scaled_dbl = (*(img.wht + i) - min) / (max - min) * 255;
+		int value = (uint8_t)(round(scaled_dbl));
+		*(img.img + i) = value;
+		//printf("%f\n", *(temp2 + i));
+		/*if (*(img.wht + i) > 255) {
+			//printf("255\n");
+			*(img.img + i) = 255;
+		}
+		else if (*(img.wht + i) < 0) {
+			//printf("0\n");
+			*(img.img + i) = 0;
+		}
+		else {
+			//printf("%f\n", *(temp2 + i));
+			*(img.img + i) = (uint8_t)(round(*(img.wht + i)));
+		}*/
+	}
+	
+	return img;
 }
 
 void fwht_transform(int n, const int *src, int *dst)
@@ -149,6 +273,29 @@ void fwht_transform(int n, const int *src, int *dst)
     
     memcpy(dst, a, sizeof(int)*n);
 }
+
+void dbl_fwht_transform(int n, const double *src, double *dst)  // double version for wht image
+{
+    double adata[n];
+    double bdata[n];
+    double *a = adata;
+    double *b = bdata;
+    void *tmp;
+    memcpy(a, src, sizeof(double)*n);
+    
+    // Fast Walsh Hadamard Transform.
+    int i, j, s;
+    for (i = n>>1; i > 0; i>>=1) {
+        for (j = 0; j < n; j++) {
+            s = j/i%2;
+            b[j]=a[(s?-i:0)+j]+(s?-1:1)*a[(s?0:i)+j];
+        }
+        tmp = a; a = b; b = tmp;
+    }
+    
+    memcpy(dst, a, sizeof(double)*n);
+}
+
 void fwht_normalize(int n, int *src)
 {
     int i;

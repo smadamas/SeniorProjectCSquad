@@ -19,17 +19,21 @@
  */
 struct buff readToBuff(char *imageName, char *const buffName)
 {
-	char* name;
+	char path[32 + 7] = "./img/";     // max size of imageName + size of folder name
+	char* name = malloc(14);
 	strcpy(name, imageName);
 	char *temp = strtok(name, ".");
 	char *ext = strtok(NULL, " ");
+	strcat(path, imageName);
+	// printf("%s\n", path);
+	
 	FILE *in;
 	struct buff buffer;
-
+	
 	if (strcmp(ext, "wht") == 0)
 	{
 		printf(KYEL"Reading %s into %s..."RESET"\n", imageName, buffName);
-		in = fopen(strcat(temp, ".wht"), "rb");
+		in = fopen(path, "rb");
 		fread(&buffer.width, sizeof(int), 1, in);
 		fread(&buffer.height, sizeof(int), 1, in);
 		fread(&buffer.channels, sizeof(int), 1, in);
@@ -45,13 +49,14 @@ struct buff readToBuff(char *imageName, char *const buffName)
 		// buffer.has_wht = 1;
 		fclose(in);
 		//print_matrixf(buffer.wht, buffer.width);
-		
+		free(name);
 		return buffer;
 	}
 
 	printf(KYEL"Reading %s into %s..."RESET"\n" , imageName, buffName);
 	int width, height, ch;
-	unsigned char *buff = stbi_load(imageName, &width, &height, &ch, 0);
+	unsigned char *buff = stbi_load(path, &width, &height, &ch, 0);
+	// unsigned char *buff = stbi_load(path, &width, &height, &ch, 0);
 	if (buffName == NULL || buff == NULL)
 	{
 		printf(KRED "Error: "RESET " Cannot read file\n");
@@ -60,22 +65,22 @@ struct buff readToBuff(char *imageName, char *const buffName)
 	//printf("ext:%s\n",ext);
 	if (strcmp(ext, "png") == 0)
 	{
-		in = fopen(strcat(temp, ".png"), "rb");
+		in = fopen(path, "rb");
 		buffer.imrgb = gdImageCreateFromPng(in);
 	}
 	else if (strcmp(ext, "jpeg") == 0)
 	{
-		in = fopen(strcat(temp, ".jpeg"), "rb");
+		in = fopen(path, "rb");
 		buffer.imrgb = gdImageCreateFromJpeg(in);
 	}
 	else if (strcmp(ext, "gif") == 0)
 	{
-		in = fopen(strcat(temp, ".gif"), "rb");
+		in = fopen(path, "rb");
 		buffer.imrgb = gdImageCreateFromGif(in);
 	}
 	else if (strcmp(ext, "tiff") == 0)
 	{
-		in = fopen(strcat(temp, ".tiff"), "rb");
+		in = fopen(path, "rb");
 		buffer.imrgb = gdImageCreateFromTiff(in);
 	}
 	
@@ -89,5 +94,6 @@ struct buff readToBuff(char *imageName, char *const buffName)
 	buffer.isLibgd = false;
 	buffer.has_wht = 0;
 	printf(KYEL "Done reading!\n"RESET);
+	free(name);
 	return buffer;
 }

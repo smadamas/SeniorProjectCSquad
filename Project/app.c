@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <setjmp.h>
+#include <time.h>
 #include "gd.h"
 
 struct buff
@@ -32,6 +33,7 @@ struct template
 	int tpColumn;       ///< target pixel number of columns
 };
 
+//#include "test.c"
 #include "read.c"
 #include "write.c"
 #include "arithmetics.c"
@@ -45,6 +47,7 @@ struct template
 #include "grayscale.c" //included in wht.c already
 #include "wht.c"		 //included in read.c already
 #include "fwht.c"
+
 
 #define KGRN "\x1B[32m"     ///< Escape code for green terminal text 
 #define KYEL "\x1B[33m"     ///< Escape code for yellow terminal text
@@ -603,6 +606,43 @@ int main(int argc, char **argv)
 			buffName = strtok(NULL, " ");
 			struct buff temp = grayscale(buffSearch(imageName, buffers, buffCount), buffName);
 			addBuffer(temp, buffers, &buffCount);
+		}
+		else if ((strcmp(command, "test") == 0)) {
+			// run_tests();
+			clock_t t;
+			double time_taken = 0;
+			char *filenames[12] = {"2", "4", "8", "16", "32", "64", "128", "256", "512", "1024", "2048", "4096"};
+			double wht_times[12];
+			double fwht_times[12];
+			int num_tests = 10;    // change this value to desired number of tests
+
+			for(int i = 0; i < num_tests; i++){
+				char path[50] = "./test_img/";
+				strcat(path, filenames[i]);
+				strcat(path, ".png");
+				// printf("%s\n", path);
+				struct buff temp = readToBuff(path, "testbuff");
+
+				t = clock();
+				temp = wht(temp, "testbuff");
+				t = clock() - t;
+				time_taken = ((double) t) / CLOCKS_PER_SEC;
+				wht_times[i] = time_taken;
+				
+				struct buff temp2 = readToBuff(path, "testbuff");
+				t = clock();
+				temp2 = grayscale(temp2, "testbuff");
+				temp2 = fwht(temp2, "testbuff");
+				t = clock() - t;
+				time_taken = ((double) t) / CLOCKS_PER_SEC;
+				fwht_times[i] = time_taken;
+				// printf("%s took %f seconds\n", path, time_taken);
+			}
+
+			printf("Image Size		WHT Time (sec)			FWHT Time (sec)\n");
+			for(int i = 0; i < num_tests; i++){
+				printf("%s			%f			%f\n", filenames[i], wht_times[i], fwht_times[i]);
+			}
 		}
 		else if ((strcmp(command, "XXXXX") == 0)) {
 			// do nothing! this is if the user types Enter only

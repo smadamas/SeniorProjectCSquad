@@ -21,27 +21,31 @@ void writeToImage(struct buff buffer, char *imageName, int wht)
 {
 	char *temp = strtok(imageName, ".");
 	char *ext = strtok(NULL, " ");
+	char path[32 + 7] = "./img/";
+	strcat(path, imageName);
+	strcat(path, ".");
+	strcat(path, ext);	
 
-	if (wht == 1) {
+	if (wht > 0) {
 		if (buffer.name == NULL)
 		{
 			printf(KRED "Error: " RESET "buffer is empty.\n");
 		}
 		else if (strcmp(ext, "png") == 0)
 		{
-			stbi_write_png(strcat(temp, ".png"), buffer.width, buffer.height, buffer.channels, buffer.whtimg, buffer.width * buffer.channels);
+			stbi_write_png(path, buffer.width, buffer.height, buffer.channels, buffer.whtimg, buffer.width * buffer.channels);
 		}
 		else if (strcmp(ext, "jpg") == 0 || strcmp(ext, "jpeg") == 0)
 		{
-			stbi_write_jpg(strcat(temp, ".jpg"), buffer.width, buffer.height, buffer.channels, buffer.whtimg, buffer.width * buffer.channels);
+			stbi_write_jpg(path, buffer.width, buffer.height, buffer.channels, buffer.whtimg, buffer.width * buffer.channels);
 		}
 		else if (strcmp(ext, "tiff") == 0)
 		{
-			stbi_write_jpg(strcat(temp, ".tiff"), buffer.width, buffer.height, buffer.channels, buffer.whtimg, buffer.width * buffer.channels);
+			stbi_write_jpg(path, buffer.width, buffer.height, buffer.channels, buffer.whtimg, buffer.width * buffer.channels);
 		}
 		else if (strcmp(ext, "gif") == 0)
 		{
-			stbi_write_jpg(strcat(temp, ".gif"), buffer.width, buffer.height, buffer.channels, buffer.whtimg, buffer.width * buffer.channels);
+			stbi_write_jpg(path, buffer.width, buffer.height, buffer.channels, buffer.whtimg, buffer.width * buffer.channels);
 		}
 		else if (strcmp(ext, "wht") == 0)
 		{
@@ -60,25 +64,25 @@ void writeToImage(struct buff buffer, char *imageName, int wht)
 		}
 		else if (strcmp(ext, "png") == 0)
 		{
-			FILE *output = fopen(strcat(temp, ".png"), "wb");
+			FILE *output = fopen(path, "wb");
 			gdImagePngEx(buffer.imrgb, output, 9);
 			fclose(output);
 		}
 		else if (strcmp(ext, "jpg") == 0 || strcmp(ext, "jpeg") == 0)
 		{
-			FILE *output = fopen(strcat(temp, ".jpg"), "wb");
+			FILE *output = fopen(path, "wb");
 			gdImageJpeg(buffer.imrgb, output, 9);
 			fclose(output);
 		}
 		else if (strcmp(ext, "tiff") == 0)
 		{
-			FILE *output = fopen(strcat(temp, ".tiff"), "wb");
+			FILE *output = fopen(path, "wb");
 			gdImageTiff(buffer.imrgb, output);
 			fclose(output);
 		}
 		else if (strcmp(ext, "gif") == 0)
 		{
-			FILE *output = fopen(strcat(temp, ".gif"), "wb");
+			FILE *output = fopen(path, "wb");
 			gdImageGif(buffer.imrgb, output);
 			fclose(output);
 		}
@@ -96,19 +100,19 @@ void writeToImage(struct buff buffer, char *imageName, int wht)
 		}
 		else if (strcmp(ext, "png") == 0)
 		{
-			stbi_write_png(strcat(temp, ".png"), buffer.width, buffer.height, buffer.channels, buffer.img, buffer.width * buffer.channels);
+			stbi_write_png(path, buffer.width, buffer.height, buffer.channels, buffer.img, buffer.width * buffer.channels);
 		}
 		else if (strcmp(ext, "jpg") == 0 || strcmp(ext, "jpeg") == 0)
 		{
-			stbi_write_jpg(strcat(temp, ".jpg"), buffer.width, buffer.height, buffer.channels, buffer.img, buffer.width * buffer.channels);
+			stbi_write_jpg(path, buffer.width, buffer.height, buffer.channels, buffer.img, buffer.width * buffer.channels);
 		}
 		else if (strcmp(ext, "tiff") == 0)
 		{
-			stbi_write_jpg(strcat(temp, ".tiff"), buffer.width, buffer.height, buffer.channels, buffer.img, buffer.width * buffer.channels);
+			stbi_write_jpg(path, buffer.width, buffer.height, buffer.channels, buffer.img, buffer.width * buffer.channels);
 		}
 		else if (strcmp(ext, "gif") == 0)
 		{
-			stbi_write_jpg(strcat(temp, ".gif"), buffer.width, buffer.height, buffer.channels, buffer.img, buffer.width * buffer.channels);
+			stbi_write_jpg(path, buffer.width, buffer.height, buffer.channels, buffer.img, buffer.width * buffer.channels);
 		}
 		else if (strcmp(ext, "wht") == 0) 
 		{
@@ -129,8 +133,8 @@ void writeToImage(struct buff buffer, char *imageName, int wht)
  */
 void write_to_wht(struct buff buffer, char* imageName) {
 	int size = buffer.height * buffer.width * buffer.channels;
-	char name[30];
-	strcpy(name, imageName);
+	char name[30 + 7] = "./img/";
+	strcat(name, imageName);
 	strcat(name, ".wht");
 	FILE* fp = fopen(name, "w");
 	fwrite(&buffer.height, sizeof(int), 1, fp);

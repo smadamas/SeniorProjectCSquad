@@ -4,7 +4,13 @@
 #define KRED  "\x1B[31m"
 #define KMAG  "\x1B[35m"
 #define RESET "\x1B[0m"
-
+/**
+ * Performs a Hadamard Transform on an input `buff` and returns the output image as a `buff`.
+ * \param input `buff` containing the image information before the Hadamard Transform
+ * \param buffname name of the `buff` that will be output
+ *  
+ * \return `buff` containing the Hadamard transformed image data.
+ */
 struct buff hadamard(struct buff input, char * buffName)
 {
     

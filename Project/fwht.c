@@ -11,9 +11,20 @@
 #define KRED  "\x1B[31m"
 #define KMAG  "\x1B[35m"
 #define RESET "\x1B[0m"
-
+/**
+ * Helper function for Fast Walsh-Hadamard Transform
+ * \param n the length of one side of the padded n by n image in pixels
+ * \param src `int[]` containing the data to be transformed
+ * \param dst `int[]` that will store the transformed data
+ */
 void fwht_transform(int n, const int *src, int *dst);
-
+/**
+ * Performs a Fast Walsh-Hadamard Transform on an input `buff` and returns the output image as a `buff`.
+ * \param buffer `buff` containing the image information before the Fast Walsh-Hadamard Transform
+ * \param buffname name of the `buff` that will be output
+ *  
+ * \return `buff` containing the Fast Walsh-Hadamard transformed image data.
+ */
 struct buff fwht(struct buff buffer, char* buffname){
     // printf("Hellow World!\n");
     struct buff result;
@@ -138,13 +149,11 @@ void fwht_transform(int n, const int *src, int *dst)
     
     memcpy(dst, a, sizeof(int)*n);
 }
-
 void fwht_normalize(int n, int *src)
 {
     int i;
     for (i = 0; i < n; i++) src[i] /= n;
 }
-
 double fwht_sum_absolute_difference(int n, int *a, int *b)
 {
     long sum = 0;
